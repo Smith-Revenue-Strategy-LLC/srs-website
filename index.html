@@ -11,6 +11,28 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
+    <button class="admin-login-button" type="button" data-admin-open>Admin Login</button>
+
+    <div class="admin-modal" data-admin-modal hidden>
+      <div class="admin-modal__panel" role="dialog" aria-modal="true" aria-labelledby="admin-login-title">
+        <button class="admin-modal__close" type="button" aria-label="Close admin login" data-admin-close>&times;</button>
+        <p class="code-label">&gt; ADMIN.access</p>
+        <h2 id="admin-login-title">Admin Login</h2>
+        <form class="admin-form" data-admin-form>
+          <label>
+            Username
+            <input type="text" name="username" autocomplete="username" required>
+          </label>
+          <label>
+            Password
+            <input type="password" name="password" autocomplete="current-password" required>
+          </label>
+          <button class="admin-submit" type="submit">Enter Admin Site</button>
+          <p class="admin-status" role="status" aria-live="polite" data-admin-status></p>
+        </form>
+      </div>
+    </div>
+
     <main class="page-shell">
       <section class="hero" aria-labelledby="page-title">
         <div class="hero__content">
@@ -75,5 +97,6 @@
         <span>Waco, TX</span>
       </footer>
     </main>
+    <script src="admin-login.js"></script>
   </body>
 </html>
