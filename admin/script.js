@@ -26,12 +26,12 @@ if (form && status) {
     const email = data.get("email") || "";
     const company = data.get("company") || "";
     const message = data.get("message") || "";
-    const subject = encodeURIComponent(`Free consult request from ${company || name}`);
+    const subject = encodeURIComponent(`Fit call request from ${company || name}`);
     const body = encodeURIComponent(
       `Name: ${name}\nEmail: ${email}\nCompany: ${company}\n\nBottleneck to discuss:\n${message}`
     );
 
-    status.textContent = "Opening a draft email so your team can connect directly.";
+    status.textContent = "Opening a draft email so SRS can follow up directly.";
     window.location.href = `mailto:hello@smithrevenuestrategy.com?subject=${subject}&body=${body}`;
   });
 }
