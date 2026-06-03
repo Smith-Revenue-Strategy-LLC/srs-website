@@ -191,7 +191,7 @@ if (canvas) {
     ctx.fillStyle = "rgba(158,210,223,0.9)";
     ctx.font = "700 11px ui-monospace, SFMono-Regular, Consolas, monospace";
     ctx.textAlign = "left";
-    ctx.fillText("REVENUE CAPACITY RESTORED", x, y - 12);
+    ctx.fillText("OPERATING BURDEN REDUCED", x, y - 12);
   }
 
   function render() {
