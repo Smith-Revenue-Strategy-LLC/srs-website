@@ -1,5 +1,6 @@
 const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".site-nav");
+const navMenus = document.querySelectorAll(".nav-menu");
 
 if (navToggle && nav) {
   navToggle.addEventListener("click", () => {
@@ -11,9 +12,32 @@ if (navToggle && nav) {
     link.addEventListener("click", () => {
       nav.classList.remove("is-open");
       navToggle.setAttribute("aria-expanded", "false");
+      navMenus.forEach((menu) => {
+        menu.classList.remove("is-open");
+        menu.querySelector(".nav-menu-button")?.setAttribute("aria-expanded", "false");
+      });
     });
   });
 }
+
+navMenus.forEach((menu) => {
+  const button = menu.querySelector(".nav-menu-button");
+  if (!button) return;
+
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const isOpen = menu.classList.toggle("is-open");
+    button.setAttribute("aria-expanded", String(isOpen));
+  });
+});
+
+document.addEventListener("click", (event) => {
+  navMenus.forEach((menu) => {
+    if (menu.contains(event.target)) return;
+    menu.classList.remove("is-open");
+    menu.querySelector(".nav-menu-button")?.setAttribute("aria-expanded", "false");
+  });
+});
 
 const form = document.querySelector("#consult-form");
 const status = document.querySelector(".form-status");
@@ -26,7 +50,7 @@ if (form && status) {
     const email = data.get("email") || "";
     const company = data.get("company") || "";
     const message = data.get("message") || "";
-    const subject = encodeURIComponent(`Fit call request from ${company || name}`);
+    const subject = encodeURIComponent(`Call request from ${company || name}`);
     const body = encodeURIComponent(
       `Name: ${name}\nEmail: ${email}\nCompany: ${company}\n\nBottleneck to discuss:\n${message}`
     );
@@ -51,7 +75,7 @@ if (canvas) {
     { x: 0.68, y: 0.28, label: "AI" },
     { x: 0.26, y: 0.55, label: "DATA" },
     { x: 0.52, y: 0.62, label: "LOGIC" },
-    { x: 0.78, y: 0.76, label: "REV" }
+    { x: 0.78, y: 0.76, label: "REVENUE" }
   ];
 
   const links = [
@@ -78,7 +102,7 @@ if (canvas) {
     ctx.fillStyle = "#020711";
     ctx.fillRect(0, 0, width, height);
 
-    ctx.strokeStyle = "rgba(72,255,132,0.08)";
+    ctx.strokeStyle = "rgba(127,199,154,0.07)";
     ctx.lineWidth = 1;
     for (let x = 0; x <= width; x += 38) {
       ctx.beginPath();
@@ -104,7 +128,7 @@ if (canvas) {
       const b = nodePoint(nodes[to]);
       const pulse = (Math.sin(tick * 0.035 + index) + 1) / 2;
 
-      ctx.strokeStyle = "rgba(72,255,132,0.28)";
+      ctx.strokeStyle = "rgba(127,199,154,0.24)";
       ctx.lineWidth = 2;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
@@ -114,7 +138,7 @@ if (canvas) {
 
       const px = a.x + (b.x - a.x) * pulse;
       const py = a.y + (b.y - a.y) * pulse;
-      ctx.fillStyle = index % 2 ? "#fff19b" : "#48ff84";
+      ctx.fillStyle = index === links.length - 1 ? "#f0cf73" : "#7fc79a";
       ctx.beginPath();
       ctx.arc(px, py, 4, 0, Math.PI * 2);
       ctx.fill();
@@ -126,12 +150,12 @@ if (canvas) {
       const point = nodePoint(node);
       const radius = index === 2 || index === 5 ? 38 : 30;
 
-      ctx.fillStyle = "#052513";
+      ctx.fillStyle = "#071f17";
       ctx.beginPath();
       ctx.roundRect(point.x - radius, point.y - radius, radius * 2, radius * 2, 8);
       ctx.fill();
 
-      ctx.strokeStyle = index === 2 ? "#48ff84" : index === 5 ? "#fff19b" : "#9ed2df";
+      ctx.strokeStyle = index === 2 ? "#7fc79a" : index === 5 ? "#f0cf73" : "#9ed2df";
       ctx.lineWidth = 3;
       ctx.stroke();
 
@@ -150,15 +174,15 @@ if (canvas) {
     const h = 14;
     const fill = reduceMotion ? 0.72 : 0.66 + Math.sin(tick * 0.025) * 0.08;
 
-    ctx.fillStyle = "rgba(72,255,132,0.12)";
+    ctx.fillStyle = "rgba(127,199,154,0.1)";
     ctx.beginPath();
     ctx.roundRect(x, y, w, h, 7);
     ctx.fill();
 
     const gradient = ctx.createLinearGradient(x, y, x + w, y);
     gradient.addColorStop(0, "#9ed2df");
-    gradient.addColorStop(0.55, "#48ff84");
-    gradient.addColorStop(1, "#fff19b");
+    gradient.addColorStop(0.55, "#7fc79a");
+    gradient.addColorStop(1, "#f0cf73");
     ctx.fillStyle = gradient;
     ctx.beginPath();
     ctx.roundRect(x, y, w * fill, h, 7);

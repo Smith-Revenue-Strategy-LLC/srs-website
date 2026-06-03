@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contact | Smith Revenue Strategy</title>
-    <meta name="description" content="Request a fit call with Smith Revenue Strategy for workflow automation, AI-enabled revenue systems, workshops, or speaking inquiries.">
+    <title>Book a Call | Smith Revenue Strategy</title>
+    <meta name="description" content="Book a call with Smith Revenue Strategy to discuss workflow automation, AI-enabled revenue systems, and operational bottlenecks.">
     <script src="auth.js"></script>
     <link rel="stylesheet" href="styles.css">
   </head>
@@ -19,29 +19,33 @@
         <span></span>
       </button>
       <nav class="site-nav" id="site-nav" aria-label="Main navigation">
-        <a href="index.html">Start Here</a>
-        <a href="guide.html">Guide</a>
-        <a href="work-together.html">Work Together</a>
-        <a href="results.html">Results</a>
-        <a href="faq.html">FAQ</a>
+        <div class="nav-menu">
+          <button class="nav-menu-button" type="button" aria-expanded="false">
+            Working Together
+          </button>
+          <div class="nav-submenu" aria-label="Working Together pages">
+            <a href="work-together.html">The Path</a>
+            <a href="results.html">Results</a>
+            <a href="faq.html">FAQ</a>
+          </div>
+        </div>
         <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a class="nav-cta" href="contact.html">Request a Fit Call</a>
+        <a class="nav-cta" href="contact.html">Book a Call</a>
       </nav>
     </header>
 
     <main class="content-page">
-      <p class="eyebrow">Request a fit call</p>
-      <h1>See if Smith Revenue Strategy is right for you.</h1>
+      <p class="eyebrow">Book a call</p>
+      <h1>Start with a practical conversation.</h1>
       <p class="hero-lede">
         Share the bottleneck you are carrying, and SRS will help determine whether a
-        focused fit call is the right next step.
+        focused workflow assessment is the right next step.
       </p>
 
       <section class="content-section consult-section">
         <div class="consult-copy">
           <p class="eyebrow">Start the conversation</p>
-          <h2>Request a fit call</h2>
+          <h2>Book a call</h2>
           <p>
             By submitting my data, I consent to Smith Revenue Strategy collecting,
             processing, and storing my information in accordance with the Smith Revenue
@@ -69,30 +73,9 @@
             <input type="checkbox" name="consent" required>
             <span>I consent to Smith Revenue Strategy collecting, processing, and storing my information in accordance with the Privacy Notice.</span>
           </label>
-          <button class="button primary" type="submit">Send Request</button>
+          <button class="button primary" type="submit">Send Call Request</button>
           <p class="form-status" role="status" aria-live="polite"></p>
         </form>
-      </section>
-
-      <section class="content-section">
-        <p class="eyebrow">Speaking requests & other inquiries</p>
-        <h2>Bring SRS to your event or leadership team.</h2>
-        <div class="resource-grid">
-          <article class="resource-card">
-            <h3>Speaking requests & other inquiries</h3>
-            <p>
-              To bring SRS to speak or lead a workshop at your event, share the audience,
-              timing, and operational topic you want to address.
-            </p>
-          </article>
-          <article class="resource-card">
-            <h3>Workshops and leadership sessions</h3>
-            <p>
-              Use the message form above to share your audience, timing, and the operational
-              or AI-enabled growth topic you want to address.
-            </p>
-          </article>
-        </div>
       </section>
     </main>
 
@@ -102,15 +85,11 @@
         <p>Revenue strategy, workflow automation, and AI-enabled growth.</p>
       </div>
       <nav aria-label="Footer navigation">
-        <a href="index.html">Start Here</a>
-        <a href="guide.html">Guide</a>
-        <a href="work-together.html">Work Together</a>
+        <a href="index.html">Home</a>
+        <a href="work-together.html">Working Together</a>
         <a href="results.html">Results</a>
-        <a href="faq.html">FAQ</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="privacy.html">Privacy Policy</a>
       </nav>
+      <a class="footer-legal" href="privacy.html">Privacy Policy</a>
     </footer>
     <script src="script.js"></script>
   </body>

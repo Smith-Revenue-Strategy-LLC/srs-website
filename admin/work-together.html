@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Work Together | Smith Revenue Strategy</title>
+    <title>Working Together | Smith Revenue Strategy</title>
     <meta name="description" content="See the Smith Revenue Strategy engagement path, workflow assessment options, and possible paths after the assessment.">
     <script src="auth.js"></script>
     <link rel="stylesheet" href="styles.css">
@@ -19,14 +19,18 @@
         <span></span>
       </button>
       <nav class="site-nav" id="site-nav" aria-label="Main navigation">
-        <a href="index.html">Start Here</a>
-        <a href="guide.html">Guide</a>
-        <a href="work-together.html">Work Together</a>
-        <a href="results.html">Results</a>
-        <a href="faq.html">FAQ</a>
+        <div class="nav-menu">
+          <button class="nav-menu-button" type="button" aria-expanded="false">
+            Working Together
+          </button>
+          <div class="nav-submenu" aria-label="Working Together pages">
+            <a href="work-together.html">The Path</a>
+            <a href="results.html">Results</a>
+            <a href="faq.html">FAQ</a>
+          </div>
+        </div>
         <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a class="nav-cta" href="contact.html">Request a Fit Call</a>
+        <a class="nav-cta" href="contact.html">Book a Call</a>
       </nav>
     </header>
 
@@ -35,31 +39,36 @@
         <p class="eyebrow">Working Together</p>
         <h1 id="work-title">A clear path from first call to confident decision.</h1>
         <p class="hero-lede">
-          Every engagement starts with fit. From there, SRS helps define the workflow
+          Every engagement starts with a first conversation. From there, SRS helps define the workflow
           problem, assess the opportunity, and identify the most practical way forward.
         </p>
         <div class="hero-actions">
-          <a class="button primary" href="contact.html">Request a Fit Call</a>
-          <a class="button secondary" href="#assessment">See assessment options</a>
+          <a class="button primary" href="contact.html">Book a Call</a>
+          <a class="button secondary" href="#assessment">Learn More</a>
         </div>
       </section>
 
-      <section class="journey-strip" aria-label="Site path">
-        <a href="index.html">
-          <span>Start</span>
-          <strong>Name the problem</strong>
-        </a>
-        <a href="guide.html">
-          <span>Guide</span>
-          <strong>Meet your guide</strong>
-        </a>
-        <a class="is-active" href="work-together.html">
-          <span>Path</span>
-          <strong>See the path</strong>
-        </a>
+      <section class="journey-strip" aria-label="Booking flow">
         <a href="contact.html">
-          <span>Call</span>
-          <strong>Request the call</strong>
+          <span>01</span>
+          <div>
+            <strong>Connect</strong>
+            <small>Start with the call</small>
+          </div>
+        </a>
+        <a class="is-active" href="#assessment">
+          <span>02</span>
+          <div>
+            <strong>Assess</strong>
+            <small>Map the workflow</small>
+          </div>
+        </a>
+        <a href="results.html">
+          <span>03</span>
+          <div>
+            <strong>Decide</strong>
+            <small>Choose the path</small>
+          </div>
         </a>
       </section>
 
@@ -76,22 +85,17 @@
           <article>
             <span>01</span>
             <h3>Complimentary Connect Call</h3>
-            <p>We start with a 30-minute initial consult to understand your situation and potential fit.</p>
+            <p>We start with a 30-minute initial consult to understand your situation and whether SRS can help.</p>
           </article>
           <article>
             <span>02</span>
             <h3>Workflow Assessment</h3>
-            <p>If there is a mutual fit, we recommend the right assessment option based on your project scope.</p>
+            <p>If the problem is ready, we recommend the right assessment option based on your project scope.</p>
           </article>
           <article>
             <span>03</span>
-            <h3>Workflow Review</h3>
-            <p>We determine which steps can be automated, eliminated, or simplified with a human in the loop.</p>
-          </article>
-          <article>
-            <span>04</span>
-            <h3>Findings Summary</h3>
-            <p>You receive a Findings Summary and Value Assessment Presentation so you can choose the clearest path.</p>
+            <h3>Findings and Decision Path</h3>
+            <p>We review what can be automated, eliminated, or simplified and summarize the clearest path forward.</p>
           </article>
         </div>
       </section>
@@ -99,7 +103,7 @@
       <section class="section assessment-section" id="assessment" aria-labelledby="assessment-title">
         <div class="section-intro">
           <p class="eyebrow">Assessment options</p>
-          <h2 id="assessment-title">Choose the assessment that fits the problem.</h2>
+          <h2 id="assessment-title">Choose the assessment that matches the problem.</h2>
         </div>
         <div class="assessment-grid">
           <article class="assessment-card">
@@ -130,8 +134,7 @@
                 <p class="card-kicker">Includes</p>
                 <ul>
                   <li>Three 1-hour sessions</li>
-                  <li>Leading executive</li>
-                  <li>Stakeholder in project business unit</li>
+                  <li>Leading executive and project stakeholder</li>
                   <li>Full walk-through with front-line team</li>
                 </ul>
               </div>
@@ -146,12 +149,9 @@
           <p class="terminal-label">what_you_keep</p>
           <h3>Clarity and freedom</h3>
           <ul>
-            <li>Workflow gap analysis</li>
-            <li>Priority map</li>
-            <li>Automation and elimination tasks</li>
-            <li>Problem/solution fit analysis</li>
-            <li>Path to revenue impact</li>
-            <li>Executive findings presentation</li>
+            <li>Workflow gap analysis and priority map</li>
+            <li>Automation, elimination, and simplification tasks</li>
+            <li>Executive findings presentation with path to revenue impact</li>
           </ul>
           <p>
             The findings are yours. Execute on your own, bring in another partner, or
@@ -175,7 +175,7 @@
             <span>What changes if the workflow improves, and how that impact should be tracked.</span>
           </article>
           <article>
-            <strong>Technical fit</strong>
+            <strong>Technical reality</strong>
             <span>Whether existing systems can support the process or need a different operating layer.</span>
           </article>
           <article>
@@ -214,7 +214,7 @@
       <section class="section next-step-section" aria-labelledby="work-next-title">
         <div class="next-step-copy">
           <p class="eyebrow">Your next move</p>
-          <h2 id="work-next-title">Request the call, or keep building confidence with outcomes.</h2>
+          <h2 id="work-next-title">Book the call, or keep building confidence with outcomes.</h2>
           <p>
             You have seen the shape of the engagement. Now decide whether to start a
             conversation or look at the business changes SRS is working toward.
@@ -225,8 +225,8 @@
           <h3>Move forward when it is useful.</h3>
           <p>No pressure to rush. The path is there so the first call can be practical.</p>
           <div class="next-step-actions">
-            <a class="button primary" href="contact.html">Request a Fit Call</a>
-            <a class="button secondary" href="results.html">See what changes</a>
+            <a class="button primary" href="contact.html">Book a Call</a>
+            <a class="button secondary" href="results.html">Learn More</a>
           </div>
         </div>
       </section>
@@ -238,15 +238,11 @@
         <p>Revenue strategy, workflow automation, and AI-enabled growth.</p>
       </div>
       <nav aria-label="Footer navigation">
-        <a href="index.html">Start Here</a>
-        <a href="guide.html">Guide</a>
-        <a href="work-together.html">Work Together</a>
+        <a href="index.html">Home</a>
+        <a href="work-together.html">Working Together</a>
         <a href="results.html">Results</a>
-        <a href="faq.html">FAQ</a>
-        <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="privacy.html">Privacy Policy</a>
       </nav>
+      <a class="footer-legal" href="privacy.html">Privacy Policy</a>
     </footer>
     <script src="script.js"></script>
   </body>
