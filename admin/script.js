@@ -2,6 +2,16 @@ const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".site-nav");
 const navMenus = document.querySelectorAll(".nav-menu");
 
+function closeNav() {
+  if (!nav || !navToggle) return;
+  nav.classList.remove("is-open");
+  navToggle.setAttribute("aria-expanded", "false");
+  navMenus.forEach((menu) => {
+    menu.classList.remove("is-open");
+    menu.querySelector(".nav-menu-button")?.setAttribute("aria-expanded", "false");
+  });
+}
+
 if (navToggle && nav) {
   navToggle.addEventListener("click", () => {
     const isOpen = nav.classList.toggle("is-open");
@@ -10,12 +20,7 @@ if (navToggle && nav) {
 
   nav.querySelectorAll("a").forEach((link) => {
     link.addEventListener("click", () => {
-      nav.classList.remove("is-open");
-      navToggle.setAttribute("aria-expanded", "false");
-      navMenus.forEach((menu) => {
-        menu.classList.remove("is-open");
-        menu.querySelector(".nav-menu-button")?.setAttribute("aria-expanded", "false");
-      });
+      closeNav();
     });
   });
 }
@@ -32,11 +37,20 @@ navMenus.forEach((menu) => {
 });
 
 document.addEventListener("click", (event) => {
+  if (nav && navToggle && !nav.contains(event.target) && !navToggle.contains(event.target)) {
+    closeNav();
+    return;
+  }
+
   navMenus.forEach((menu) => {
     if (menu.contains(event.target)) return;
     menu.classList.remove("is-open");
     menu.querySelector(".nav-menu-button")?.setAttribute("aria-expanded", "false");
   });
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeNav();
 });
 
 const form = document.querySelector("#consult-form");
