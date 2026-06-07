@@ -53,26 +53,105 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeNav();
 });
 
-const form = document.querySelector("#consult-form");
-const status = document.querySelector(".form-status");
+const bookingUrl =
+  "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2mSMpkde6JzlfVSu2HEvnWfhKFofDRUU7D1ly8uAUcfrHj6R1kZdg61wH2XZJKWkzP5kmaKElU";
+const bookingEmbedUrl =
+  "https://calendar.google.com/calendar/appointments/schedules/AcZssZ2mSMpkde6JzlfVSu2HEvnWfhKFofDRUU7D1ly8uAUcfrHj6R1kZdg61wH2XZJKWkzP5kmaKElU";
+const bookingOpenButtons = document.querySelectorAll("[data-booking-open]");
+let bookingModal = document.querySelector("[data-booking-modal]");
+let bookingClose = null;
+let bookingReturnTarget = null;
 
-if (form && status) {
-  form.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const data = new FormData(form);
-    const name = data.get("name") || "";
-    const email = data.get("email") || "";
-    const company = data.get("company") || "";
-    const message = data.get("message") || "";
-    const subject = encodeURIComponent(`Call request from ${company || name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nCompany: ${company}\n\nBottleneck to discuss:\n${message}`
-    );
-
-    status.textContent = "Opening a draft email so SRS can follow up directly.";
-    window.location.href = `mailto:hello@smithrevenuestrategy.com?subject=${subject}&body=${body}`;
-  });
+function createBookingModal() {
+  const modal = document.createElement("div");
+  modal.className = "booking-modal";
+  modal.dataset.bookingModal = "";
+  modal.hidden = true;
+  modal.innerHTML = `
+    <div
+      class="booking-modal-panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="booking-modal-title"
+    >
+      <div class="booking-modal-header">
+        <div>
+          <p class="eyebrow">Complimentary connect call</p>
+          <h2 id="booking-modal-title">Book My Free Call</h2>
+        </div>
+        <button class="booking-modal-close" type="button" aria-label="Close booking calendar" data-booking-close>
+          &times;
+        </button>
+      </div>
+      <iframe
+        class="booking-calendar"
+        src="${bookingEmbedUrl}"
+        title="Book a call with Smith Revenue Strategy"
+        loading="lazy"
+      ></iframe>
+      <a
+        class="booking-fallback"
+        href="${bookingUrl}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open booking calendar in a new window
+      </a>
+    </div>
+  `;
+  document.body.append(modal);
+  return modal;
 }
+
+if (bookingOpenButtons.length && !bookingModal) {
+  bookingModal = createBookingModal();
+}
+
+if (bookingModal) {
+  bookingClose = bookingModal.querySelector("[data-booking-close]");
+}
+
+function closeBookingModal() {
+  if (!bookingModal) return;
+  bookingModal.hidden = true;
+  document.body.classList.remove("booking-modal-open");
+  bookingReturnTarget?.focus();
+}
+
+function openBookingModal(trigger) {
+  if (!bookingModal) return;
+  bookingReturnTarget = trigger;
+  bookingModal.hidden = false;
+  document.body.classList.add("booking-modal-open");
+  bookingClose?.focus();
+}
+
+bookingOpenButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    closeNav();
+    openBookingModal(button);
+  });
+
+  button.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    closeNav();
+    openBookingModal(button);
+  });
+});
+
+bookingClose?.addEventListener("click", closeBookingModal);
+
+bookingModal?.addEventListener("click", (event) => {
+  if (event.target === bookingModal) closeBookingModal();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && bookingModal && !bookingModal.hidden) {
+    closeBookingModal();
+  }
+});
 
 const canvas = document.querySelector("#flow-canvas");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

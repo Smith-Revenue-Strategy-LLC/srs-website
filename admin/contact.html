@@ -30,7 +30,7 @@
           </div>
         </div>
         <a href="about.html">About</a>
-        <a class="nav-cta" href="contact.html">Book a Call</a>
+        <a class="nav-cta" href="contact.html" data-booking-open>Book a Call</a>
       </nav>
     </header>
 
@@ -47,35 +47,22 @@
           <p class="eyebrow">Start the conversation</p>
           <h2>Book a call</h2>
           <p>
-            By submitting my data, I consent to Smith Revenue Strategy collecting,
-            processing, and storing my information in accordance with the Smith Revenue
-            Strategy Privacy Notice.
+            Before you dive headlong into a technology transformation project, start
+            with a quick call to make sure SRS is a potential fit.
           </p>
         </div>
-        <form class="contact-form" id="consult-form">
-          <label>
-            Name
-            <input type="text" name="name" autocomplete="name" required>
-          </label>
-          <label>
-            Work email
-            <input type="email" name="email" autocomplete="email" required>
-          </label>
-          <label>
-            Company
-            <input type="text" name="company" autocomplete="organization">
-          </label>
-          <label>
-            What bottleneck should we talk about?
-            <textarea name="message" rows="5" required></textarea>
-          </label>
-          <label class="consent">
-            <input type="checkbox" name="consent" required>
-            <span>I consent to Smith Revenue Strategy collecting, processing, and storing my information in accordance with the Privacy Notice.</span>
-          </label>
-          <button class="button primary" type="submit">Send Call Request</button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-        </form>
+        <div class="booking-card" aria-label="Book a call with Smith Revenue Strategy">
+          <p class="eyebrow">Complimentary connect call</p>
+          <h3>See if Smith Revenue Strategy is right for you.</h3>
+          <p>
+            Share the workflow friction, growth constraint, or operational question
+            you are carrying. The first call is designed to help determine whether a
+            focused assessment is the right next step.
+          </p>
+          <button class="button primary booking-link" type="button" data-booking-open>
+            Book My Free Call
+          </button>
+        </div>
       </section>
     </main>
 
