@@ -1,6 +1,87 @@
+const siteHeader = document.querySelector(".site-header");
+const brand = document.querySelector(".brand");
 const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".site-nav");
 const navMenus = document.querySelectorAll(".nav-menu");
+const rodneyProfileImageUrl = "/assets/images/team/Rodney%20Smith.jpg";
+const rodneyLinkedInUrl = "https://www.linkedin.com/in/rodney-smith-profile";
+let lastHeaderScrollY = window.scrollY;
+let headerScrollTicking = false;
+
+function linkedInIconMarkup(className) {
+  return `
+    <a
+      class="linkedin-link ${className}"
+      href="${rodneyLinkedInUrl}"
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label="View Rodney Smith on LinkedIn"
+      title="View Rodney Smith on LinkedIn"
+    >
+      in
+    </a>
+  `;
+}
+
+function createHeaderPersona() {
+  if (!siteHeader || !brand || document.querySelector("[data-header-persona]")) return;
+
+  const persona = document.createElement("div");
+  persona.className = "header-persona";
+  persona.dataset.headerPersona = "";
+  persona.innerHTML = `
+    <img
+      class="profile-photo-mini header-profile-photo"
+      src="${rodneyProfileImageUrl}"
+      alt="Rodney Smith"
+      width="80"
+      height="80"
+    >
+    ${linkedInIconMarkup("header-linkedin")}
+  `;
+  brand.insertAdjacentElement("afterend", persona);
+}
+
+function revealSiteHeader() {
+  siteHeader?.classList.remove("is-hidden");
+}
+
+function siteHeaderShouldStayVisible() {
+  return (
+    !siteHeader ||
+    window.scrollY <= 96 ||
+    nav?.classList.contains("is-open") ||
+    document.body.classList.contains("booking-modal-open")
+  );
+}
+
+function updateSiteHeaderVisibility() {
+  if (!siteHeader) return;
+
+  const currentScrollY = Math.max(window.scrollY, 0);
+  const scrollDelta = currentScrollY - lastHeaderScrollY;
+
+  if (siteHeaderShouldStayVisible()) {
+    revealSiteHeader();
+    lastHeaderScrollY = currentScrollY;
+    return;
+  }
+
+  if (Math.abs(scrollDelta) < 8) return;
+
+  siteHeader.classList.toggle("is-hidden", scrollDelta > 0);
+  lastHeaderScrollY = currentScrollY;
+}
+
+function requestSiteHeaderUpdate() {
+  if (headerScrollTicking) return;
+
+  headerScrollTicking = true;
+  window.requestAnimationFrame(() => {
+    updateSiteHeaderVisibility();
+    headerScrollTicking = false;
+  });
+}
 
 function closeNav() {
   if (!nav || !navToggle) return;
@@ -16,6 +97,7 @@ if (navToggle && nav) {
   navToggle.addEventListener("click", () => {
     const isOpen = nav.classList.toggle("is-open");
     navToggle.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen) revealSiteHeader();
   });
 
   nav.querySelectorAll("a").forEach((link) => {
@@ -53,14 +135,125 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") closeNav();
 });
 
+window.addEventListener("scroll", requestSiteHeaderUpdate, { passive: true });
+
+createHeaderPersona();
+
 const bookingUrl =
   "https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ2mSMpkde6JzlfVSu2HEvnWfhKFofDRUU7D1ly8uAUcfrHj6R1kZdg61wH2XZJKWkzP5kmaKElU";
 const bookingEmbedUrl =
   "https://calendar.google.com/calendar/appointments/schedules/AcZssZ2mSMpkde6JzlfVSu2HEvnWfhKFofDRUU7D1ly8uAUcfrHj6R1kZdg61wH2XZJKWkzP5kmaKElU";
-const bookingOpenButtons = document.querySelectorAll("[data-booking-open]");
+const visibleBookingTriggers = Array.from(document.querySelectorAll("[data-booking-open]"));
+let stickyBookingCta = null;
+let stickyBookingButton = null;
+const visibleBookingTriggerSet = new Set();
 let bookingModal = document.querySelector("[data-booking-modal]");
 let bookingClose = null;
 let bookingReturnTarget = null;
+
+function createStickyBookingCta() {
+  const cta = document.createElement("aside");
+  cta.className = "sticky-booking-cta";
+  cta.dataset.stickyBookingCta = "";
+  cta.setAttribute("aria-label", "Book a call with Rodney");
+  cta.setAttribute("aria-hidden", "true");
+  cta.innerHTML = `
+    <div class="sticky-booking-persona">
+      <img
+        class="profile-photo-mini sticky-booking-photo"
+        src="${rodneyProfileImageUrl}"
+        alt="Rodney Smith"
+        width="80"
+        height="80"
+      >
+      ${linkedInIconMarkup("sticky-linkedin")}
+    </div>
+    <p>
+      <span>Ready for a practical conversation?</span>
+      <strong>Meet with Rodney.</strong>
+    </p>
+    <button class="button primary sticky-booking-button" type="button" data-booking-open>
+      Book a Call
+    </button>
+  `;
+  document.body.append(cta);
+  return cta;
+}
+
+if (visibleBookingTriggers.length) {
+  stickyBookingCta = createStickyBookingCta();
+  stickyBookingButton = stickyBookingCta.querySelector("[data-booking-open]");
+  stickyBookingButton.tabIndex = -1;
+}
+
+const bookingOpenButtons = stickyBookingButton
+  ? [...visibleBookingTriggers, stickyBookingButton]
+  : visibleBookingTriggers;
+
+function setStickyBookingCtaVisible(isVisible) {
+  if (!stickyBookingCta || !stickyBookingButton) return;
+  stickyBookingCta.classList.toggle("is-visible", isVisible);
+  stickyBookingCta.setAttribute("aria-hidden", String(!isVisible));
+  stickyBookingButton.tabIndex = isVisible ? 0 : -1;
+}
+
+function updateStickyBookingCta() {
+  const modalIsOpen = Boolean(bookingModal && !bookingModal.hidden);
+  setStickyBookingCtaVisible(!modalIsOpen && visibleBookingTriggerSet.size === 0);
+}
+
+function triggerIsInViewport(trigger) {
+  const rect = trigger.getBoundingClientRect();
+  return (
+    rect.width > 0 &&
+    rect.height > 0 &&
+    rect.bottom > 0 &&
+    rect.right > 0 &&
+    rect.top < window.innerHeight &&
+    rect.left < window.innerWidth
+  );
+}
+
+function setupStickyBookingCta() {
+  if (!stickyBookingCta || !visibleBookingTriggers.length) return;
+
+  if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleBookingTriggerSet.add(entry.target);
+            return;
+          }
+
+          visibleBookingTriggerSet.delete(entry.target);
+        });
+
+        updateStickyBookingCta();
+      },
+      { threshold: 0.01 }
+    );
+
+    visibleBookingTriggers.forEach((trigger) => {
+      if (triggerIsInViewport(trigger)) visibleBookingTriggerSet.add(trigger);
+      observer.observe(trigger);
+    });
+    updateStickyBookingCta();
+    return;
+  }
+
+  const checkVisibleTriggers = () => {
+    visibleBookingTriggerSet.clear();
+    visibleBookingTriggers.forEach((trigger) => {
+      if (triggerIsInViewport(trigger)) visibleBookingTriggerSet.add(trigger);
+    });
+    updateStickyBookingCta();
+  };
+
+  window.addEventListener("scroll", checkVisibleTriggers, { passive: true });
+  window.addEventListener("resize", checkVisibleTriggers);
+  checkVisibleTriggers();
+}
 
 function createBookingModal() {
   const modal = document.createElement("div");
@@ -115,6 +308,7 @@ function closeBookingModal() {
   if (!bookingModal) return;
   bookingModal.hidden = true;
   document.body.classList.remove("booking-modal-open");
+  updateStickyBookingCta();
   bookingReturnTarget?.focus();
 }
 
@@ -123,6 +317,8 @@ function openBookingModal(trigger) {
   bookingReturnTarget = trigger;
   bookingModal.hidden = false;
   document.body.classList.add("booking-modal-open");
+  revealSiteHeader();
+  updateStickyBookingCta();
   bookingClose?.focus();
 }
 
@@ -152,6 +348,8 @@ document.addEventListener("keydown", (event) => {
     closeBookingModal();
   }
 });
+
+setupStickyBookingCta();
 
 const canvas = document.querySelector("#flow-canvas");
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
