@@ -2,7 +2,6 @@ const siteHeader = document.querySelector(".site-header");
 const brand = document.querySelector(".brand");
 const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".site-nav");
-const navMenus = document.querySelectorAll(".nav-menu");
 const rodneyProfileImageUrl = "/assets/images/team/Rodney%20Smith.jpg";
 const rodneyLinkedInUrl = "https://www.linkedin.com/in/rodney-smith-profile";
 let lastHeaderScrollY = window.scrollY;
@@ -86,16 +85,14 @@ function requestSiteHeaderUpdate() {
 function closeNav() {
   if (!nav || !navToggle) return;
   nav.classList.remove("is-open");
+  document.body.classList.remove("nav-menu-open");
   navToggle.setAttribute("aria-expanded", "false");
-  navMenus.forEach((menu) => {
-    menu.classList.remove("is-open");
-    menu.querySelector(".nav-menu-button")?.setAttribute("aria-expanded", "false");
-  });
 }
 
 if (navToggle && nav) {
   navToggle.addEventListener("click", () => {
     const isOpen = nav.classList.toggle("is-open");
+    document.body.classList.toggle("nav-menu-open", isOpen);
     navToggle.setAttribute("aria-expanded", String(isOpen));
     if (isOpen) revealSiteHeader();
   });
@@ -107,28 +104,10 @@ if (navToggle && nav) {
   });
 }
 
-navMenus.forEach((menu) => {
-  const button = menu.querySelector(".nav-menu-button");
-  if (!button) return;
-
-  button.addEventListener("click", (event) => {
-    event.stopPropagation();
-    const isOpen = menu.classList.toggle("is-open");
-    button.setAttribute("aria-expanded", String(isOpen));
-  });
-});
-
 document.addEventListener("click", (event) => {
   if (nav && navToggle && !nav.contains(event.target) && !navToggle.contains(event.target)) {
     closeNav();
-    return;
   }
-
-  navMenus.forEach((menu) => {
-    if (menu.contains(event.target)) return;
-    menu.classList.remove("is-open");
-    menu.querySelector(".nav-menu-button")?.setAttribute("aria-expanded", "false");
-  });
 });
 
 document.addEventListener("keydown", (event) => {

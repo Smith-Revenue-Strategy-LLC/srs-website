@@ -186,64 +186,59 @@ p {
   position: relative;
 }
 
-.nav-menu-button {
+.nav-menu-heading {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   min-height: 40px;
-  border: 0;
-  padding: 0;
-  background: transparent;
   color: inherit;
   font: inherit;
   font-weight: 800;
-  cursor: pointer;
 }
 
 .site-nav > a,
-.nav-menu-button {
+.nav-menu-heading {
   width: 100%;
-  justify-content: space-between;
+  justify-content: flex-start;
   padding: 12px 10px;
   text-align: left;
   text-transform: uppercase;
   letter-spacing: 0;
 }
 
-.nav-menu-button::after {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-right: 1px solid currentColor;
-  border-bottom: 1px solid currentColor;
-  transform: translateY(-2px) rotate(45deg);
-}
-
 .nav-submenu {
+  --nav-tree-left: 18px;
+
   position: static;
-  display: none;
+  display: block;
   min-width: 0;
-  margin-top: 4px;
-  padding: 4px 0 8px 12px;
-  background: rgba(255, 255, 255, 0.03);
+  margin: 0 0 8px 10px;
+  padding: 2px 0 6px 26px;
+  background:
+    linear-gradient(rgba(var(--green-rgb), 0.46), rgba(var(--green-rgb), 0.46))
+      var(--nav-tree-left) 0 / 1px calc(100% - 24px) no-repeat;
   border: 0;
   box-shadow: none;
 }
 
 .nav-submenu a {
+  position: relative;
   display: block;
   padding: 11px 12px;
   color: var(--ink);
 }
 
-.nav-submenu a:hover {
-  background: rgba(var(--green-rgb), 0.1);
+.nav-submenu a::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(-26px + var(--nav-tree-left));
+  width: 13px;
+  height: 1px;
+  background: rgba(var(--green-rgb), 0.56);
 }
 
-.nav-menu:hover .nav-submenu,
-.nav-menu:focus-within .nav-submenu,
-.nav-menu.is-open .nav-submenu {
-  display: block;
+.nav-submenu a:hover {
+  background: rgba(var(--green-rgb), 0.1);
 }
 
 .nav-cta,
@@ -1455,6 +1450,12 @@ body.booking-modal-open .sticky-booking-cta {
   transform: translateY(calc(100% + 24px));
 }
 
+body.nav-menu-open .sticky-booking-cta {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(calc(100% + 24px));
+}
+
 .booking-modal {
   position: fixed;
   inset: 0;
@@ -1937,7 +1938,7 @@ body.booking-modal-open .sticky-booking-cta {
     display: flex;
   }
 
-  .nav-menu-button {
+  .nav-menu-heading {
     min-height: 44px;
   }
 
@@ -1987,7 +1988,7 @@ body.booking-modal-open .sticky-booking-cta {
     display: flex;
   }
 
-  .nav-menu-button {
+  .nav-menu-heading {
     min-height: 44px;
   }
 
