@@ -371,7 +371,7 @@ h2,
 h3 {
   margin: 0;
   letter-spacing: 0;
-  line-height: 0.96;
+  line-height: 1.04;
   font-family: Georgia, "Times New Roman", serif;
   color: var(--ink);
 }
@@ -382,6 +382,10 @@ h1 {
   padding-bottom: 28px;
   border-bottom: 1px solid rgba(169, 201, 215, 0.16);
   overflow-wrap: anywhere;
+}
+
+.hero h1 {
+  line-height: 1;
 }
 
 h2 {
@@ -1780,7 +1784,7 @@ body.nav-menu-open .sticky-booking-cta {
   font-family: Georgia, "Times New Roman", serif;
   font-size: clamp(2rem, 4vw, 4rem);
   font-weight: 800;
-  line-height: 0.98;
+  line-height: 1.04;
 }
 
 .collapsible-section .resource-grid,
