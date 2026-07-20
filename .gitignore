@@ -1,0 +1,10 @@
+# Loose docs must NEVER live in this repo.
+# CNAME points smithrevenuestrategy.com here, so anything committed is PUBLISHED.
+# Plans, briefs, and context live in Drive: SRS Operational Files/projects/srs-website/
+docs/
+*.md
+!README.md
+
+# Local tooling / OS
+.claude/
+.DS_Store
