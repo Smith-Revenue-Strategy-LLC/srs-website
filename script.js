@@ -481,3 +481,87 @@ if (canvas) {
   resizeCanvas();
   render();
 }
+
+// Scroll-linked tray swap: scrolling past the open Board of Advisors closes it and
+// opens Trusted Partners (and reverses on the way back up). No-op on every page that
+// lacks both trays or in browsers without IntersectionObserver.
+(function setupTraySwap() {
+  if (!("IntersectionObserver" in window)) return;
+  const advisors = document.getElementById("advisors-tray");
+  const partners = document.getElementById("partners-tray");
+  if (!advisors || !partners) return;
+  const partnersSummary = partners.querySelector("summary");
+  if (!partnersSummary) return;
+
+  let partnersActive = partners.open; // true once partners is the open tray
+  let autoDisabled = false; // any manual click hands control back to the user for good
+  let swapping = false; // re-entrancy lock while we compensate scroll
+  let lastY = window.scrollY;
+  const root = document.documentElement;
+
+  // Keep the partners summary pinned in the viewport across the open/close so the page
+  // never lurches. Force instant scroll so the site's smooth scroll-behavior doesn't
+  // animate the correction.
+  function applySwap(openEl, closeEl) {
+    swapping = true;
+    const prevBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    const topBefore = partnersSummary.getBoundingClientRect().top;
+    openEl.open = true;
+    closeEl.open = false;
+    const topAfter = partnersSummary.getBoundingClientRect().top;
+    window.scrollBy(0, topAfter - topBefore);
+    root.style.scrollBehavior = prevBehavior;
+    lastY = window.scrollY;
+    // Release the lock after the browser has settled the two frames of layout/scroll.
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        swapping = false;
+      });
+    });
+  }
+
+  function evaluate() {
+    if (autoDisabled || swapping) {
+      lastY = window.scrollY;
+      return;
+    }
+    const dir = window.scrollY > lastY ? "down" : "up";
+    lastY = window.scrollY;
+    const top = partnersSummary.getBoundingClientRect().top;
+    const line = window.innerHeight * 0.6; // trigger around the lower third
+    if (!partnersActive && dir === "down" && top <= line) {
+      // Don't yank a tray closed while the reader's keyboard focus lives inside it.
+      if (advisors.contains(document.activeElement)) return;
+      applySwap(partners, advisors);
+      partnersActive = true;
+    } else if (partnersActive && dir === "up" && top > line) {
+      applySwap(advisors, partners);
+      partnersActive = false;
+    }
+  }
+
+  let ticking = false;
+  window.addEventListener(
+    "scroll",
+    function () {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function () {
+        evaluate();
+        ticking = false;
+      });
+    },
+    { passive: true }
+  );
+
+  // First manual toggle of either tray disables auto-control permanently.
+  [advisors, partners].forEach(function (tray) {
+    const summary = tray.querySelector("summary");
+    if (summary) {
+      summary.addEventListener("click", function () {
+        autoDisabled = true;
+      });
+    }
+  });
+})();
