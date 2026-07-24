@@ -485,8 +485,18 @@ if (canvas) {
 // Scroll-linked tray swap: scrolling past the open Board of Advisors closes it and
 // opens Trusted Partners (and reverses on the way back up). No-op on every page that
 // lacks both trays or in browsers without IntersectionObserver.
+//
+// DESKTOP ONLY. On touch/small screens the swap collapses ~700px above the reader and
+// the scroll compensation fights momentum scrolling, which feels janky. There, both
+// trays stay plain tap-to-open accordions (no auto-scroll, no jump).
 (function setupTraySwap() {
   if (!("IntersectionObserver" in window)) return;
+  if (
+    !window.matchMedia ||
+    !window.matchMedia("(min-width: 768px) and (pointer: fine)").matches
+  ) {
+    return;
+  }
   const advisors = document.getElementById("advisors-tray");
   const partners = document.getElementById("partners-tray");
   if (!advisors || !partners) return;

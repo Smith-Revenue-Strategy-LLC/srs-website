@@ -1779,7 +1779,7 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .content-section {
-  margin-top: clamp(48px, 7vw, 84px);
+  margin-top: clamp(56px, 8vw, 84px);
 }
 
 .person-photo {
@@ -1801,10 +1801,36 @@ body.nav-menu-open .sticky-booking-cta {
   margin-bottom: 0;
 }
 
+/* Circular headshot with a small certification medallion overlapping the corner. */
+.person-photo-wrap {
+  position: relative;
+  display: block;
+  width: 132px;
+  margin-bottom: 22px;
+}
+
+.person-photo-wrap .person-photo {
+  margin-bottom: 0;
+}
+
+.cert-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -2px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid rgba(240, 207, 115, 0.55);
+  background: #000;
+  object-fit: cover;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.55);
+}
+
 .collapsible-section {
   background: linear-gradient(180deg, rgba(12, 29, 45, 0.7), rgba(6, 17, 30, 0.52));
-  border: 0;
-  border-radius: 8px;
+  border: 1px solid rgba(169, 201, 215, 0.16);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(2, 7, 17, 0.35);
 }
 
 .collapsible-section summary {
