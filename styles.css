@@ -1735,14 +1735,6 @@ body.nav-menu-open .sticky-booking-cta {
   flex: 1 1 auto;
 }
 
-.footer-phone {
-  display: inline-block;
-  margin-top: 12px;
-  color: var(--white);
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
 .footer-legal {
   align-self: center;
   flex: 0 0 auto;
@@ -1904,6 +1896,42 @@ body.nav-menu-open .sticky-booking-cta {
 
 .story-panel p {
   max-width: 880px;
+}
+
+.story-panel .proof-lede {
+  margin-top: clamp(28px, 4vw, 40px);
+  margin-bottom: 14px;
+  color: var(--green);
+  font-weight: 800;
+}
+
+.story-panel .proof-list {
+  max-width: 880px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.story-panel .proof-list li {
+  position: relative;
+  padding: 10px 0 10px 22px;
+  color: var(--teal);
+  border-bottom: 1px solid rgba(var(--green-rgb), 0.14);
+}
+
+.story-panel .proof-list li:last-child {
+  border-bottom: 0;
+}
+
+.story-panel .proof-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 18px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
 }
 
 .resource-grid {
