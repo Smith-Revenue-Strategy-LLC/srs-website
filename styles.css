@@ -717,6 +717,16 @@ h3 {
   font-weight: 600;
 }
 
+.why-more a {
+  color: var(--green);
+  border-bottom: 1px solid rgba(127, 199, 154, 0.45);
+}
+
+.why-more a:hover,
+.why-more a:focus-visible {
+  border-bottom-color: var(--green);
+}
+
 .steps,
 .service-grid {
   display: grid;
