@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>QA preview: BidStrike surfaces | SRS</title>
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+      /* Preview chrome only. Nothing here ships; it exists so all five
+         placements render in one viewport for a single visual check.
+         Serve the site root and open /qa/preview-bidstrike.html */
+      body { zoom: 0.62; }
+      .qa-wrap { padding: 20px 26px 60px; }
+      .qa-h { font-family: "SFMono-Regular", Consolas, monospace; font-size: 0.72rem;
+              font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+              color: #f0cf73; margin: 30px 0 10px; }
+      .qa-h:first-child { margin-top: 0; }
+      .qa-h::before { content: "> "; }
+      .qa-box { background: rgba(4, 11, 24, 0.42); border-radius: 8px; padding: 22px; }
+      .qa-note { color: #7f93a0; font-size: 0.78rem; font-style: italic; margin: 8px 0 0; }
+    </style>
+  </head>
+  <body>
+    <div class="qa-wrap">
+
+      <p class="qa-h">01 &nbsp;/work-together &mdash; custom solution card</p>
+      <div class="qa-box">
+        <div class="path-list">
+          <article>
+            <h3>Targeted Retooling</h3>
+            <p>If the return is there and the right tools are already in place, I help orchestrate them into a cleaner system.</p>
+          </article>
+          <article class="bs-keyline">
+            <h3>Custom Operational Solution</h3>
+            <p>If the workflow needs a tailored solution, the project is shaped around your exact business parameters.</p>
+            <a class="bs-link" href="https://bidstrike.cloud/" target="_blank" rel="noopener">See one I shipped</a>
+          </article>
+        </div>
+      </div>
+
+      <p class="qa-h">02 &nbsp;/results &mdash; case block</p>
+      <article class="bs-case bs-keyline">
+        <p class="terminal-label">custom_build</p>
+        <h3>A bid desk for specialty contractors</h3>
+        <p>
+          The estimators were spending their week reading bid invitations instead of
+          pricing work, and most of those jobs were never winnable.
+        </p>
+        <div class="bs-case-grid">
+          <div><p class="terminal-label">the_drag</p><p>Bid invitations sorted by hand, in an inbox, one at a time.</p></div>
+          <div><p class="terminal-label">the_change</p><p>Every opportunity scored on fit, GC quality, distance, and documents.</p></div>
+          <div><p class="terminal-label">the_result</p><p>Estimator hours move to the bids the company can actually win.</p></div>
+        </div>
+        <div class="bs-case-actions">
+          <a class="bs-cta" href="https://bidstrike.cloud/" target="_blank" rel="noopener">See <span class="bs-mark">Bid<i>Strike</i></span></a>
+          <a class="button secondary" href="/contact">Book a Call</a>
+        </div>
+        <p class="bs-disclose">BidStrike is my own product. I built it, I own it, and it grew out of this work.</p>
+      </article>
+
+      <p class="qa-h">03 &nbsp;/about &mdash; "What I've Built" tray card</p>
+      <div class="qa-box">
+        <article class="resource-card bs-keyline">
+          <div class="bs-card-head">
+            <span class="bs-mark bs-mark-lg">Bid<i>Strike</i></span>
+            <span class="bs-badge">LIVE</span>
+          </div>
+          <p class="advisor-role">bidstrike.cloud &middot; Built and owned by Rodney Smith</p>
+          <ul class="advisor-details">
+            <li>The bid desk for contractors. Every invitation scored, the winnable work first.</li>
+          </ul>
+          <div class="advisor-links">
+            <a class="bs-link" href="https://bidstrike.cloud/" target="_blank" rel="noopener">bidstrike.cloud</a>
+          </div>
+        </article>
+      </div>
+
+      <p class="qa-h">04 &nbsp;/ (home) &mdash; proof band</p>
+      <aside class="bs-band" style="margin-inline:0;">
+        <div class="bs-band-copy">
+          <p class="bs-band-kicker">
+            <span class="bs-mark">Bid<i>Strike</i></span>
+            <span>Software I built</span>
+          </p>
+          <h2>When the fix doesn't exist yet, I build it.</h2>
+          <p>BidStrike is mine. It scores bid invitations for contractors so estimators stop guessing which jobs to chase.</p>
+        </div>
+        <div class="bs-band-actions">
+          <a class="bs-cta" href="https://bidstrike.cloud/" target="_blank" rel="noopener">See BidStrike</a>
+        </div>
+      </aside>
+
+      <p class="qa-h">05 &nbsp;/is-this-you &mdash; third situation card</p>
+      <div class="qa-box">
+        <div class="situation-grid">
+          <article class="situation-card">
+            <p class="terminal-label">situation_b</p>
+            <h3>Stuck at a ceiling, unclear what to fix</h3>
+            <p>You've hit a ceiling and you're not sure why.</p>
+            <a class="button primary" href="/contact">Book a Call</a>
+          </article>
+          <article class="situation-card bs-keyline">
+            <p class="terminal-label">situation_c</p>
+            <h3>You bid work, and you're guessing which jobs to chase</h3>
+            <p>The invitations pile up faster than anyone can read them.</p>
+            <a class="bs-cta" href="https://bidstrike.cloud/" target="_blank" rel="noopener">See <span class="bs-mark">Bid<i>Strike</i></span></a>
+          </article>
+        </div>
+      </div>
+
+      <p class="qa-h">06 &nbsp;site-wide footer</p>
+      <footer class="site-footer">
+        <div>
+          <strong>Smith Revenue Strategy</strong>
+          <p>Helping owners hunt for the next customer and fix the tools that slow them down.</p>
+        </div>
+        <div class="bs-footer-block">
+          <p class="bs-footer-kicker">Also built here</p>
+          <a class="bs-link" href="https://bidstrike.cloud/" target="_blank" rel="noopener">
+            <span class="bs-mark">Bid<i>Strike</i></span>
+            <span class="bs-footer-tag">The bid desk for contractors</span>
+          </a>
+        </div>
+        <a class="footer-legal" href="/privacy">Privacy Policy</a>
+      </footer>
+
+    </div>
+  </body>
+</html>
