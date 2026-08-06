@@ -37,7 +37,10 @@ function createHeaderPersona() {
     >
     ${linkedInIconMarkup("header-linkedin")}
   `;
-  brand.insertAdjacentElement("afterend", persona);
+  // Anchor after the wordmark so the company name stays welded to the lockup
+  // and the persona chip follows it, rather than splitting the two.
+  const brandWords = document.querySelector(".brand-words");
+  (brandWords || brand).insertAdjacentElement("afterend", persona);
 }
 
 // The header never hides. Past the fold it compacts and the SRS lockup

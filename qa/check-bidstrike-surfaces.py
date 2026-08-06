@@ -277,6 +277,37 @@ def _():
 
 
 # --------------------------------------------------------------------------
+# 11. The header wordmark is site-wide, like the footer, so it drifts the same
+# way. The lockup art is the SRS glyph only; these two strings are the company
+# name and tagline that used to live inside the logo image, so they have to
+# match the brand exactly and appear on every page.
+# --------------------------------------------------------------------------
+@check("header wordmark present and identical on all pages")
+def _():
+    # children are <strong>/<small>, NOT nested spans, so the first </span>
+    # closes the block
+    block = re.compile(r'<span class="brand-words".*?</span>', re.S)
+    bad = []
+    seen = {}
+    for page in PAGES:
+        m = block.search(read(page))
+        if not m:
+            bad.append("%s: no brand-words block" % page)
+            continue
+        seen.setdefault(m.group(0), []).append(page)
+        if 'aria-hidden="true"' not in m.group(0):
+            bad.append("%s: brand-words must be aria-hidden (the brand link "
+                       "already carries the accessible name)" % page)
+    if len(seen) > 1:
+        bad.append("brand-words differs between pages: %s" % [v for v in seen.values()])
+    for text in ("Smith Revenue Strategy", "Unlock AI-Enabled Growth"):
+        if not any(text in b for b in seen):
+            bad.append("brand-words missing the string %r" % text)
+    notes.append("brand-words on %d/%d pages" % (sum(len(v) for v in seen.values()), len(PAGES)))
+    return bad
+
+
+# --------------------------------------------------------------------------
 # 10. The full-width-slab bug.
 # Several card classes are `display: grid`. An inline-flex child inside one
 # gets blockified and stretches the whole track, so .bs-cta renders as a

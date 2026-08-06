@@ -2533,40 +2533,86 @@ body.nav-menu-open .sticky-booking-cta {
   letter-spacing: 0.06em;
 }
 
-/* --- home page proof band ------------------------------------------------ */
+/* --- home page proof band -------------------------------------------------
+   Deliberately NOT the SRS panel treatment. This block wears BidStrike's own
+   navy-and-lime so it reads as a different brand interrupting the page, not as
+   another card in the SRS stack. Bounded on all four sides (a notice, not a
+   section) and everything left-aligned, CTA included. */
 .bs-band {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: clamp(18px, 3vw, 34px);
+  position: relative;
   margin: 0 clamp(18px, 5vw, 72px);
-  padding: clamp(22px, 3vw, 30px);
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
-  border-radius: 8px;
+  padding: clamp(24px, 3.4vw, 34px);
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 88% 12%, rgba(174, 242, 63, 0.13), transparent 58%),
+    linear-gradient(135deg, #0a1626 0%, #081221 58%, #070f1c 100%);
+  border: 1px solid rgba(174, 242, 63, 0.3);
+  border-radius: 12px;
+  box-shadow:
+    0 0 0 1px rgba(3, 9, 21, 0.6),
+    0 22px 60px rgba(0, 0, 0, 0.42);
+}
+
+/* The strike: BidStrike's slash motif, echoed as a quiet background mark. */
+.bs-band::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  right: clamp(-40px, -2vw, -10px);
+  width: 190px;
+  height: 190%;
+  background: linear-gradient(180deg, rgba(174, 242, 63, 0.15), rgba(174, 242, 63, 0.03));
+  transform: rotate(24deg);
+  pointer-events: none;
 }
 
 .bs-band-copy {
-  flex: 1 1 min(420px, 100%);
+  position: relative;
+  z-index: 1;
+}
+
+.bs-band-kicker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 14px;
+}
+
+.bs-band-kicker .bs-mark {
+  font-size: 1.24rem;
+  line-height: 1;
+}
+
+.bs-band-kicker span {
+  color: #7f93a0;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .bs-band h2 {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   font-size: clamp(1.35rem, 2.4vw, 1.9rem);
   line-height: 1.18;
 }
 
 .bs-band p {
   margin: 0;
-  max-width: 56ch;
+  max-width: 62ch;
 }
 
 .bs-band-actions {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
   gap: 12px;
-  flex: 0 1 auto;
+  margin-top: 20px;
 }
 
 /* --- results case block -------------------------------------------------- */
@@ -2638,13 +2684,10 @@ body.nav-menu-open .sticky-booking-cta {
 
 /* --- responsive ---------------------------------------------------------- */
 @media (max-width: 760px) {
-  .bs-band {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .bs-band-actions {
-    width: 100%;
+  /* the band is block-flow now, so it needs no direction switch; only the
+     decorative slash gets out of the way of the copy */
+  .bs-band::after {
+    display: none;
   }
 
   .site-footer .bs-footer-block {
@@ -2720,4 +2763,92 @@ body.nav-menu-open .sticky-booking-cta {
 .situation-card .bs-cta {
   width: fit-content;
   margin-top: 2px;
+}
+
+/* --- hero / journey-strip divider -----------------------------------------
+   The hero and the 01-02-03 strip ran together with nothing between them.
+   Inset to the same gutter as the strip below it so it reads as a section
+   break, not a full-bleed rule. */
+.hero-divider {
+  height: 1px;
+  margin: clamp(18px, 3vw, 30px) clamp(18px, 5vw, 72px) clamp(10px, 2vw, 18px);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(169, 201, 215, 0.26) 12%,
+    rgba(169, 201, 215, 0.26) 88%,
+    transparent
+  );
+}
+
+@media (min-width: 1440px) {
+  .hero-divider {
+    margin-inline: max(72px, calc((100vw - 1320px) / 2));
+  }
+}
+
+/* --- header wordmark ------------------------------------------------------
+   The lockup image is the SRS glyph only; the full name and tagline that used
+   to live in the logo art are set as text here. Visible at the top of the
+   page, faded and collapsed once the header compacts on scroll. */
+.brand-words {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  flex: 0 1 auto;
+  min-width: 0;
+  max-width: 320px;
+  margin-left: -6px;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 1;
+  transition:
+    opacity 190ms ease 130ms,
+    max-width 240ms ease,
+    margin-left 240ms ease;
+}
+
+.brand-words strong {
+  color: var(--ink);
+  font-size: 0.94rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+}
+
+.brand-words small {
+  color: var(--teal);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+
+/* Fade first, then collapse the space, so the text never squeezes mid-run. */
+.site-header.is-compact .brand-words {
+  max-width: 0;
+  margin-left: -18px;
+  opacity: 0;
+  transition:
+    opacity 130ms ease,
+    max-width 240ms ease 110ms,
+    margin-left 240ms ease 110ms;
+}
+
+/* Below the desktop nav breakpoint the row is already carrying a hamburger,
+   a persona chip and the lockup. The wordmark is the thing that gives. */
+@media (max-width: 900px) {
+  .brand-words {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand-words,
+  .site-header.is-compact .brand-words {
+    transition: none;
+  }
 }
