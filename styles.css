@@ -53,6 +53,11 @@ p {
 }
 
 .site-header {
+  --brand-w: 93px;
+  --brand-h: 40px;
+  --persona-photo: 32px;
+  --persona-linkedin: 28px;
+  --persona-pad: 3px 5px;
   position: sticky;
   top: 0;
   z-index: 20;
@@ -60,43 +65,82 @@ p {
   align-items: center;
   justify-content: flex-start;
   gap: 18px;
-  padding: 10px clamp(18px, 4vw, 56px);
+  padding: 12px clamp(18px, 4vw, 56px);
   background: rgba(3, 9, 21, 0.74);
   border-bottom: 1px solid rgba(169, 201, 215, 0.1);
   backdrop-filter: blur(20px);
-  transform: translateY(0);
-  transition: transform 220ms ease;
-  will-change: transform;
+  transition:
+    gap 240ms ease,
+    padding 240ms ease,
+    background 240ms ease;
 }
 
-.site-header.is-hidden {
-  pointer-events: none;
-  transform: translateY(calc(-100% - 2px));
+/* Past the fold the lockup gives way to the S-mark and the bar tightens. */
+.site-header.is-compact {
+  --brand-w: 30px;
+  --brand-h: 36px;
+  --persona-photo: 26px;
+  --persona-linkedin: 24px;
+  --persona-pad: 3px 4px;
+  gap: 14px;
+  padding-block: 6px;
+  background: rgba(3, 9, 21, 0.88);
 }
 
 .brand {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: clamp(118px, 12vw, 150px);
-  min-height: 0;
+  position: relative;
+  z-index: 0;
+  display: block;
+  flex: 0 0 auto;
+  width: var(--brand-w);
+  height: var(--brand-h);
   padding: 0;
+  overflow: hidden;
   background: transparent;
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  min-width: 0;
+  transition: width 240ms ease, height 240ms ease;
 }
 
-.brand-logo {
+/* Narrowing waits on the fade so the lockup is never chopped mid-transition. */
+.site-header.is-compact .brand {
+  transition: width 240ms ease 110ms, height 240ms ease;
+}
+
+.brand-logo,
+.brand-mark {
+  position: absolute;
+  top: 50%;
+  left: 0;
   display: block;
-  width: 100%;
-  height: auto;
+  width: auto;
+  height: 100%;
+  transform: translateY(-50%);
   filter:
     brightness(1.34)
     contrast(1.18)
-    drop-shadow(0 10px 22px rgba(0, 0, 0, 0.58))
-    drop-shadow(0 0 16px rgba(169, 201, 215, 0.18));
+    drop-shadow(0 3px 8px rgba(0, 0, 0, 0.55));
+}
+
+.brand-logo {
+  opacity: 1;
+  transition: opacity 190ms ease 130ms;
+}
+
+.brand-mark {
+  opacity: 0;
+  transition: opacity 130ms ease;
+}
+
+.site-header.is-compact .brand-logo {
+  opacity: 0;
+  transition: opacity 130ms ease;
+}
+
+.site-header.is-compact .brand-mark {
+  opacity: 1;
+  transition: opacity 190ms ease 130ms;
 }
 
 .header-persona,
@@ -107,11 +151,30 @@ p {
 }
 
 .header-persona {
+  position: relative;
+  z-index: 1;
   gap: 7px;
-  padding: 4px 6px;
+  padding: var(--persona-pad);
   border: 1px solid rgba(169, 201, 215, 0.12);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.035);
+  transition: gap 240ms ease, padding 240ms ease;
+}
+
+.header-persona .profile-photo-mini {
+  width: var(--persona-photo);
+  height: var(--persona-photo);
+  transition: width 240ms ease, height 240ms ease;
+}
+
+.header-persona .linkedin-link {
+  width: var(--persona-linkedin);
+  transition:
+    width 240ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .profile-photo-mini {
@@ -282,9 +345,12 @@ p {
 .nav-toggle {
   display: grid;
   flex: 0 0 auto;
+  /* stretch sizes this to the bar, so min-height is only a floor and must
+     stay under --brand-h or it drives the header height instead. */
+  align-self: stretch;
   margin-left: auto;
   width: 48px;
-  height: 38px;
+  min-height: 32px;
   place-items: center;
   align-content: center;
   gap: 5px;
@@ -1633,15 +1699,15 @@ body.nav-menu-open .sticky-booking-cta {
     padding-inline: 14px;
   }
 
-  .brand {
-    width: clamp(100px, 30vw, 118px);
+  .site-header.is-compact {
+    gap: 8px;
   }
 
   .header-persona {
     gap: 5px;
-    padding: 3px 4px;
   }
 
+  /* Sticky booking CTA only. The header photo is sized by --persona-photo. */
   .profile-photo-mini {
     width: 32px;
     height: 32px;
@@ -2336,7 +2402,13 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-header {
+  .site-header,
+  .site-header .brand,
+  .brand-logo,
+  .brand-mark,
+  .header-persona,
+  .header-persona .profile-photo-mini,
+  .header-persona .linkedin-link {
     transition: none;
   }
 }

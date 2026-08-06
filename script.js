@@ -4,7 +4,6 @@ const navToggle = document.querySelector(".nav-toggle");
 const nav = document.querySelector(".site-nav");
 const rodneyProfileImageUrl = "/assets/images/team/Rodney%20Smith.jpg";
 const rodneyLinkedInUrl = "https://www.linkedin.com/in/rodney-smith-profile";
-let lastHeaderScrollY = window.scrollY;
 let headerScrollTicking = false;
 
 function linkedInIconMarkup(className) {
@@ -41,35 +40,24 @@ function createHeaderPersona() {
   brand.insertAdjacentElement("afterend", persona);
 }
 
-function revealSiteHeader() {
-  siteHeader?.classList.remove("is-hidden");
-}
+// The header never hides. Past the fold it compacts and the SRS lockup
+// cross-fades to the S-mark, so Book a Call stays reachable the whole page.
+// The two thresholds are deliberately apart: a single one flickers when a
+// scroll settles right on the boundary.
+const HEADER_COMPACT_ENTER = 88;
+const HEADER_COMPACT_EXIT = 56;
 
-function siteHeaderShouldStayVisible() {
-  return (
-    !siteHeader ||
-    window.scrollY <= 96 ||
-    nav?.classList.contains("is-open") ||
-    document.body.classList.contains("booking-modal-open")
-  );
-}
-
-function updateSiteHeaderVisibility() {
+function updateSiteHeaderCompact() {
   if (!siteHeader) return;
 
   const currentScrollY = Math.max(window.scrollY, 0);
-  const scrollDelta = currentScrollY - lastHeaderScrollY;
+  const isCompact = siteHeader.classList.contains("is-compact");
 
-  if (siteHeaderShouldStayVisible()) {
-    revealSiteHeader();
-    lastHeaderScrollY = currentScrollY;
-    return;
+  if (!isCompact && currentScrollY > HEADER_COMPACT_ENTER) {
+    siteHeader.classList.add("is-compact");
+  } else if (isCompact && currentScrollY < HEADER_COMPACT_EXIT) {
+    siteHeader.classList.remove("is-compact");
   }
-
-  if (Math.abs(scrollDelta) < 8) return;
-
-  siteHeader.classList.toggle("is-hidden", scrollDelta > 0);
-  lastHeaderScrollY = currentScrollY;
 }
 
 function requestSiteHeaderUpdate() {
@@ -77,7 +65,7 @@ function requestSiteHeaderUpdate() {
 
   headerScrollTicking = true;
   window.requestAnimationFrame(() => {
-    updateSiteHeaderVisibility();
+    updateSiteHeaderCompact();
     headerScrollTicking = false;
   });
 }
@@ -94,7 +82,6 @@ if (navToggle && nav) {
     const isOpen = nav.classList.toggle("is-open");
     document.body.classList.toggle("nav-menu-open", isOpen);
     navToggle.setAttribute("aria-expanded", String(isOpen));
-    if (isOpen) revealSiteHeader();
   });
 
   nav.querySelectorAll("a").forEach((link) => {
@@ -115,6 +102,10 @@ document.addEventListener("keydown", (event) => {
 });
 
 window.addEventListener("scroll", requestSiteHeaderUpdate, { passive: true });
+
+// Deep links and restored scroll positions land mid-page, so settle the
+// state once at load rather than waiting for the first scroll event.
+updateSiteHeaderCompact();
 
 createHeaderPersona();
 
@@ -296,7 +287,6 @@ function openBookingModal(trigger) {
   bookingReturnTarget = trigger;
   bookingModal.hidden = false;
   document.body.classList.add("booking-modal-open");
-  revealSiteHeader();
   updateStickyBookingCta();
   bookingClose?.focus();
 }
