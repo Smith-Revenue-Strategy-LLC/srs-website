@@ -2412,3 +2412,312 @@ body.nav-menu-open .sticky-booking-cta {
     transition: none;
   }
 }
+
+/* ==========================================================================
+   BidStrike cross-surface components
+   --------------------------------------------------------------------------
+   Lime has exactly one job on this site: it marks a link that LEAVES for
+   bidstrike.cloud. Used nowhere else, it becomes a legend the visitor learns
+   in one glance. Do not reuse it as a generic accent.
+
+   NOTE: this stylesheet has no inline text-link style, so a bare <a> inside a
+   paragraph renders identical to the surrounding sentence and is effectively
+   invisible. Every outbound link below is a styled element for that reason.
+   ========================================================================== */
+
+:root {
+  --lime: #aef23f;
+  --lime-deep: #8ed420;
+  --lime-line: rgba(174, 242, 63, 0.42);
+  --lime-wash: rgba(174, 242, 63, 0.06);
+}
+
+/* --- wordmark ------------------------------------------------------------ */
+.bs-mark {
+  font-style: italic;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.bs-mark i {
+  font-style: italic;
+  color: var(--lime);
+}
+
+/* --- outbound link ------------------------------------------------------- */
+.bs-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--lime);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.4;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+
+.bs-link::after {
+  content: "\2197";
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.bs-link:hover,
+.bs-link:focus-visible {
+  border-bottom-color: var(--lime-line);
+}
+
+.bs-link .bs-mark {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.02rem;
+}
+
+/* --- outbound button ----------------------------------------------------- */
+.bs-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 18px;
+  border: 1px solid var(--lime-line);
+  border-radius: 999px;
+  background: var(--lime-wash);
+  color: var(--lime);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.bs-cta::after {
+  content: "\2197";
+  font-size: 1em;
+  line-height: 1;
+}
+
+.bs-cta:hover {
+  background: rgba(174, 242, 63, 0.12);
+  transform: translateY(-1px);
+  transition: transform 160ms ease, background 160ms ease;
+}
+
+/* --- keyline: marks any block that leads off-site ------------------------ */
+.bs-keyline {
+  border-left: 2px solid var(--lime);
+  padding-left: clamp(14px, 2vw, 20px);
+}
+
+/* --- ownership disclosure ------------------------------------------------ */
+.bs-disclose {
+  margin: 14px 0 0;
+  color: #7f93a0;
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
+/* --- live badge ---------------------------------------------------------- */
+.bs-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border: 1px solid rgba(127, 199, 154, 0.3);
+  border-radius: 3px;
+  color: var(--green);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+/* --- home page proof band ------------------------------------------------ */
+.bs-band {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(18px, 3vw, 34px);
+  margin: 0 clamp(18px, 5vw, 72px);
+  padding: clamp(22px, 3vw, 30px);
+  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
+  border-radius: 8px;
+}
+
+.bs-band-copy {
+  flex: 1 1 min(420px, 100%);
+}
+
+.bs-band h2 {
+  margin: 0 0 8px;
+  font-size: clamp(1.35rem, 2.4vw, 1.9rem);
+  line-height: 1.18;
+}
+
+.bs-band p {
+  margin: 0;
+  max-width: 56ch;
+}
+
+.bs-band-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  flex: 0 1 auto;
+}
+
+/* --- results case block -------------------------------------------------- */
+.bs-case {
+  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
+  border-radius: 8px;
+  padding: clamp(22px, 4vw, 34px);
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+}
+
+.bs-case h3 {
+  margin: 0 0 12px;
+}
+
+.bs-case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: clamp(14px, 2vw, 24px);
+  margin: 24px 0;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.bs-case-grid p {
+  margin: 0;
+}
+
+.bs-case-grid .terminal-label {
+  margin-bottom: 8px;
+  font-size: 0.68rem;
+}
+
+.bs-case-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* --- footer block --------------------------------------------------------
+   Scoped under .site-footer on purpose: `.site-footer > div` sets
+   `flex: 1 1 auto` and out-specifies a bare `.bs-footer-block`, which would
+   make this column grow and shove the privacy link off the row. */
+.site-footer .bs-footer-block {
+  flex: 0 1 auto;
+  align-self: center;
+}
+
+.bs-footer-block .bs-footer-kicker {
+  margin: 0 0 6px;
+  color: #7f93a0;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.bs-footer-block .bs-link {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.9rem;
+}
+
+.bs-footer-block .bs-footer-tag {
+  color: #7f93a0;
+  font-weight: 500;
+}
+
+/* --- responsive ---------------------------------------------------------- */
+@media (max-width: 760px) {
+  .bs-band {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bs-band-actions {
+    width: 100%;
+  }
+
+  .site-footer .bs-footer-block {
+    align-self: flex-start;
+  }
+
+  .bs-footer-block .bs-link {
+    flex-wrap: wrap;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bs-cta:hover {
+    transform: none;
+  }
+}
+
+/* --- about page: "What I've Built" tray -----------------------------------
+   Scoped overrides. `.advisor-links a` (0,1,1) sets the green pill treatment
+   and out-specifies a bare `.bs-link`, and `.resource-grid` is a 2-up that
+   would leave a hole next to a single card. */
+#built-tray .resource-grid {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.advisor-links a.bs-link {
+  padding: 7px 13px;
+  color: var(--lime);
+  background: var(--lime-wash);
+  border: 1px solid var(--lime-line);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.advisor-links a.bs-link:hover,
+.advisor-links a.bs-link:focus-visible {
+  background: rgba(174, 242, 63, 0.14);
+  border-color: rgba(174, 242, 63, 0.62);
+}
+
+.bs-card-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.bs-mark-lg {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1.1;
+}
+
+/* --- is-this-you: third situation card ------------------------------------
+   The grid was a fixed 2-up built for two cards. auto-fit lets the third sit
+   beside them on desktop and fold at tablet width; the existing mobile query
+   still forces a single column. Grouped here so reverting this branch
+   restores the 2-up. */
+.situation-grid {
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+/* --- faq: outbound link sits under the answer paragraph ------------------ */
+.faq-list details .bs-link {
+  margin-top: 4px;
+}
+
+/* .situation-card is a grid container, so an inline-flex child gets blockified
+   and stretches the full track. The gold pill escapes this via
+   `.situation-card .button { width: fit-content }`; .bs-cta is not a .button,
+   so it needs the same treatment or it renders as a full-width slab next to a
+   compact neighbour. */
+.situation-card .bs-cta {
+  width: fit-content;
+  margin-top: 2px;
+}
