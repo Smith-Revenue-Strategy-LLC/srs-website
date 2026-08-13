@@ -2870,3 +2870,167 @@ body.nav-menu-open .sticky-booking-cta {
     transition: none;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Events page: agenda retrospective, leave-behind proof, room photo strip.
+   Added 2026-08-12. Reuses the existing card language (.event-audience-grid
+   article) on purpose; these rules only add what did not already exist.
+   Gold = a human acts. Green = the system works. Never both on one element.
+   --------------------------------------------------------------------------- */
+
+.event-agenda {
+  margin-top: 42px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(169, 201, 215, 0.13);
+}
+
+.event-agenda h3 {
+  margin: 6px 0 26px;
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+}
+
+.event-agenda-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px;
+}
+
+.event-agenda-grid h4 {
+  margin: 0 0 14px;
+  color: var(--green);
+  font-size: 0.82rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.event-agenda-grid ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.event-agenda-grid li {
+  padding: 10px 0;
+  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.event-agenda-grid li span {
+  display: inline-block;
+  min-width: 58px;
+  color: var(--teal);
+  font-variant-numeric: tabular-nums;
+}
+
+.event-agenda-spine {
+  max-width: 68ch;
+  margin: 26px 0 0;
+}
+
+.event-agenda-spine strong {
+  color: var(--green);
+  letter-spacing: 0.04em;
+}
+
+.leavebehind-grid {
+  margin-bottom: 34px;
+}
+
+.event-figure {
+  margin: 0 0 34px;
+  max-width: 420px;
+}
+
+.event-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+
+.event-figure figcaption,
+.event-photo-strip figcaption {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.event-comingsoon {
+  padding: 26px 28px;
+  border: 1px solid rgba(240, 207, 115, 0.34);
+  border-radius: var(--radius);
+  background: var(--panel-strong);
+}
+
+.event-comingsoon h3 {
+  margin: 8px 0 12px;
+  font-size: clamp(1.2rem, 2.1vw, 1.6rem);
+}
+
+.event-comingsoon p {
+  max-width: 68ch;
+  margin: 0;
+}
+
+.event-comingsoon-tag {
+  margin-top: 16px !important;
+  color: var(--gold);
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.event-photo-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.event-photo-strip figure {
+  margin: 0;
+}
+
+.event-photo-strip img {
+  display: block;
+  width: 100%;
+  height: 210px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+
+@media (max-width: 900px) {
+  .event-agenda-grid,
+  .event-photo-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .event-photo-strip img {
+    height: auto;
+  }
+
+  .event-figure {
+    max-width: 100%;
+  }
+}
+
+/* Band separation for the two new events sections. These are modifiers on
+   .section; they exist so the leave-behind proof and the room photos read as
+   distinct bands instead of blending into the overview above them. */
+.event-leavebehind-section {
+  border-top: 1px solid rgba(169, 201, 215, 0.08);
+}
+
+.event-room-section {
+  background: rgba(3, 9, 21, 0.36);
+  border-block: 1px solid rgba(169, 201, 215, 0.08);
+}
+
+/* The next-step grid inherits .event-audience-grid; it only needs breathing
+   room above the button row. */
+.event-next-grid {
+  margin-bottom: 30px;
+}
