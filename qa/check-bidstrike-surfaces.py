@@ -16,6 +16,7 @@ import html
 import json
 import os
 import re
+import struct
 import sys
 from html.parser import HTMLParser
 
@@ -375,6 +376,67 @@ def _():
                     "`width: fit-content` override" % (page, host)
                 )
     notes.append("grid-hosted cta pairs checked: %s" % (sorted(set(checked)) or "none"))
+    return bad
+
+
+# --------------------------------------------------------------------------
+# 11. The wordmark is the real logo art, never type faking it.
+# Until 2026-08-12 every display use of the name was `<span class="bs-mark">
+# Bid<i>Strike</i></span>` - Inter in bold italic with the "Strike" half tinted
+# lime. It approximated the logo and matched it nowhere: wrong letterforms,
+# wrong slant, and no strike blade at all. The art now ships instead. This
+# check exists so nobody reintroduces the text stand-in one placement at a
+# time, and so the img keeps the alt text that carries the name to screen
+# readers and search once the word itself is gone from the markup.
+# --------------------------------------------------------------------------
+LOGO_SRC = "/assets/images/brand/bidstrike-logo-white.png"
+
+
+@check("every display wordmark is the logo art, with alt text")
+def _():
+    bad = []
+    css = read("styles.css")
+
+    if ".bs-mark" in css:
+        bad.append("styles.css still defines .bs-mark (the type stand-in)")
+
+    found = 0
+    for page in PAGES:
+        src = read(page)
+        if "bs-mark" in src:
+            bad.append("%s: still renders the .bs-mark type stand-in" % page)
+        for tag in re.findall(r"<img\b[^>]*\bbs-logo\b[^>]*>", src):
+            found += 1
+            attrs = dict(ATTR_RE.findall(tag))
+            if attrs.get("src") != LOGO_SRC:
+                bad.append("%s: bs-logo src is %r, expected %r"
+                           % (page, attrs.get("src"), LOGO_SRC))
+            if attrs.get("alt") != "BidStrike":
+                bad.append('%s: bs-logo alt is %r, expected "BidStrike" - the '
+                           "brand name only reaches a screen reader through alt "
+                           "now that the text is gone" % (page, attrs.get("alt")))
+            if not (attrs.get("width") and attrs.get("height")):
+                bad.append("%s: bs-logo has no width/height, so the row reflows "
+                           "when the art loads" % page)
+
+    # The art file has to exist and match the attributes, or every placement
+    # renders at the wrong aspect (or as a broken-image icon).
+    if not os.path.exists(LOGO_SRC.lstrip("/")):
+        bad.append("missing asset %s" % LOGO_SRC)
+    else:
+        with open(LOGO_SRC.lstrip("/"), "rb") as fh:
+            head = fh.read(33)
+        if head[:8] != b"\x89PNG\r\n\x1a\n":
+            bad.append("%s is not a PNG" % LOGO_SRC)
+        else:
+            w, h = struct.unpack(">II", head[16:24])
+            if (w, h) != (640, 108):
+                bad.append("%s is %dx%d; the markup declares 640x108"
+                           % (LOGO_SRC, w, h))
+
+    notes.append("bs-logo placements: %d across %d pages" % (found, len(PAGES)))
+    if found < 13:
+        bad.append("only %d bs-logo placements; 13 shipped on 2026-08-12" % found)
     return bad
 
 

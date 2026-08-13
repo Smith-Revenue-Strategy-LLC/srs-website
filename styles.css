@@ -53,8 +53,18 @@ p {
 }
 
 .site-header {
-  --brand-w: 93px;
-  --brand-h: 40px;
+  /* The wordmark block is the alignment anchor, not the other way round: the
+     lockup is sized so its top edge lands on the top of "Smith Revenue
+     Strategy" and its bottom edge on the bottom of the tagline. Both heights
+     read from these tokens, so retyping the wordmark re-justifies the logo
+     instead of quietly breaking the alignment. */
+  --wm-name: 0.94rem;
+  --wm-tag: 0.6rem;
+  --wm-leading: 1.1;
+  --wm-gap: 2px;
+  --brand-h: calc((var(--wm-name) + var(--wm-tag)) * var(--wm-leading) + var(--wm-gap));
+  /* srs-lettermark.png is full-bleed ink at 360x155, so box height IS ink height. */
+  --brand-w: calc(var(--brand-h) * 360 / 155);
   --persona-photo: 32px;
   --persona-linkedin: 28px;
   --persona-pad: 3px 5px;
@@ -2432,18 +2442,22 @@ body.nav-menu-open .sticky-booking-cta {
   --lime-wash: rgba(174, 242, 63, 0.06);
 }
 
-/* --- wordmark ------------------------------------------------------------ */
-.bs-mark {
-  font-style: italic;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--ink);
-  white-space: nowrap;
-}
+/* --- wordmark -------------------------------------------------------------
+   Every display use of the name is the real logo art, not Inter faking it in
+   bold italic. The art is white letters plus the lime strike, so it only ever
+   sits on the dark surfaces (band, footer, about tray, lime CTA).
 
-.bs-mark i {
-  font-style: italic;
-  color: var(--lime);
+   Sizing: the letterforms occupy the top 233 of the art's 261px and the strike
+   drops the rest below their baseline. Inter's cap height is 0.727em, so
+   0.82em of art puts the logo's caps at the same height as the type it sits
+   next to, and the -0.09em bottom margin pulls the strike's overhang back so
+   the LETTER baseline is what aligns - in a text line and in a flex row, since
+   a replaced element's baseline is its bottom margin edge either way. */
+.bs-logo {
+  display: inline-block;
+  width: auto;
+  height: 0.82em;
+  margin-bottom: -0.09em;
 }
 
 /* --- outbound link ------------------------------------------------------- */
@@ -2471,8 +2485,7 @@ body.nav-menu-open .sticky-booking-cta {
   border-bottom-color: var(--lime-line);
 }
 
-.bs-link .bs-mark {
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+.bs-link .bs-logo {
   font-size: 1.02rem;
 }
 
@@ -2579,9 +2592,8 @@ body.nav-menu-open .sticky-booking-cta {
   margin: 0 0 14px;
 }
 
-.bs-band-kicker .bs-mark {
+.bs-band-kicker .bs-logo {
   font-size: 1.24rem;
-  line-height: 1;
 }
 
 .bs-band-kicker span {
@@ -2736,9 +2748,8 @@ body.nav-menu-open .sticky-booking-cta {
   margin-bottom: 14px;
 }
 
-.bs-mark-lg {
+.bs-logo-lg {
   font-size: clamp(1.5rem, 3vw, 2rem);
-  line-height: 1.1;
 }
 
 /* --- is-this-you: third situation card ------------------------------------
@@ -2795,7 +2806,7 @@ body.nav-menu-open .sticky-booking-cta {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 2px;
+  gap: var(--wm-gap);
   flex: 0 1 auto;
   min-width: 0;
   max-width: 320px;
@@ -2811,20 +2822,20 @@ body.nav-menu-open .sticky-booking-cta {
 
 .brand-words strong {
   color: var(--ink);
-  font-size: 0.94rem;
+  font-size: var(--wm-name);
   font-weight: 700;
   letter-spacing: 0.01em;
-  line-height: 1.1;
+  line-height: var(--wm-leading);
 }
 
 .brand-words small {
   color: var(--teal);
   font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 0.6rem;
+  font-size: var(--wm-tag);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  line-height: 1.1;
+  line-height: var(--wm-leading);
 }
 
 /* Fade first, then collapse the space, so the text never squeezes mid-run. */
@@ -2843,6 +2854,13 @@ body.nav-menu-open .sticky-booking-cta {
 @media (max-width: 900px) {
   .brand-words {
     display: none;
+  }
+
+  /* No wordmark left to justify against, so the lockup goes back to carrying
+     the row on its own instead of staying shrunk to a phantom text block. */
+  .site-header {
+    --brand-h: 40px;
+    --brand-w: calc(var(--brand-h) * 360 / 155);
   }
 }
 
