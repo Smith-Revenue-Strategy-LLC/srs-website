@@ -133,32 +133,37 @@
     </script>
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="Smith Revenue Strategy home">
-        <img class="brand-logo" src="/assets/images/brand/srs-lettermark.png" alt="" width="360" height="155">
-        <img class="brand-mark" src="/assets/images/brand/srs-mark.png" alt="" width="144" height="176">
-      </a>
-      <span class="brand-words" aria-hidden="true">
-        <strong>Smith Revenue Strategy</strong>
-        <small>Unlock AI-Enabled Growth</small>
-      </span>
-      <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
-        <span></span>
-        <span></span>
-      </button>
-      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
-        <a href="/">Home</a>
-        <div class="nav-menu">
-          <span class="nav-menu-heading">Working Together</span>
-          <div class="nav-submenu" aria-label="Working Together pages">
-            <a href="/work-together">How It Works</a>
-            <a href="/results">Results</a>
-            <a href="/faq">FAQ</a>
-          </div>
-        </div>
+    <header class="site-header" data-header>
+      <div class="nav-wrap">
+        <a class="brand" href="/" aria-label="Smith Revenue Strategy home">
+          <img class="brand-logo" src="/assets/images/brand/srs-lettermark.png" alt="" width="360" height="155">
+          <img class="brand-mark" src="/assets/images/brand/srs-mark.png" alt="" width="144" height="176">
+          <span class="brand-words" aria-hidden="true">
+            <strong>Smith Revenue Strategy</strong>
+            <small>Unlock AI-Enabled Growth</small>
+          </span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="/work-together">How It Works</a></li>
+          <li><a href="/sled-radar">SLED Radar</a></li>
+          <li><a href="/results">Results</a></li>
+          <li><a href="/events">Events</a></li>
+          <li><a href="/about" aria-current="page">About</a></li>
+          <li><a href="/faq">FAQ</a></li>
+        </ul>
+        <div class="nav-spacer"></div>
+        <a class="btn btn-amber btn-sm nav-cta" href="/contact" data-booking-open>Book a Call</a>
+        <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <nav class="site-nav mobile-nav" id="site-nav" aria-label="Primary">
+        <a href="/work-together">How It Works</a>
+        <a href="/sled-radar">SLED Radar</a>
+        <a href="/results">Results</a>
         <a href="/events">Events</a>
-        <a href="/about">About</a>
-        <a class="nav-cta" href="/contact" data-booking-open>Book a Call</a>
+        <a href="/about" aria-current="page">About</a>
+        <a href="/faq">FAQ</a>
       </nav>
     </header>
 
@@ -226,7 +231,7 @@
           <article class="resource-card">
             <img class="person-photo" src="/assets/images/team/Brian%20McKee.jpg" alt="Brian McKee">
             <h3>Brian L. McKee</h3>
-            <p class="advisor-role">Head of Sales, Global Strategic Accounts · Honeywell Technologies</p>
+            <p class="advisor-role">Head of Sales, Global Strategic Accounts - Honeywell Technologies</p>
             <ul class="advisor-details">
               <li>Nearly 30 years in sales and go-to-market leadership across enterprise, mid-market, SMB, and channel.</li>
               <li>Former VP of Sales at Zebra Technologies, where he built a 112-person global inside sales organization from scratch.</li>
@@ -246,7 +251,7 @@
           <article class="resource-card">
             <img class="person-photo" src="/assets/images/team/Eric%20Swan.jpg" alt="Eric Swan">
             <h3>Eric Swan, DBA</h3>
-            <p class="advisor-role">Clinical Associate Professor of Marketing · Baylor University</p>
+            <p class="advisor-role">Clinical Associate Professor of Marketing - Baylor University</p>
             <ul class="advisor-details">
               <li>Faculty member and sales coach in Baylor's ProSales program.</li>
               <li>Named to Baylor's Outstanding Non-Tenure Track Award for 2023-24.</li>
@@ -266,7 +271,7 @@
           <article class="resource-card">
             <img class="person-photo" src="/assets/images/team/Andrew%20Mulford.jpg" alt="Andrew Mulford">
             <h3>Andrew Mulford</h3>
-            <p class="advisor-role">Founder & CEO · One Life Group</p>
+            <p class="advisor-role">Founder & CEO - One Life Group</p>
             <ul class="advisor-details">
               <li>Executive coach to owners, CEOs, and second-in-commands.</li>
               <li>Runs CEO peer advisory groups and strategic planning for privately held businesses.</li>
@@ -286,7 +291,7 @@
           <article class="resource-card">
             <img class="person-photo" src="/assets/images/team/Micah%20Lamb.jpg" alt="Micah Lamb">
             <h3>Micah Lamb, MBA</h3>
-            <p class="advisor-role">Assistant VP, IT Projects & Governance · Baylor University</p>
+            <p class="advisor-role">Assistant VP, IT Projects & Governance - Baylor University</p>
             <ul class="advisor-details">
               <li>25 years at Baylor, from web developer up to AVP.</li>
               <li>Owns IT governance and the university's technology project portfolio.</li>
@@ -396,7 +401,7 @@
         <div class="resource-grid">
           <article class="resource-card bs-keyline">
             <div class="bs-card-head">
-              <img class="bs-logo bs-logo-lg" src="/assets/images/brand/bidstrike-logo-white.png" alt="BidStrike" width="640" height="108">
+              <img class="bs-logo bs-logo-lg" src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
               <span class="bs-badge">LIVE</span>
             </div>
             <p class="advisor-role">bidstrike.cloud &middot; Built and owned by Rodney Smith</p>
@@ -427,7 +432,7 @@
       <div class="bs-footer-block">
         <p class="bs-footer-kicker">Also built here</p>
         <a class="bs-link" href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">
-          <img class="bs-logo" src="/assets/images/brand/bidstrike-logo-white.png" alt="BidStrike" width="640" height="108">
+          <img class="bs-logo" src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
           <span class="bs-footer-tag">The bid desk for contractors</span>
         </a>
       </div>

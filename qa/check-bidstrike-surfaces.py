@@ -173,7 +173,12 @@ def _():
 # --------------------------------------------------------------------------
 @check("nav row untouched: no bidstrike link in site navigation")
 def _():
-    nav_re = re.compile(r'<nav class="site-nav".*?</nav>', re.S)
+    # 2026-08-19: was r'<nav class="site-nav"' which demanded that be the ONLY class.
+    # The flat top nav carries `class="site-nav mobile-nav"`, so the old pattern
+    # matched nothing and the check reported "no site-nav found" on every page -
+    # a gate failing on its own brittleness, not on a real defect. Match site-nav
+    # as one class among several.
+    nav_re = re.compile(r'<nav[^>]*\bclass="[^"]*\bsite-nav\b[^"]*".*?</nav>', re.S)
     bad = []
     counts = set()
     for page in PAGES:
@@ -389,7 +394,16 @@ def _():
 # time, and so the img keeps the alt text that carries the name to screen
 # readers and search once the word itself is gone from the markup.
 # --------------------------------------------------------------------------
-LOGO_SRC = "/assets/images/brand/bidstrike-logo-white.png"
+# 2026-08-19: the site inverted from a DARK theme to the light BidStrike-family
+# theme, so the correct art in the MARKUP flipped. The dark-ink cut is now the
+# default because most surfaces are light; the two navy islands (.bs-band and the
+# footer) swap to the white cut in CSS via `content: url()`, and the lime CTA
+# keeps the dark art via a more-specific override. This gate asserts the MARKUP
+# default only - it cannot see the CSS swap, so do not "fix" a navy surface by
+# changing its <img src>.
+# Before this date the expectation was bidstrike-logo-white.png, which was right
+# for the dark site and became a stale assertion the moment the theme changed.
+LOGO_SRC = "/assets/images/brand/bidstrike-logo.png"
 
 
 @check("every display wordmark is the logo art, with alt text")
@@ -430,9 +444,34 @@ def _():
             bad.append("%s is not a PNG" % LOGO_SRC)
         else:
             w, h = struct.unpack(">II", head[16:24])
-            if (w, h) != (640, 108):
-                bad.append("%s is %dx%d; the markup declares 640x108"
-                           % (LOGO_SRC, w, h))
+            # 2026-08-19: this compared the PNG against a HARDCODED (640, 108).
+            # That is a snapshot, not an invariant - it went stale the moment the
+            # light-theme restyle swapped the white cut for the dark one, and it
+            # would go stale again on any future art change. What actually matters
+            # is that the intrinsic size DECLARED IN THE MARKUP matches the real
+            # file, because a mismatch is what causes cumulative layout shift.
+            # So: read the declared dims off the pages and compare to the file.
+            declared = set()
+            for _pg in PAGES:
+                with open(_pg, encoding="utf-8") as _fh:
+                    _src = _fh.read()
+                for _tag in re.findall(r"<img[^>]*>", _src):
+                    if LOGO_SRC not in _tag:
+                        continue
+                    _mw = re.search(r'width="(\d+)"', _tag)
+                    _mh = re.search(r'height="(\d+)"', _tag)
+                    if _mw and _mh:
+                        declared.add((int(_mw.group(1)), int(_mh.group(1))))
+            if not declared:
+                bad.append("no <img> declares width/height for %s" % LOGO_SRC)
+            elif len(declared) > 1:
+                bad.append("%s is declared at %d different sizes across the site: %s"
+                           % (LOGO_SRC, len(declared), sorted(declared)))
+            elif declared != {(w, h)}:
+                d = sorted(declared)[0]
+                bad.append("%s is %dx%d but the markup declares %dx%d "
+                           "(intrinsic-size mismatch causes layout shift)"
+                           % (LOGO_SRC, w, h, d[0], d[1]))
 
     notes.append("bs-logo placements: %d across %d pages" % (found, len(PAGES)))
     if found < 13:

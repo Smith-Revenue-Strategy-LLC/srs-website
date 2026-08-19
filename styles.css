@@ -1,25 +1,103 @@
+/* SRS marketing site - light theme, shared design language with bidstrike.cloud.
+   Restyled 2026-08-18 from the previous dark theme: cream on near-black, serif
+   headings, gold/green accents. All three are gone.
+   Read this block before changing any colour below.
+
+   THE TWO-ACCENT RULE (kept from the dark theme, re-mapped for a light ground):
+     LIME  #aef23f = "the system works". Machine output, automated steps,
+                     process rails, BidStrike product surfaces.
+     AMBER #b45309 = "a human acts". Every primary CTA. Book a Call is AMBER.
+   Do not collapse these into one accent and do not make an SRS CTA lime.
+
+   HOW LIME SURVIVES A LIGHT GROUND. Lime on white is 1.35:1, so it can never
+   carry text or meaning on its own here. On light, lime is a FILL (with navy
+   text sitting on it, 13.1:1) or a rule/rail anchored by a darker edge. Lime
+   TEXT only appears on the navy islands, where it reads at 13.1:1.
+   A "system" LABEL is therefore navy-600 text carrying a lime mark, never
+   lime text. Same signal, readable.
+
+   NAVY ISLANDS are deliberate, not leftovers. The hero visual, the featured
+   cards, the event hero, the BidStrike band and the footer stay dark so the
+   page has depth and so lime has somewhere to be itself. #flow-canvas paints
+   its own #020711 ground from script.js, so .hero-visual could not go light
+   even if we wanted it to. */
+
+@font-face {
+  font-family: "Geist";
+  src: url("/assets/fonts/Geist-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 :root {
-  color-scheme: dark;
-  --ink: #f7f5f0;
-  --muted: #adc4cf;
-  --paper: #030915;
-  --white: #ffffff;
-  --green-rgb: 120, 178, 148;
-  --line: rgba(169, 201, 215, 0.16);
-  --charcoal: #030915;
-  --panel: rgba(9, 24, 39, 0.68);
-  --panel-strong: rgba(11, 31, 48, 0.78);
-  --panel-soft: rgba(12, 29, 45, 0.5);
-  --teal: #a9c9d7;
-  --green: #7fc79a;
-  --amber: #fff19b;
-  --gold: #f0cf73;
-  --gold-deep: #b9871e;
-  --orange: #7fc79a;
-  --violet: #1a8f54;
-  --shadow: 0 26px 90px rgba(0, 0, 0, 0.34);
+  color-scheme: light;
+
+  /* -- canonical tokens, identical to bidstrike.cloud -------------------- */
+  --canvas: #f4f6fb;
+  --canvas-2: #eaeef6;
+  --card: #ffffff;
+  --ink: #0d1733;
+  --ink-soft: #495777;
+  /* --ink-faint is 3.76:1 on white. It is a UI/decoration tone ONLY.
+     It must never carry body copy. Use --ink-soft (7.21:1) for that. */
+  --ink-faint: #7784a0;
+  --line: rgba(13, 23, 51, 0.1);
+  --line-soft: rgba(13, 23, 51, 0.06);
+  --navy-500: #3a57ad;
+  --navy-600: #274088;
+  --navy-700: #1b2f66;
+  --navy-800: #13224b;
+  --navy-850: #101d40;
+  --navy-900: #0d1733;
+  --navy-950: #080f24;
+  --lime: #aef23f;
+  --lime-bright: #c8ff63;
+  --lime-deep: #8ed420;
+  --amber: #b45309;
+  --amber-hover: #92400e;
+  --maxw: 1200px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+
+  /* -- the two accents, named by what they MEAN ------------------------- */
+  --system: var(--navy-600);      /* text that labels machine output */
+  --system-mark: var(--lime);     /* the graphic that carries the lime */
+  --action: var(--amber);         /* CTA fill, white text on it (5.02:1) */
+  /* Amber as TEXT: #b45309 is 4.32:1 on --canvas-2, under AA. The darker
+     tone clears 6.1:1 on every ground we ship, so amber text uses this. */
+  --action-text: var(--amber-hover);
+
+  /* -- on the navy islands ---------------------------------------------- */
+  --on-navy: #ffffff;
+  --on-navy-soft: #c3cfeb;        /* 11.3:1 on --navy-900 */
+  --line-on-navy: rgba(174, 203, 255, 0.16);
+
+  /* -- surfaces ---------------------------------------------------------- */
+  --wash: rgba(13, 23, 51, 0.035);  /* faint inset tile on a white card */
+  --shadow: 0 1px 2px rgba(13, 23, 51, 0.04), 0 18px 40px -26px rgba(8, 15, 36, 0.28);
+  --shadow-lg: 0 1px 2px rgba(13, 23, 51, 0.05), 0 26px 50px -24px rgba(8, 15, 36, 0.34);
   --radius: 8px;
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  /* -- legacy names kept because ~100 call sites read them. Each one now
+        resolves to the LIGHT-theme equivalent of what it used to mean. ---- */
+  --paper: var(--canvas);
+  --white: #ffffff;
+  --muted: var(--ink-soft);       /* was #adc4cf secondary text */
+  --teal: var(--navy-600);        /* was #a9c9d7 accent text */
+  --green: var(--navy-600);       /* was the "system" text colour */
+  --green-rgb: 39, 64, 136;       /* navy-600, for washes/dividers only */
+  --gold: var(--amber);           /* was #f0cf73, the CTA */
+  --amber-pale: rgba(180, 83, 9, 0.14);
+
+  /* REMOVED, not renamed: --orange (#7fc79a) and --violet (#1a8f54) were both
+     greens wearing the wrong name, plus --charcoal, --panel, --panel-soft and
+     --gold-deep. All six had ZERO references in this stylesheet, in any .html,
+     and in script.js, so they were dead tokens carrying a false label. Renaming
+     them would have preserved a lie about the palette; they are deleted.
+     --panel-strong WAS live (one use, .event-comingsoon) and that call site now
+     reads var(--card). */
+
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
 * {
@@ -33,10 +111,10 @@ html {
 body {
   margin: 0;
   background:
-    radial-gradient(circle at 18% 8%, rgba(56, 104, 137, 0.22), transparent 34vw),
-    radial-gradient(circle at 86% 14%, rgba(127, 199, 154, 0.12), transparent 30vw),
-    linear-gradient(145deg, rgba(14, 32, 51, 0.74), rgba(3, 9, 21, 0.98) 42%, rgba(3, 8, 15, 1)),
-    var(--paper);
+    radial-gradient(circle at 18% 8%, rgba(58, 87, 173, 0.07), transparent 34vw),
+    radial-gradient(circle at 86% 14%, rgba(174, 242, 63, 0.055), transparent 30vw),
+    linear-gradient(180deg, #ffffff, var(--canvas) 30%, var(--canvas));
+  background-color: var(--canvas);
   background-attachment: fixed;
   color: var(--ink);
   overflow-x: hidden;
@@ -71,13 +149,10 @@ p {
   position: sticky;
   top: 0;
   z-index: 20;
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 18px;
+  display: block;
   padding: 12px clamp(18px, 4vw, 56px);
-  background: rgba(3, 9, 21, 0.74);
-  border-bottom: 1px solid rgba(169, 201, 215, 0.1);
+  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid var(--line);
   backdrop-filter: blur(20px);
   transition:
     gap 240ms ease,
@@ -92,30 +167,31 @@ p {
   --persona-photo: 26px;
   --persona-linkedin: 24px;
   --persona-pad: 3px 4px;
-  gap: 14px;
   padding-block: 6px;
-  background: rgba(3, 9, 21, 0.88);
+  background: rgba(255, 255, 255, 0.95);
 }
 
 .brand {
   position: relative;
   z-index: 0;
-  display: block;
+  display: inline-flex;
+  align-items: center;
   flex: 0 0 auto;
-  width: var(--brand-w);
+  min-width: var(--brand-w);
   height: var(--brand-h);
-  padding: 0;
-  overflow: hidden;
+  /* the leading slot the absolutely-positioned lockup art occupies */
+  padding: 0 0 0 var(--brand-w);
+  overflow: visible;
   background: transparent;
   border: 0;
   border-radius: 0;
   box-shadow: none;
-  transition: width 240ms ease, height 240ms ease;
+  transition: padding-left 240ms ease, height 240ms ease;
 }
 
 /* Narrowing waits on the fade so the lockup is never chopped mid-transition. */
 .site-header.is-compact .brand {
-  transition: width 240ms ease 110ms, height 240ms ease;
+  transition: padding-left 240ms ease 110ms, height 240ms ease;
 }
 
 .brand-logo,
@@ -125,12 +201,15 @@ p {
   left: 0;
   display: block;
   width: auto;
+  max-width: none;
   height: 100%;
   transform: translateY(-50%);
-  filter:
-    brightness(1.34)
-    contrast(1.18)
-    drop-shadow(0 3px 8px rgba(0, 0, 0, 0.55));
+  /* Both files are monochrome art cut for the old near-black bar:
+     srs-lettermark.png is near-white (mean ink 183/255) and would vanish here,
+     srs-mark.png is a mid grey (138/255) and washes out. brightness(0) flattens
+     each to solid ink while keeping the alpha, so the lockup and the compact
+     mark read the same weight on the light bar. Measured, not guessed. */
+  filter: brightness(0);
 }
 
 .brand-logo {
@@ -165,9 +244,9 @@ p {
   z-index: 1;
   gap: 7px;
   padding: var(--persona-pad);
-  border: 1px solid rgba(169, 201, 215, 0.12);
+  border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.035);
+  background: var(--canvas);
   transition: gap 240ms ease, padding 240ms ease;
 }
 
@@ -192,9 +271,9 @@ p {
   width: 36px;
   height: 36px;
   flex: 0 0 auto;
-  border: 1px solid rgba(169, 201, 215, 0.2);
+  border: 1px solid rgba(13, 23, 51, 0.18);
   border-radius: 50%;
-  background: #020711;
+  background: var(--canvas-2);
   object-fit: cover;
   object-position: center;
   box-shadow: 0 0 18px rgba(var(--green-rgb), 0.12);
@@ -205,9 +284,9 @@ p {
   place-items: center;
   width: 32px;
   aspect-ratio: 1;
-  border: 1px solid rgba(169, 201, 215, 0.15);
+  border: 1px solid var(--line);
   border-radius: 50%;
-  background: rgba(169, 201, 215, 0.06);
+  background: var(--wash);
   color: var(--teal);
   font-size: 0.76rem;
   font-weight: 900;
@@ -221,40 +300,199 @@ p {
 
 .linkedin-link:hover,
 .linkedin-link:focus-visible {
-  background: rgba(169, 201, 215, 0.12);
-  border-color: rgba(169, 201, 215, 0.28);
+  background: rgba(13, 23, 51, 0.12);
+  border-color: rgba(13, 23, 51, 0.18);
   color: var(--ink);
   transform: translateY(-1px);
 }
 
 .linkedin-link:focus-visible {
-  outline: 2px solid rgba(127, 199, 154, 0.72);
+  outline: 2px solid var(--navy-600);
   outline-offset: 3px;
 }
 
-.site-nav {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: clamp(18px, 4vw, 56px);
-  display: none;
-  min-width: min(320px, calc(100vw - 36px));
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  padding: 16px;
-  background: rgba(5, 13, 26, 0.94);
-  border: 1px solid rgba(169, 201, 215, 0.12);
-  border-radius: 4px;
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(22px);
-  color: var(--teal);
-  font-size: 0.86rem;
-}
+/* ==========================================================================
+   TOP NAV
+   --------------------------------------------------------------------------
+   Flat horizontal bar, matching bidstrike.cloud. The open/closed state is
+   driven ENTIRELY by what script.js sets, which was read before this was
+   written (script.js lines 4, 78-87):
+     - it resolves the panel as `.site-nav` (a CLASS, not the #site-nav id)
+     - it toggles `.is-open` on that element
+     - it toggles `nav-menu-open` on <body>
+     - it sets aria-expanded on `.nav-toggle`
+   Every selector below keys off one of those four. Do not switch any of them
+   to an id selector and do not rename them.
 
-.site-nav.is-open {
+   The desktop row and the panel are mutually exclusive by BREAKPOINT, not by
+   an !important: above 1080px the rule that reveals the panel does not exist,
+   so a stale `.is-open` cannot leave it hanging open.
+   ========================================================================== */
+
+.nav-wrap {
   display: flex;
+  align-items: center;
+  gap: 18px;
 }
 
+.site-header.is-compact .nav-wrap {
+  gap: 14px;
+}
+
+.nav-spacer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* --- desktop link row ---------------------------------------------------- */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+  margin: 0 0 0 4px;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-links a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: color 140ms ease, background 140ms ease;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+  background: rgba(13, 23, 51, 0.05);
+}
+
+/* "You are here" is system state, so the mark is lime. The ink and background
+   also change, so the state never depends on the lime alone - lime is 1.35:1
+   on this ground and could not carry it. */
+.nav-links a[aria-current="page"],
+.nav-links a.is-active {
+  position: relative;
+  color: var(--ink);
+  background: rgba(13, 23, 51, 0.05);
+}
+
+.nav-links a[aria-current="page"]::after,
+.nav-links a.is-active::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  bottom: 3px;
+  left: 12px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--lime-deep);
+}
+
+/* --- hamburger (three spans, per the markup) ----------------------------- */
+.nav-toggle {
+  display: none;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--card);
+  cursor: pointer;
+}
+
+.nav-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+  transition: transform 250ms var(--ease), opacity 180ms ease;
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(1),
+body.nav-menu-open .nav-toggle span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(2),
+body.nav-menu-open .nav-toggle span:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle[aria-expanded="true"] span:nth-child(3),
+body.nav-menu-open .nav-toggle span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* --- slide-down panel ---------------------------------------------------- */
+.site-nav {
+  display: none;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.site-nav a {
+  display: block;
+  padding: 14px 4px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-bottom: 1px solid var(--line-soft);
+  transition: color 140ms ease, background 140ms ease;
+}
+
+.site-nav a:last-child {
+  border-bottom: 0;
+}
+
+.site-nav a:hover,
+.site-nav a:focus-visible {
+  color: var(--ink);
+  background: rgba(13, 23, 51, 0.04);
+}
+
+.site-nav a[aria-current="page"],
+.site-nav a.is-active {
+  color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--lime-deep);
+  padding-left: 12px;
+}
+
+@keyframes navSlideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (max-width: 1080px) {
+  .nav-links {
+    display: none;
+  }
+
+  .nav-toggle {
+    display: flex;
+  }
+
+  .site-nav.is-open,
+  body.nav-menu-open .site-nav {
+    display: block;
+    animation: navSlideDown 180ms var(--ease);
+  }
+}
+
+/* --- fallback: any page still shipping the old nested dropdown ------------
+   These three classes belong to the nav that this bar replaces. They are kept
+   ONLY so a page that has not been re-marked-up yet does not render unstyled
+   white-on-white. Delete them once every page carries .nav-links. */
 .nav-menu {
   position: relative;
 }
@@ -263,55 +501,105 @@ p {
   display: inline-flex;
   align-items: center;
   min-height: 40px;
-  color: inherit;
+  padding: 12px 4px;
+  color: var(--ink);
   font: inherit;
   font-weight: 800;
 }
 
-.site-nav > a,
-.nav-menu-heading {
-  width: 100%;
-  justify-content: flex-start;
-  padding: 12px 10px;
-  text-align: left;
-  text-transform: uppercase;
-  letter-spacing: 0;
-}
-
 .nav-submenu {
-  --nav-tree-left: 18px;
-
-  position: static;
   display: block;
-  min-width: 0;
   margin: 0 0 8px 10px;
-  padding: 2px 0 6px 26px;
-  background:
-    linear-gradient(rgba(var(--green-rgb), 0.46), rgba(var(--green-rgb), 0.46))
-      var(--nav-tree-left) 0 / 1px calc(100% - 24px) no-repeat;
-  border: 0;
-  box-shadow: none;
+  padding: 2px 0 6px 18px;
+  border-left: 1px solid var(--line);
+  list-style: none;
 }
 
 .nav-submenu a {
-  position: relative;
   display: block;
-  padding: 11px 12px;
-  color: var(--ink);
-}
-
-.nav-submenu a::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: calc(-26px + var(--nav-tree-left));
-  width: 13px;
-  height: 1px;
-  background: rgba(var(--green-rgb), 0.56);
+  padding: 11px 8px;
+  color: var(--ink-soft);
 }
 
 .nav-submenu a:hover {
-  background: rgba(var(--green-rgb), 0.1);
+  color: var(--ink);
+  background: rgba(13, 23, 51, 0.04);
+}
+
+/* --- buttons ------------------------------------------------------------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font: 700 0.95rem/1 var(--body, inherit);
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 160ms var(--ease), box-shadow 160ms var(--ease), background 160ms ease;
+}
+
+.btn-sm {
+  padding: 9px 16px;
+  border-radius: 9px;
+  font-size: 0.875rem;
+}
+
+/* AMBER = a human acts. This is the CTA colour on this site. White on #b45309
+   is 5.02:1. It is deliberately NOT lime - lime is the system accent. */
+.btn-amber {
+  background: var(--action);
+  color: #ffffff;
+  border-color: var(--amber-hover);
+  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(180, 83, 9, 0.55);
+}
+
+.btn-amber:hover {
+  background: var(--amber-hover);
+  transform: translateY(-1px);
+}
+
+.btn-amber:active {
+  transform: translateY(0);
+}
+
+/* LIME = the system works. Fill only, with navy on it at 14.1:1. */
+.btn-lime {
+  background: linear-gradient(180deg, var(--lime-bright), var(--lime) 60%, var(--lime-deep));
+  background-color: var(--lime);
+  color: var(--navy-950);
+  border-color: var(--lime-deep);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 10px 22px -12px rgba(142, 212, 32, 0.6);
+}
+
+.btn-ghost {
+  background: var(--card);
+  color: var(--navy-700);
+  border-color: var(--line);
+  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.06);
+}
+
+.btn-ghost:hover {
+  border-color: rgba(13, 23, 51, 0.18);
+  transform: translateY(-1px);
+}
+
+/* --- focus: one visible ring on everything interactive ------------------- */
+:focus-visible {
+  outline: 2px solid var(--navy-600);
+  outline-offset: 2px;
+}
+
+/* A navy ring is invisible on the navy islands, so it flips to lime there
+   (13.1:1 on --navy-900). */
+.site-footer :focus-visible,
+.bs-band :focus-visible,
+.event-hero :focus-visible,
+.hero-visual :focus-visible {
+  outline-color: var(--lime);
 }
 
 .nav-cta,
@@ -321,7 +609,7 @@ p {
   justify-content: center;
   min-height: 46px;
   border-radius: 999px;
-  border: 1px solid rgba(169, 201, 215, 0.16);
+  border: 1px solid var(--line);
   padding: 0 16px;
   font-weight: 800;
 }
@@ -333,16 +621,16 @@ p {
 
 .nav-cta,
 .button.primary {
-  background: var(--gold);
-  color: #071522;
-  border-color: rgba(240, 207, 115, 0.94);
-  box-shadow: 0 0 24px rgba(240, 207, 115, 0.16);
+  background: var(--action);
+  color: #ffffff;
+  border-color: var(--amber-hover);
+  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(180, 83, 9, 0.55);
 }
 
 .button.secondary {
-  background: rgba(159, 216, 230, 0.05);
-  color: var(--teal);
-  border-color: rgba(159, 216, 230, 0.16);
+  background: var(--card);
+  color: var(--navy-700);
+  border-color: var(--line);
   font-weight: 700;
 }
 
@@ -350,51 +638,6 @@ p {
 .nav-cta:hover {
   transform: translateY(-1px);
   transition: transform 160ms ease, background 160ms ease;
-}
-
-.nav-toggle {
-  display: grid;
-  flex: 0 0 auto;
-  /* stretch sizes this to the bar, so min-height is only a floor and must
-     stay under --brand-h or it drives the header height instead. */
-  align-self: stretch;
-  margin-left: auto;
-  width: 48px;
-  min-height: 32px;
-  place-items: center;
-  align-content: center;
-  gap: 5px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-}
-
-.nav-toggle::before,
-.nav-toggle span {
-  content: "";
-  display: block;
-  width: 27px;
-  height: 1px;
-  background: var(--white);
-  transition: transform 180ms ease, opacity 180ms ease, width 180ms ease;
-}
-
-.nav-toggle:hover::before,
-.nav-toggle:hover span {
-  width: 31px;
-}
-
-.nav-toggle[aria-expanded="true"]::before {
-  opacity: 0;
-}
-
-.nav-toggle[aria-expanded="true"] span:first-child {
-  transform: translateY(3px) rotate(45deg);
-}
-
-.nav-toggle[aria-expanded="true"] span:last-child {
-  transform: translateY(-3px) rotate(-45deg);
 }
 
 .hero {
@@ -408,8 +651,9 @@ p {
 
 .page-hero {
   padding: clamp(66px, 10vw, 128px) clamp(18px, 5vw, 72px) clamp(46px, 7vw, 82px);
-  background: rgba(4, 11, 24, 0.56);
-  border-bottom: 1px solid rgba(169, 201, 215, 0.08);
+  background: linear-gradient(180deg, #ffffff, var(--canvas));
+  background-color: var(--canvas);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .page-hero > .eyebrow,
@@ -446,9 +690,10 @@ h1,
 h2,
 h3 {
   margin: 0;
-  letter-spacing: 0;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1.04;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   color: var(--ink);
 }
 
@@ -456,7 +701,7 @@ h1 {
   font-size: clamp(3rem, 5.8vw, 5.45rem);
   max-width: 820px;
   padding-bottom: 28px;
-  border-bottom: 1px solid rgba(169, 201, 215, 0.16);
+  border-bottom: 1px solid var(--line);
   overflow-wrap: anywhere;
 }
 
@@ -476,8 +721,8 @@ h3 {
   max-width: 680px;
   margin: 26px 0;
   font-size: clamp(1.08rem, 1.5vw, 1.32rem);
-  font-style: italic;
-  font-weight: 700;
+  font-weight: 600;
+  color: var(--ink-soft);
 }
 
 .hero-subline {
@@ -524,12 +769,12 @@ h3 {
   align-items: center;
   min-height: 0;
   padding: 14px 16px;
-  background: rgba(255, 255, 255, 0.025);
-  border: 1px solid rgba(169, 201, 215, 0.1);
+  background: var(--card);
+  border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--teal);
   font-weight: 800;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow);
   transition:
     background 160ms ease,
     border-color 160ms ease,
@@ -539,14 +784,14 @@ h3 {
 
 .journey-strip a:hover,
 .journey-strip a:focus-visible {
-  background: rgba(169, 201, 215, 0.06);
-  border-color: rgba(169, 201, 215, 0.22);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.13);
+  background: var(--wash);
+  border-color: rgba(13, 23, 51, 0.18);
+  box-shadow: var(--shadow-lg);
   transform: translateY(-1px);
 }
 
 .journey-strip a:focus-visible {
-  outline: 2px solid rgba(127, 199, 154, 0.72);
+  outline: 2px solid var(--navy-600);
   outline-offset: 3px;
 }
 
@@ -557,9 +802,10 @@ h3 {
   width: 34px;
   height: 34px;
   padding: 0;
-  color: var(--green);
-  background: rgba(127, 199, 154, 0.08);
-  border: 1px solid rgba(127, 199, 154, 0.16);
+  color: var(--navy-900);
+  background: linear-gradient(180deg, var(--lime-bright), var(--lime) 60%, var(--lime-deep));
+  background-color: var(--lime);
+  border: 1px solid var(--lime-deep);
   border-radius: 6px;
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.72rem;
@@ -569,7 +815,9 @@ h3 {
 .journey-strip strong {
   display: block;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   font-size: clamp(1.16rem, 1.5vw, 1.45rem);
   line-height: 1;
 }
@@ -588,8 +836,8 @@ h3 {
   height: min(70vh, 560px);
   align-self: center;
   overflow: hidden;
-  background: rgba(3, 9, 21, 0.78);
-  border: 1px solid rgba(169, 201, 215, 0.12);
+  background: var(--navy-950);
+  border: 1px solid var(--line);
   border-radius: 8px;
   box-shadow: var(--shadow);
 }
@@ -605,15 +853,15 @@ h3 {
   position: absolute;
   width: min(250px, 42%);
   padding: 16px;
-  background: rgba(8, 24, 39, 0.78);
-  border: 1px solid rgba(169, 201, 215, 0.12);
+  background: rgba(19, 34, 75, 0.88);
+  border: 1px solid var(--line);
   border-radius: 6px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 18px 44px -18px rgba(8, 15, 36, 0.5);
 }
 
 .visual-panel span {
   display: block;
-  color: var(--teal);
+  color: var(--on-navy-soft);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -622,15 +870,15 @@ h3 {
 .visual-panel strong {
   display: block;
   margin-top: 5px;
-  color: var(--ink);
+  color: var(--on-navy);
   font-size: 1.15rem;
 }
 
+/* Machine output on the product visual, so this is lime, not amber. It sits on
+   the navy island where lime reads at 13.1:1. */
 .panel-c strong {
-  color: var(--gold);
-  text-shadow:
-    0 0 8px rgba(255, 230, 109, 0.38),
-    0 0 16px rgba(185, 135, 30, 0.16);
+  color: var(--lime);
+  text-shadow: 0 0 14px rgba(174, 242, 63, 0.35);
 }
 
 .panel-a {
@@ -650,7 +898,7 @@ h3 {
 
 .section {
   padding: clamp(72px, 10vw, 132px) clamp(18px, 5vw, 72px);
-  background: rgba(4, 11, 24, 0.42);
+  background: var(--canvas);
 }
 
 .proof-section {
@@ -659,9 +907,9 @@ h3 {
   gap: clamp(24px, 5vw, 64px);
   align-items: start;
   padding: clamp(56px, 8vw, 96px) clamp(18px, 5vw, 72px);
-  background: rgba(3, 9, 21, 0.36);
-  border-top: 1px solid rgba(169, 201, 215, 0.08);
-  border-bottom: 1px solid rgba(169, 201, 215, 0.08);
+  background: var(--canvas-2);
+  border-top: 1px solid var(--line-soft);
+  border-bottom: 1px solid var(--line-soft);
 }
 
 .proof-section h2 {
@@ -685,7 +933,7 @@ h3 {
 .proof-grid article,
 .case-grid article {
   padding: 22px;
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.74), rgba(6, 17, 30, 0.56));
+  background: var(--card);
   border: 0;
   border-radius: 8px;
 }
@@ -695,7 +943,9 @@ h3 {
   min-height: 2em;
   margin-bottom: 10px;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   font-size: clamp(1.3rem, 2vw, 2rem);
   line-height: 1;
 }
@@ -707,7 +957,7 @@ h3 {
 }
 
 .case-section {
-  background: rgba(4, 11, 24, 0.42);
+  background: var(--canvas);
 }
 
 .case-grid {
@@ -728,8 +978,8 @@ h3 {
   grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.72fr);
   gap: clamp(22px, 5vw, 72px);
   align-items: center;
-  background: rgba(3, 9, 21, 0.36);
-  border-top: 1px solid rgba(169, 201, 215, 0.08);
+  background: var(--canvas-2);
+  border-top: 1px solid var(--line-soft);
 }
 
 .decision-section p,
@@ -755,15 +1005,15 @@ h3 {
 .next-step-card {
   padding: clamp(22px, 3vw, 34px);
   background:
-    linear-gradient(180deg, rgba(12, 29, 45, 0.76), rgba(6, 17, 30, 0.6));
+    var(--card);
   background-size: auto;
   border: 0;
   border-radius: 8px;
-  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.24);
+  box-shadow: var(--shadow-lg);
 }
 
 .next-step-card h3 {
-  color: var(--gold);
+  color: var(--action-text);
   font-size: clamp(1.45rem, 2.6vw, 2.5rem);
 }
 
@@ -777,7 +1027,7 @@ h3 {
 }
 
 .why-section {
-  border-top: 1px solid rgba(169, 201, 215, 0.08);
+  border-top: 1px solid var(--line-soft);
 }
 
 .why-body {
@@ -795,7 +1045,7 @@ h3 {
 
 .why-more a {
   color: var(--green);
-  border-bottom: 1px solid rgba(127, 199, 154, 0.45);
+  border-bottom: 1px solid rgba(39, 64, 136, 0.45);
 }
 
 .why-more a:hover,
@@ -815,7 +1065,7 @@ h3 {
   grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
   gap: clamp(20px, 4vw, 48px);
   padding: clamp(24px, 4vw, 40px);
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.68), rgba(6, 17, 30, 0.48));
+  background: var(--card);
   border: 0;
   border-radius: 8px;
 }
@@ -840,7 +1090,7 @@ h3 {
   grid-template-columns: 58px minmax(0, 1fr);
   gap: 18px;
   padding: 24px 0;
-  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  border-top: 1px solid var(--line);
 }
 
 .friction-list article:first-child {
@@ -877,10 +1127,10 @@ h3 {
 .faq-list details,
 .contact-form,
 .booking-card {
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
+  background: var(--card);
   border: 0;
   border-radius: 8px;
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow);
 }
 
 .steps article,
@@ -898,7 +1148,7 @@ h3 {
 }
 
 .situation-section {
-  background: rgba(4, 11, 24, 0.42);
+  background: var(--canvas);
 }
 
 .situation-page .page-hero {
@@ -956,8 +1206,8 @@ h3 {
 
 .engagement-card-body > div {
   padding: 18px;
-  background: rgba(255, 255, 255, 0.035);
-  border: 1px solid rgba(169, 201, 215, 0.1);
+  background: var(--canvas);
+  border: 1px solid var(--line);
   border-radius: 6px;
 }
 
@@ -968,8 +1218,8 @@ h3 {
   grid-template-columns: minmax(0, 0.95fr) minmax(360px, 0.75fr);
   gap: clamp(24px, 5vw, 72px);
   align-items: center;
-  background: rgba(3, 9, 21, 0.36);
-  border-block: 1px solid rgba(169, 201, 215, 0.08);
+  background: var(--canvas-2);
+  border-block: 1px solid var(--line-soft);
 }
 
 .guide-copy,
@@ -989,12 +1239,12 @@ h3 {
   gap: 18px;
   align-items: start;
   padding: 20px 0;
-  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  border-top: 1px solid var(--line);
 }
 
 .evidence-row strong {
   color: var(--teal);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 2.4rem;
   line-height: 1;
   text-shadow: none;
@@ -1036,19 +1286,22 @@ h3 {
 }
 
 .assessment-card.featured {
-  background: linear-gradient(180deg, rgba(14, 42, 57, 0.86), rgba(8, 27, 38, 0.72));
-  color: var(--white);
+  background: var(--card);
+  border-top: 4px solid var(--lime);
+  box-shadow: var(--shadow-lg);
 }
 
 .assessment-card.featured p,
 .assessment-card.featured li {
-  color: #dad7cf;
+  color: var(--ink-soft);
 }
 
 .solution-tag {
   margin: 14px 0 0;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   font-size: clamp(1.9rem, 3.4vw, 3.2rem);
   font-weight: 900;
   line-height: 1;
@@ -1065,7 +1318,7 @@ h3 {
 .team-panel li {
   padding: 9px 0;
   color: var(--muted);
-  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  border-top: 1px solid var(--line);
 }
 
 .assessment-note {
@@ -1078,7 +1331,7 @@ h3 {
 .walkaway-panel {
   margin-top: 16px;
   padding: clamp(24px, 4vw, 36px);
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.7), rgba(6, 17, 30, 0.52));
+  background: var(--card);
   border: 0;
   border-radius: 8px;
 }
@@ -1118,17 +1371,15 @@ h3 {
 .walkaway-panel li {
   display: grid;
   padding: 14px;
-  color: var(--gold);
-  font-family: Georgia, "Times New Roman", serif;
+  color: var(--action-text);
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 1.25rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1.05;
-  text-shadow:
-    0 0 8px rgba(255, 230, 109, 0.42),
-    0 0 18px rgba(185, 135, 30, 0.2);
+  text-shadow: none;
   border: 0;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--canvas);
 }
 
 .walkaway-panel li {
@@ -1142,8 +1393,8 @@ h3 {
   line-height: 1.12;
   text-align: left;
   text-shadow: none;
-  border: 1px solid rgba(169, 201, 215, 0.1);
-  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  background: var(--canvas);
 }
 
 .walkaway-panel li::before {
@@ -1153,7 +1404,7 @@ h3 {
   bottom: 16px;
   left: 12px;
   width: 3px;
-  background: linear-gradient(180deg, var(--green), rgba(240, 207, 115, 0.72));
+  background: linear-gradient(180deg, var(--lime-deep), var(--amber));
   border-radius: 999px;
 }
 
@@ -1169,7 +1420,7 @@ h3 {
 .lab-panel strong {
   display: block;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 1.3rem;
   line-height: 1;
 }
@@ -1181,13 +1432,13 @@ h3 {
 
 .paths-section,
 .faq-section {
-  background: rgba(3, 9, 21, 0.36);
-  color: var(--white);
+  background: var(--canvas-2);
+  color: var(--ink);
 }
 
 .paths-section p,
 .faq-section p {
-  color: #d1d3d2;
+  color: var(--ink-soft);
 }
 
 .path-list {
@@ -1197,7 +1448,7 @@ h3 {
 }
 
 .path-list article {
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
+  background: var(--card);
 }
 
 .paths-note {
@@ -1209,7 +1460,7 @@ h3 {
 
 .path-list h3,
 .faq-section h2 {
-  color: var(--white);
+  color: var(--ink);
 }
 
 .path-list article:nth-child(2) h3,
@@ -1224,11 +1475,11 @@ h3 {
 }
 
 .service-grid article:nth-child(1) {
-  border-top: 5px solid var(--green);
+  border-top: 5px solid var(--lime);
 }
 
 .service-grid article:nth-child(2) {
-  border-top: 5px solid var(--teal);
+  border-top: 5px solid var(--navy-600);
 }
 
 .service-grid article:nth-child(3) {
@@ -1241,13 +1492,13 @@ h3 {
 }
 
 .faq-list details {
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
+  background: var(--card);
   padding: 22px 24px;
 }
 
 .faq-list summary {
   cursor: pointer;
-  color: var(--white);
+  color: var(--ink);
   font-size: 1.12rem;
   font-weight: 800;
 }
@@ -1261,7 +1512,7 @@ h3 {
 .consult-highlights span {
   width: fit-content;
   padding: 10px 12px;
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--canvas);
   border: 0;
   border-radius: 999px;
   color: var(--green);
@@ -1272,7 +1523,7 @@ h3 {
 
 .closing-cta {
   text-align: center;
-  border-top: 1px solid rgba(169, 201, 215, 0.08);
+  border-top: 1px solid var(--line-soft);
 }
 
 .closing-cta p {
@@ -1292,8 +1543,8 @@ h3 {
   min-height: min(560px, calc(100vh - 170px));
   padding: clamp(38px, 5vw, 62px) clamp(18px, 5vw, 72px) clamp(30px, 4vw, 46px);
   overflow: hidden;
-  background: #030915;
-  border-bottom: 1px solid rgba(169, 201, 215, 0.1);
+  background: var(--navy-950);
+  border-bottom: 1px solid var(--line);
 }
 
 .event-hero::before {
@@ -1302,8 +1553,8 @@ h3 {
   inset: 0;
   z-index: 1;
   background:
-    radial-gradient(circle at 76% 48%, rgba(117, 213, 209, 0.2), transparent 30vw),
-    linear-gradient(90deg, rgba(3, 9, 21, 0.98), rgba(5, 14, 27, 0.86) 46%, rgba(3, 9, 21, 0.58));
+    radial-gradient(circle at 76% 48%, rgba(58, 87, 173, 0.34), transparent 30vw),
+    linear-gradient(90deg, var(--navy-950), rgba(16, 29, 64, 0.86) 46%, rgba(8, 15, 36, 0.58));
 }
 
 .event-hero-visual {
@@ -1320,8 +1571,8 @@ h3 {
   inset: -20px;
   z-index: -1;
   background:
-    linear-gradient(90deg, rgba(3, 9, 21, 0.86), rgba(3, 9, 21, 0.1) 42%),
-    radial-gradient(circle at 68% 32%, rgba(127, 199, 154, 0.22), transparent 38%);
+    linear-gradient(90deg, rgba(8, 15, 36, 0.86), rgba(8, 15, 36, 0.1) 42%),
+    radial-gradient(circle at 68% 32%, rgba(174, 242, 63, 0.18), transparent 38%);
   border-radius: 14px;
   filter: blur(10px);
 }
@@ -1349,8 +1600,21 @@ h3 {
   max-width: 980px;
 }
 
+/* .event-hero stays a dark island, so everything inside it has to invert back.
+   Without these three rules the page-level --ink headings render navy on navy. */
+.event-hero h1 {
+  color: var(--on-navy);
+  border-bottom-color: var(--line-on-navy);
+}
+
+.event-hero .eyebrow,
+.event-hero .terminal-label {
+  color: var(--lime);
+}
+
+.event-hero p,
 .event-hero .hero-lede {
-  color: #dce8e6;
+  color: var(--on-navy-soft);
 }
 
 .event-snapshot {
@@ -1358,13 +1622,13 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
   padding: 18px clamp(18px, 5vw, 72px) 16px;
-  background: rgba(3, 9, 21, 0.38);
+  background: var(--canvas-2);
 }
 
 .event-snapshot article,
 .event-audience-grid article {
   padding: 22px;
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
+  background: var(--card);
   border: 0;
   border-radius: 8px;
 }
@@ -1384,7 +1648,9 @@ h3 {
   display: block;
   margin-top: 12px;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   font-size: clamp(1.25rem, 2vw, 1.85rem);
   line-height: 1;
 }
@@ -1399,7 +1665,7 @@ h3 {
 
 .event-overview-section,
 .event-calendar-section {
-  background: rgba(4, 11, 24, 0.42);
+  background: var(--canvas);
 }
 
 .event-body-grid {
@@ -1426,7 +1692,7 @@ h3 {
   grid-template-columns: 120px minmax(0, 1fr);
   gap: 18px;
   padding: 18px 0;
-  border-top: 1px solid rgba(169, 201, 215, 0.12);
+  border-top: 1px solid var(--line);
 }
 
 .event-detail-list strong {
@@ -1438,10 +1704,11 @@ h3 {
   position: sticky;
   top: 108px;
   padding: clamp(22px, 3vw, 32px);
-  background: linear-gradient(180deg, rgba(14, 42, 57, 0.86), rgba(8, 27, 38, 0.72));
-  border: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--lime);
   border-radius: 8px;
-  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
 .event-register-panel h3 {
@@ -1457,7 +1724,7 @@ h3 {
 
 .event-register-panel div {
   padding: 14px 0;
-  border-top: 1px solid rgba(169, 201, 215, 0.13);
+  border-top: 1px solid var(--line);
 }
 
 .event-register-panel dd {
@@ -1467,8 +1734,8 @@ h3 {
 }
 
 .event-fit-section {
-  background: rgba(3, 9, 21, 0.36);
-  border-block: 1px solid rgba(169, 201, 215, 0.08);
+  background: var(--canvas-2);
+  border-block: 1px solid var(--line-soft);
 }
 
 .event-audience-grid {
@@ -1488,9 +1755,9 @@ h3 {
 .event-calendar-shell {
   overflow: hidden;
   background: #f8fafc;
-  border: 1px solid rgba(169, 201, 215, 0.16);
+  border: 1px solid var(--line);
   border-radius: 8px;
-  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.22);
+  box-shadow: var(--shadow-lg);
 }
 
 .event-calendar-frame {
@@ -1510,7 +1777,8 @@ h3 {
 }
 
 .event-calendar-link a {
-  color: var(--gold);
+  color: var(--action-text);
+  border-bottom: 1px solid rgba(146, 64, 14, 0.4);
 }
 
 .contact-form {
@@ -1554,10 +1822,10 @@ h3 {
   gap: 16px;
   max-width: calc(100vw - 28px);
   padding: 12px 12px 12px 18px;
-  border: 1px solid rgba(169, 201, 215, 0.16);
+  border: 1px solid var(--line);
   border-radius: 8px;
-  background: rgba(5, 13, 26, 0.9);
-  box-shadow: 0 18px 54px rgba(0, 0, 0, 0.32);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 44px -16px rgba(8, 15, 36, 0.28), 0 2px 6px rgba(13, 23, 51, 0.08);
   backdrop-filter: blur(18px);
   opacity: 0;
   pointer-events: none;
@@ -1599,7 +1867,7 @@ h3 {
   display: block;
   margin-top: 3px;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 1.12rem;
   line-height: 1;
 }
@@ -1636,7 +1904,7 @@ body.nav-menu-open .sticky-booking-cta {
   display: grid;
   place-items: center;
   padding: clamp(14px, 3vw, 36px);
-  background: rgba(2, 7, 17, 0.78);
+  background: rgba(8, 15, 36, 0.55);
   backdrop-filter: blur(14px);
 }
 
@@ -1650,10 +1918,10 @@ body.nav-menu-open .sticky-booking-cta {
   width: min(1120px, 100%);
   height: min(860px, calc(100vh - clamp(28px, 6vw, 72px)));
   overflow: hidden;
-  border: 1px solid rgba(169, 201, 215, 0.16);
+  border: 1px solid var(--line);
   border-radius: 8px;
   background: #f8fafc;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+  box-shadow: 0 30px 70px -24px rgba(8, 15, 36, 0.45);
 }
 
 .booking-modal-header {
@@ -1662,7 +1930,9 @@ body.nav-menu-open .sticky-booking-cta {
   justify-content: space-between;
   gap: 18px;
   padding: clamp(18px, 3vw, 28px);
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.98), rgba(6, 17, 30, 0.96));
+  background: linear-gradient(180deg, #ffffff, var(--canvas));
+  background-color: var(--canvas);
+  border-bottom: 1px solid var(--line);
 }
 
 .booking-modal-header h2 {
@@ -1675,9 +1945,9 @@ body.nav-menu-open .sticky-booking-cta {
   flex: 0 0 auto;
   width: 44px;
   aspect-ratio: 1;
-  border: 1px solid rgba(169, 201, 215, 0.18);
+  border: 1px solid rgba(13, 23, 51, 0.18);
   border-radius: 50%;
-  background: rgba(159, 216, 230, 0.08);
+  background: var(--canvas);
   color: var(--ink);
   cursor: pointer;
   font: inherit;
@@ -1696,8 +1966,8 @@ body.nav-menu-open .sticky-booking-cta {
 
 .booking-fallback {
   padding: 12px clamp(18px, 3vw, 28px);
-  background: var(--white);
-  color: #071522;
+  background: var(--card);
+  color: var(--ink);
   font-size: 0.92rem;
   font-weight: 800;
   text-align: center;
@@ -1786,17 +2056,18 @@ body.nav-menu-open .sticky-booking-cta {
 .contact-form input,
 .contact-form textarea {
   width: 100%;
-  border: 1px solid rgba(169, 201, 215, 0.16);
+  border: 1px solid var(--line);
   border-radius: 6px;
   padding: 13px 14px;
-  background: rgba(3, 9, 21, 0.58);
+  background: var(--card);
   color: var(--ink);
   font: inherit;
 }
 
 .contact-form input:focus,
 .contact-form textarea:focus {
-  outline: 3px solid rgba(15, 158, 213, 0.2);
+  outline: 2px solid var(--navy-600);
+  outline-offset: 1px;
   border-color: var(--green);
 }
 
@@ -1824,14 +2095,14 @@ body.nav-menu-open .sticky-booking-cta {
   justify-content: space-between;
   gap: 24px;
   padding: 36px clamp(18px, 5vw, 72px);
-  background: rgba(3, 9, 21, 0.72);
-  color: var(--white);
-  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  background: var(--navy-950);
+  color: var(--on-navy);
+  border-top: 0;
 }
 
 .site-footer p {
   margin: 8px 0 0;
-  color: #c9c9c9;
+  color: var(--on-navy-soft);
 }
 
 .site-footer > div {
@@ -1842,7 +2113,7 @@ body.nav-menu-open .sticky-booking-cta {
   align-self: center;
   flex: 0 0 auto;
   margin-left: auto;
-  color: var(--muted);
+  color: var(--on-navy-soft);
   font-size: 0.9rem;
   text-align: right;
 }
@@ -1882,11 +2153,11 @@ body.nav-menu-open .sticky-booking-cta {
   width: 132px;
   aspect-ratio: 1;
   margin-bottom: 22px;
-  border: 1px solid rgba(169, 201, 215, 0.16);
+  border: 1px solid var(--line);
   border-radius: 50%;
   object-fit: cover;
   object-position: center;
-  background: #020711;
+  background: var(--canvas-2);
   box-shadow: 0 0 28px rgba(var(--green-rgb), 0.12);
 }
 
@@ -1915,17 +2186,17 @@ body.nav-menu-open .sticky-booking-cta {
   width: 46px;
   height: 46px;
   border-radius: 50%;
-  border: 2px solid rgba(240, 207, 115, 0.55);
-  background: #000;
+  border: 2px solid var(--amber);
+  background: var(--navy-900);
   object-fit: cover;
-  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 2px 8px rgba(8, 15, 36, 0.28);
 }
 
 .collapsible-section {
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.7), rgba(6, 17, 30, 0.52));
-  border: 1px solid rgba(169, 201, 215, 0.16);
+  background: var(--card);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(2, 7, 17, 0.35);
+  box-shadow: var(--shadow);
 }
 
 .collapsible-section summary {
@@ -1968,7 +2239,9 @@ body.nav-menu-open .sticky-booking-cta {
   grid-column: 1;
   display: block;
   color: var(--ink);
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   font-size: clamp(2rem, 4vw, 4rem);
   font-weight: 800;
   line-height: 1.04;
@@ -1992,7 +2265,7 @@ body.nav-menu-open .sticky-booking-cta {
 .story-panel,
 .resource-card {
   padding: clamp(24px, 4vw, 36px);
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.7), rgba(6, 17, 30, 0.52));
+  background: var(--card);
   border: 0;
   border-radius: 8px;
 }
@@ -2050,7 +2323,7 @@ body.nav-menu-open .sticky-booking-cta {
 
 .advisor-role {
   margin: 0 0 18px;
-  color: var(--gold);
+  color: var(--action-text);
   font-weight: 800;
   line-height: 1.35;
 }
@@ -2064,7 +2337,7 @@ body.nav-menu-open .sticky-booking-cta {
 .resource-card li {
   padding: 10px 0;
   color: var(--teal);
-  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  border-top: 1px solid var(--line);
 }
 
 .advisor-details li {
@@ -2078,7 +2351,7 @@ body.nav-menu-open .sticky-booking-cta {
   gap: 10px;
   margin-top: 18px;
   padding-top: 16px;
-  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  border-top: 1px solid var(--line);
 }
 
 .advisor-links a {
@@ -2323,8 +2596,8 @@ body.nav-menu-open .sticky-booking-cta {
 
   .event-hero::before {
     background:
-      linear-gradient(180deg, rgba(3, 9, 21, 0.9), rgba(5, 14, 27, 0.72) 48%, rgba(3, 9, 21, 0.88)),
-      linear-gradient(90deg, rgba(3, 9, 21, 0.94), rgba(3, 9, 21, 0.48));
+      linear-gradient(180deg, rgba(8, 15, 36, 0.9), rgba(16, 29, 64, 0.72) 48%, rgba(8, 15, 36, 0.88)),
+      linear-gradient(90deg, rgba(8, 15, 36, 0.94), rgba(8, 15, 36, 0.48));
   }
 
   .event-hero-visual {
@@ -2379,7 +2652,7 @@ body.nav-menu-open .sticky-booking-cta {
   .journey-strip a,
   .journey-strip a:first-child,
   .journey-strip a:last-child {
-    border: 1px solid rgba(169, 201, 215, 0.1);
+    border: 1px solid var(--line);
   }
 
   .friction-list article {
@@ -2436,10 +2709,8 @@ body.nav-menu-open .sticky-booking-cta {
    ========================================================================== */
 
 :root {
-  --lime: #aef23f;
-  --lime-deep: #8ed420;
-  --lime-line: rgba(174, 242, 63, 0.42);
-  --lime-wash: rgba(174, 242, 63, 0.06);
+  --lime-line: rgba(174, 242, 63, 0.55);
+  --lime-wash: rgba(174, 242, 63, 0.16);
 }
 
 /* --- wordmark -------------------------------------------------------------
@@ -2460,18 +2731,34 @@ body.nav-menu-open .sticky-booking-cta {
   margin-bottom: -0.09em;
 }
 
+/* The markup points every .bs-logo at bidstrike-logo.png, which is dark ink
+   (mean 29/255). That is right on the light pages and right on the lime CTA,
+   and unreadable on the two navy surfaces, so those swap to the white cut. */
+.bs-band .bs-logo,
+.site-footer .bs-logo {
+  content: url("/assets/images/brand/bidstrike-logo-white.png");
+}
+
+/* ...but the CTA inside the band is a LIME fill, where the dark art is correct. */
+.bs-band .bs-cta .bs-logo {
+  content: url("/assets/images/brand/bidstrike-logo.png");
+}
+
 /* --- outbound link ------------------------------------------------------- */
+/* Lime is 1.35:1 on white, so an outbound link cannot BE lime here. The navy
+   carries the reading and the lime underline carries the BidStrike signal.
+   Inside the navy islands (.bs-band, the footer) it flips back to real lime. */
 .bs-link {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: var(--lime);
+  color: var(--navy-700);
+  border-bottom: 2px solid var(--lime);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.86rem;
   font-weight: 700;
   line-height: 1.4;
   text-decoration: none;
-  border-bottom: 1px solid transparent;
 }
 
 .bs-link::after {
@@ -2482,7 +2769,8 @@ body.nav-menu-open .sticky-booking-cta {
 
 .bs-link:hover,
 .bs-link:focus-visible {
-  border-bottom-color: var(--lime-line);
+  color: var(--navy-900);
+  border-bottom-color: var(--lime-deep);
 }
 
 .bs-link .bs-logo {
@@ -2497,10 +2785,11 @@ body.nav-menu-open .sticky-booking-cta {
   gap: 8px;
   min-height: 46px;
   padding: 0 18px;
-  border: 1px solid var(--lime-line);
+  border: 1px solid var(--lime-deep);
   border-radius: 999px;
-  background: var(--lime-wash);
-  color: var(--lime);
+  background: linear-gradient(180deg, var(--lime-bright), var(--lime) 60%, var(--lime-deep));
+  background-color: var(--lime);
+  color: var(--navy-950);
   font-weight: 800;
   white-space: nowrap;
 }
@@ -2512,23 +2801,22 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .bs-cta:hover {
-  background: rgba(174, 242, 63, 0.12);
+  background: linear-gradient(180deg, var(--lime-bright), var(--lime-bright) 60%, var(--lime));
   transform: translateY(-1px);
   transition: transform 160ms ease, background 160ms ease;
 }
 
 /* --- keyline: marks any block that leads off-site ------------------------ */
 .bs-keyline {
-  border-left: 2px solid var(--lime);
+  border-left: 3px solid var(--lime-deep);
   padding-left: clamp(14px, 2vw, 20px);
 }
 
 /* --- ownership disclosure ------------------------------------------------ */
 .bs-disclose {
   margin: 14px 0 0;
-  color: #7f93a0;
+  color: var(--ink-soft);
   font-size: 0.82rem;
-  font-style: italic;
   line-height: 1.55;
 }
 
@@ -2537,9 +2825,10 @@ body.nav-menu-open .sticky-booking-cta {
   display: inline-flex;
   align-items: center;
   padding: 2px 8px;
-  border: 1px solid rgba(127, 199, 154, 0.3);
+  border: 1px solid var(--lime-deep);
   border-radius: 3px;
-  color: var(--green);
+  background: rgba(174, 242, 63, 0.18);
+  color: var(--navy-800);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.66rem;
   font-weight: 800;
@@ -2557,13 +2846,12 @@ body.nav-menu-open .sticky-booking-cta {
   padding: clamp(24px, 3.4vw, 34px);
   overflow: hidden;
   background:
-    radial-gradient(circle at 88% 12%, rgba(174, 242, 63, 0.13), transparent 58%),
-    linear-gradient(135deg, #0a1626 0%, #081221 58%, #070f1c 100%);
-  border: 1px solid rgba(174, 242, 63, 0.3);
+    radial-gradient(circle at 88% 12%, rgba(174, 242, 63, 0.16), transparent 58%),
+    linear-gradient(135deg, var(--navy-900) 0%, var(--navy-950) 58%, var(--navy-950) 100%);
+  background-color: var(--navy-900);
+  border: 1px solid rgba(174, 242, 63, 0.34);
   border-radius: 12px;
-  box-shadow:
-    0 0 0 1px rgba(3, 9, 21, 0.6),
-    0 22px 60px rgba(0, 0, 0, 0.42);
+  box-shadow: 0 22px 50px -22px rgba(8, 15, 36, 0.55);
 }
 
 /* The strike: BidStrike's slash motif, echoed as a quiet background mark. */
@@ -2574,7 +2862,7 @@ body.nav-menu-open .sticky-booking-cta {
   right: clamp(-40px, -2vw, -10px);
   width: 190px;
   height: 190%;
-  background: linear-gradient(180deg, rgba(174, 242, 63, 0.15), rgba(174, 242, 63, 0.03));
+  background: linear-gradient(180deg, rgba(174, 242, 63, 0.1), rgba(174, 242, 63, 0.02));
   transform: rotate(24deg);
   pointer-events: none;
 }
@@ -2597,7 +2885,7 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .bs-band-kicker span {
-  color: #7f93a0;
+  color: var(--on-navy-soft);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.68rem;
   font-weight: 700;
@@ -2606,14 +2894,31 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .bs-band h2 {
+  color: var(--on-navy);
   margin: 0 0 10px;
   font-size: clamp(1.35rem, 2.4vw, 1.9rem);
   line-height: 1.18;
 }
 
 .bs-band p {
+  color: var(--on-navy-soft);
   margin: 0;
   max-width: 62ch;
+}
+
+/* On the navy islands lime goes back to being real lime (13.1:1). */
+.bs-band .bs-link,
+.site-footer .bs-link {
+  color: var(--lime);
+  border-bottom-color: rgba(174, 242, 63, 0.45);
+}
+
+.bs-band .bs-link:hover,
+.site-footer .bs-link:hover,
+.bs-band .bs-link:focus-visible,
+.site-footer .bs-link:focus-visible {
+  color: var(--lime-bright);
+  border-bottom-color: var(--lime);
 }
 
 .bs-band-actions {
@@ -2629,10 +2934,10 @@ body.nav-menu-open .sticky-booking-cta {
 
 /* --- results case block -------------------------------------------------- */
 .bs-case {
-  background: linear-gradient(180deg, rgba(12, 29, 45, 0.72), rgba(6, 17, 30, 0.54));
+  background: var(--card);
   border-radius: 8px;
   padding: clamp(22px, 4vw, 34px);
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow);
 }
 
 .bs-case h3 {
@@ -2676,7 +2981,7 @@ body.nav-menu-open .sticky-booking-cta {
 
 .bs-footer-block .bs-footer-kicker {
   margin: 0 0 6px;
-  color: #7f93a0;
+  color: var(--on-navy-soft);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.7rem;
   font-weight: 700;
@@ -2685,12 +2990,12 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .bs-footer-block .bs-link {
-  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.9rem;
 }
 
 .bs-footer-block .bs-footer-tag {
-  color: #7f93a0;
+  color: var(--on-navy-soft);
   font-weight: 500;
 }
 
@@ -2727,9 +3032,9 @@ body.nav-menu-open .sticky-booking-cta {
 
 .advisor-links a.bs-link {
   padding: 7px 13px;
-  color: var(--lime);
-  background: var(--lime-wash);
-  border: 1px solid var(--lime-line);
+  color: var(--navy-800);
+  background: rgba(174, 242, 63, 0.2);
+  border: 1px solid var(--lime-deep);
   border-radius: 999px;
   font-size: 0.8rem;
   transition: background 160ms ease, border-color 160ms ease;
@@ -2737,8 +3042,8 @@ body.nav-menu-open .sticky-booking-cta {
 
 .advisor-links a.bs-link:hover,
 .advisor-links a.bs-link:focus-visible {
-  background: rgba(174, 242, 63, 0.14);
-  border-color: rgba(174, 242, 63, 0.62);
+  background: rgba(174, 242, 63, 0.34);
+  border-color: var(--lime-deep);
 }
 
 .bs-card-head {
@@ -2786,8 +3091,8 @@ body.nav-menu-open .sticky-booking-cta {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(169, 201, 215, 0.26) 12%,
-    rgba(169, 201, 215, 0.26) 88%,
+    rgba(13, 23, 51, 0.12) 12%,
+    rgba(13, 23, 51, 0.12) 88%,
     transparent
   );
 }
@@ -2810,7 +3115,7 @@ body.nav-menu-open .sticky-booking-cta {
   flex: 0 1 auto;
   min-width: 0;
   max-width: 320px;
-  margin-left: -6px;
+  margin-left: 10px;
   overflow: hidden;
   white-space: nowrap;
   opacity: 1;
@@ -2841,7 +3146,7 @@ body.nav-menu-open .sticky-booking-cta {
 /* Fade first, then collapse the space, so the text never squeezes mid-run. */
 .site-header.is-compact .brand-words {
   max-width: 0;
-  margin-left: -18px;
+  margin-left: 0;
   opacity: 0;
   transition:
     opacity 130ms ease,
@@ -2851,6 +3156,25 @@ body.nav-menu-open .sticky-booking-cta {
 
 /* Below the desktop nav breakpoint the row is already carrying a hamburger,
    a persona chip and the lockup. The wordmark is the thing that gives. */
+/* The nav breakpoint. The row is carrying a lockup, the amber CTA and a
+   hamburger by this width, so the wordmark and the persona chip are what give.
+   --brand-h is reset with them, or the lockup stays sized to a text block that
+   is no longer on screen - the exact bug qa/check-header-lockup.py exists to
+   catch. This sits AFTER the canonical .brand-words rule on purpose: that gate
+   resolves ".brand-words" to the FIRST exact selector match, so a hide rule
+   placed earlier would shadow the rule that carries --wm-gap. */
+@media (max-width: 1080px) {
+  .site-header .brand-words,
+  .site-header .header-persona {
+    display: none;
+  }
+
+  .site-header {
+    --brand-h: 40px;
+    --brand-w: calc(var(--brand-h) * 360 / 155);
+  }
+}
+
 @media (max-width: 900px) {
   .brand-words {
     display: none;
@@ -2881,7 +3205,7 @@ body.nav-menu-open .sticky-booking-cta {
 .event-agenda {
   margin-top: 42px;
   padding-top: 30px;
-  border-top: 1px solid rgba(169, 201, 215, 0.13);
+  border-top: 1px solid var(--line);
 }
 
 .event-agenda h3 {
@@ -2911,7 +3235,7 @@ body.nav-menu-open .sticky-booking-cta {
 
 .event-agenda-grid li {
   padding: 10px 0;
-  border-top: 1px solid rgba(169, 201, 215, 0.1);
+  border-top: 1px solid var(--line);
   color: var(--muted);
   line-height: 1.5;
 }
@@ -2960,9 +3284,9 @@ body.nav-menu-open .sticky-booking-cta {
 
 .event-comingsoon {
   padding: 26px 28px;
-  border: 1px solid rgba(240, 207, 115, 0.34);
+  border: 1px solid rgba(180, 83, 9, 0.3);
   border-radius: var(--radius);
-  background: var(--panel-strong);
+  background: var(--card);
 }
 
 .event-comingsoon h3 {
@@ -2977,7 +3301,7 @@ body.nav-menu-open .sticky-booking-cta {
 
 .event-comingsoon-tag {
   margin-top: 16px !important;
-  color: var(--gold);
+  color: var(--action-text);
   font-size: 0.82rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -3021,16 +3345,113 @@ body.nav-menu-open .sticky-booking-cta {
    .section; they exist so the leave-behind proof and the room photos read as
    distinct bands instead of blending into the overview above them. */
 .event-leavebehind-section {
-  border-top: 1px solid rgba(169, 201, 215, 0.08);
+  border-top: 1px solid var(--line-soft);
 }
 
 .event-room-section {
-  background: rgba(3, 9, 21, 0.36);
-  border-block: 1px solid rgba(169, 201, 215, 0.08);
+  background: var(--canvas-2);
+  border-block: 1px solid var(--line-soft);
 }
 
 /* The next-step grid inherits .event-audience-grid; it only needs breathing
    room above the button row. */
 .event-next-grid {
   margin-bottom: 30px;
+}
+
+/* -- SLED Radar page: the yin/yang pair ------------------------------------
+   Added 2026-08-19 with the /sled-radar page. The two cards ARE the argument
+   of that page, so they have to read as a matched pair at a glance: same
+   shape, same weight, one on each side, differing only in which end of the
+   bid table they sit at.
+
+   Accent logic follows the house two-accent rule. Both cards are systems, so
+   both take LIME as their keyline (lime = the system works). Amber is not used
+   here at all - it is reserved for a human action, and neither card is one.
+   The lime keyline is a chunky 4px rule, never a hairline and never text,
+   because lime on a light ground is 1.35:1 and cannot carry meaning at small
+   sizes. */
+
+.hero-section {
+  /* the hero already carries the page's opening statement; the standard
+     .section bottom rhythm leaves a hole under it before "The split" */
+  padding-bottom: clamp(32px, 4vw, 56px);
+}
+
+.yin-yang-section {
+  background: var(--canvas-2);
+}
+
+.yy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 36px);
+  max-width: var(--maxw);
+  margin: 28px auto 0;
+}
+
+.yy-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--lime-deep);
+  border-radius: 10px;
+  padding: clamp(22px, 3vw, 34px);
+  display: flex;
+  flex-direction: column;
+}
+
+.yy-card h2 {
+  margin: 6px 0 14px;
+  font-size: clamp(1.25rem, 2.1vw, 1.6rem);
+  line-height: 1.2;
+}
+
+.yy-card p {
+  color: var(--ink-soft);
+}
+
+.yy-list {
+  list-style: none;
+  padding: 0;
+  margin: 4px 0 18px;
+}
+
+.yy-list li {
+  position: relative;
+  padding: 7px 0 7px 22px;
+  color: var(--ink-soft);
+  border-bottom: 1px solid var(--line-soft);
+}
+
+.yy-list li:last-child {
+  border-bottom: 0;
+}
+
+/* the marker is a lime block, not lime text - see the note above */
+.yy-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 15px;
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--lime-deep);
+}
+
+.yy-question {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-soft);
+}
+
+.yy-question strong {
+  color: var(--ink);
+}
+
+@media (max-width: 860px) {
+  .yy-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
