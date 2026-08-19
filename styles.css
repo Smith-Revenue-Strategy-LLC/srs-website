@@ -3455,3 +3455,23 @@ body.nav-menu-open .sticky-booking-cta {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Short pages (privacy is the shortest) left a band of bare canvas under the
+   navy footer on tall viewports, with nothing to scroll it away. Measured
+   2026-08-19 at 1280x1600: document 1600 tall, footer ending at 1331, so 269px
+   of dead light ground below a dark footer. On a 4K display at 100% zoom it is
+   closer to 700px. Standard flex shell pins the footer to the bottom without
+   changing any page that is already taller than the viewport. */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body > main {
+  flex: 1 0 auto;
+}
+
+body > .site-footer {
+  margin-top: auto;
+}

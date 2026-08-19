@@ -37,10 +37,18 @@ function createHeaderPersona() {
     >
     ${linkedInIconMarkup("header-linkedin")}
   `;
-  // Anchor after the wordmark so the company name stays welded to the lockup
-  // and the persona chip follows it, rather than splitting the two.
-  const brandWords = document.querySelector(".brand-words");
-  (brandWords || brand).insertAdjacentElement("afterend", persona);
+  // Insert after the brand ANCHOR, never after .brand-words.
+  // 2026-08-19: the flat top nav moved .brand-words INSIDE the <a class="brand">
+  // lockup (it used to be a sibling). Anchoring to .brand-words therefore
+  // injected this chip - which contains its own <a> to LinkedIn - inside the
+  // brand anchor, producing a nested <a> in <a>. Because the chip is built with
+  // DOM methods rather than parsed from markup, the parser rule that would
+  // normally split nested anchors never runs, so the invalid structure survives
+  // into the live DOM: one click fires the LinkedIn link AND bubbles to the
+  // brand link, and the browser can navigate home instead of to LinkedIn.
+  // .brand still ends with the wordmark, so "afterend" on the anchor keeps the
+  // chip welded to the lockup exactly as before.
+  brand.insertAdjacentElement("afterend", persona);
 }
 
 // The header never hides. Past the fold it compacts and the SRS lockup
