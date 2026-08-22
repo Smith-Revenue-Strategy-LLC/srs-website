@@ -16,11 +16,15 @@
    A "system" LABEL is therefore navy-600 text carrying a lime mark, never
    lime text. Same signal, readable.
 
-   NAVY ISLANDS are deliberate, not leftovers. The hero visual, the featured
-   cards, the event hero, the BidStrike band and the footer stay dark so the
-   page has depth and so lime has somewhere to be itself. #flow-canvas paints
-   its own #020711 ground from script.js, so .hero-visual could not go light
-   even if we wanted it to. */
+   NAVY ISLANDS are deliberate, not leftovers. The featured cards, the event
+   hero, the BidStrike band and the footer stay dark so the page has depth and
+   so lime has somewhere to be itself.
+
+   The homepage hero is NOT one of them any more. The flow canvas and its three
+   floating labels were deleted 2026-08-22: it was a diagram of a process, and
+   the mission is about a person. The hero now runs single-column (.hero-solo)
+   until a real photograph replaces it. Do not fill that space with stock, an
+   illustration, or an AI-generated face. */
 
 @font-face {
   font-family: "Geist";
@@ -598,10 +602,6 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
 .site-footer :focus-visible,
 .bs-band :focus-visible,
 .event-hero :focus-visible,
-.hero-visual :focus-visible {
-  outline-color: var(--lime);
-}
-
 .nav-cta,
 .button {
   display: inline-flex;
@@ -828,72 +828,6 @@ h3 {
   color: var(--muted);
   font-weight: 700;
   line-height: 1.3;
-}
-
-.hero-visual {
-  position: relative;
-  min-height: 500px;
-  height: min(70vh, 560px);
-  align-self: center;
-  overflow: hidden;
-  background: var(--navy-950);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-}
-
-#flow-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.visual-panel {
-  position: absolute;
-  width: min(250px, 42%);
-  padding: 16px;
-  background: rgba(19, 34, 75, 0.88);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  box-shadow: 0 18px 44px -18px rgba(8, 15, 36, 0.5);
-}
-
-.visual-panel span {
-  display: block;
-  color: var(--on-navy-soft);
-  font-family: "SFMono-Regular", Consolas, monospace;
-  font-size: 0.72rem;
-  text-transform: uppercase;
-}
-
-.visual-panel strong {
-  display: block;
-  margin-top: 5px;
-  color: var(--on-navy);
-  font-size: 1.15rem;
-}
-
-/* Machine output on the product visual, so this is lime, not amber. It sits on
-   the navy island where lime reads at 13.1:1. */
-.panel-c strong {
-  color: var(--lime);
-  text-shadow: 0 0 14px rgba(174, 242, 63, 0.35);
-}
-
-.panel-a {
-  top: 11%;
-  left: 7%;
-}
-
-.panel-b {
-  top: 42%;
-  right: 7%;
-}
-
-.panel-c {
-  left: 8%;
-  bottom: 17%;
 }
 
 .section {
@@ -2440,10 +2374,6 @@ body.nav-menu-open .sticky-booking-cta {
     width: min(100%, 540px);
   }
 
-  .hero-visual {
-    min-height: 440px;
-  }
-
   .steps,
   .service-grid,
   .path-list,
@@ -2662,14 +2592,6 @@ body.nav-menu-open .sticky-booking-cta {
 
   .evidence-row {
     grid-template-columns: 1fr;
-  }
-
-  .visual-panel {
-    width: 74%;
-  }
-
-  .panel-b {
-    top: 40%;
   }
 
   .site-footer {
@@ -3085,6 +3007,27 @@ body.nav-menu-open .sticky-booking-cta {
    The hero and the 01-02-03 strip ran together with nothing between them.
    Inset to the same gutter as the strip below it so it reads as a section
    break, not a full-bleed rule. */
+/* Single-column hero. Stands until a real photograph lands in the second
+   column; see the note at the top of this file. The narrower measure and the
+   extra breathing room are the point, not a placeholder. */
+.hero-solo {
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+  padding-top: clamp(64px, 11vw, 148px);
+  padding-bottom: clamp(64px, 10vw, 132px);
+}
+
+/* NOTE: max-width here must NOT be in ch. The ch unit resolves against THIS
+   element's font-size (body size), and the h1 inside runs ~74px, so a ch value
+   collapses the headline into a narrow vertical column. Measured bug, 8/22. */
+.hero-solo .hero-copy {
+  max-width: min(100%, 780px);
+}
+
+.hero-solo .hero-lede {
+  max-width: min(100%, 520px);
+}
+
 .hero-divider {
   height: 1px;
   margin: clamp(18px, 3vw, 30px) clamp(18px, 5vw, 72px) clamp(10px, 2vw, 18px);
