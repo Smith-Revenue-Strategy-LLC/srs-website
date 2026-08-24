@@ -5,7 +5,7 @@ Scope is ENUMERATED, never hand-maintained, so a new page cannot silently fall
 out of the sitemap while the file keeps looking correct.
 Run from the repo root: python3 qa/build-sitemap.py
 """
-import glob, os, datetime, sys
+import glob, os, datetime, sys, re, pathlib
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)) + "/..")
 BASE = "https://smithrevenuestrategy.com"
@@ -17,6 +17,17 @@ PRIORITY = {"index.html": "1.0", "sled-radar.html": "0.9", "work-together.html":
 today = datetime.date.today().isoformat()
 
 pages = sorted(glob.glob("*.html"))
+
+# A page that declares itself noindex must never land in the sitemap. Hidden,
+# hand-delivered pages (the Operator OS ready page, for example) live in this
+# folder like any other file, and a bare glob would publish their URLs.
+_hidden = [p for p in pages
+           if re.search(r'name=["\']robots["\'][^>]*noindex',
+                        pathlib.Path(p).read_text(encoding="utf-8"), re.I)]
+pages = [p for p in pages if p not in _hidden]
+for h in _hidden:
+    print(f"  skipped (noindex): {h}")
+
 if not pages:
     print("FATAL: no pages found"); sys.exit(1)
 

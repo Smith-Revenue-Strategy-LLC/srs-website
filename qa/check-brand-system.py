@@ -40,8 +40,21 @@ for p in PAGES:
         fails.append("%s  non-ASCII byte at offset %d" % (p, e.start))
 
 # --- 2. nav contract ---------------------------------------------------------
+# A page may opt OUT of the site chrome, but only by saying so out loud. It has
+# to be noindex AND carry the marker comment below. Hand-delivered pages (the
+# Operator OS ready page) are deliberately chromeless: site nav on them is an
+# invitation to wander off before the one action on the page. Everything else in
+# this gate still applies to them - bans, ASCII, colors, tokens.
+CHROMELESS_MARKER = "brand-system: chromeless page"
+def is_chromeless(src):
+    return CHROMELESS_MARKER in src and re.search(
+        r'name=["\']robots["\'][^>]*noindex', src, re.I)
+
 for p in PAGES:
     s = open(p, encoding="utf-8").read()
+    if is_chromeless(s):
+        notes.append("%s  chromeless by declaration (noindex + marker), nav contract skipped" % p)
+        continue
     if s.count("<header") != 1:
         fails.append("%s  expected exactly 1 <header>, found %d" % (p, s.count("<header")))
     if 'class="nav-links"' not in s:
