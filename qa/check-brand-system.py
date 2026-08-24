@@ -6,7 +6,7 @@ list, so a new page cannot silently fall outside coverage while the gate keeps
 reporting PASS.
 
 Checks:
-  1. Voice bans: "free", "no pitch", em-dashes, non-ASCII.
+  1. Voice bans: "free", "no pitch", em-dashes, non-ASCII. Scanned over HTML AND JS.
   2. Every page carries the flat top nav and the JS-contract class .site-nav.
   3. No dark-theme remnants (old ground/ink hexes, Georgia, Inter).
   4. No white-on-light art references.
@@ -22,13 +22,21 @@ PAGES = sorted(glob.glob("*.html"))
 if len(PAGES) < 2:
     print("FATAL: enumerated %d pages, expected the whole site" % len(PAGES)); sys.exit(1)
 
+# Copy does not only ship from markup. script.js builds the booking modal and
+# writes headings straight into the DOM, so a banned word can go live on every
+# page while an HTML-only glob reports PASS. That happened. Voice bans run over
+# HTML AND JS; the markup checks below (nav contract, dark remnants, art refs)
+# stay HTML-only because they are markup contracts and do not apply to a script.
+SCRIPTS = sorted(glob.glob("*.js"))
+VOICE_FILES = PAGES + SCRIPTS
+
 # --- 1. voice bans -----------------------------------------------------------
 BANS = [
     (r'\bfree\b',    'banned word "free" (prospect-facing, no exceptions, ruled 8/14)'),
     (r'no pitch',    'banned phrase "no pitch"'),
     (r'[—–]', 'em-dash or en-dash'),
 ]
-for p in PAGES:
+for p in VOICE_FILES:
     s = open(p, encoding="utf-8").read()
     for pat, why in BANS:
         for m in re.finditer(pat, s, re.I):
@@ -119,6 +127,7 @@ print("    %-32s %-8s on %-8s %5.2f:1  (must stay a FILL, never text)"
 # --- report ------------------------------------------------------------------
 print()
 print("  scope: %d pages enumerated from disk -> %s" % (len(PAGES), ", ".join(PAGES)))
+print("  scope: %d voice-ban files (html + js) -> %s" % (len(VOICE_FILES), ", ".join(SCRIPTS) or "no .js found"))
 for n in notes:
     print("  note  %s" % n)
 print()
