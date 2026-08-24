@@ -251,7 +251,7 @@ function createBookingModal() {
       <div class="booking-modal-header">
         <div>
           <p class="eyebrow">Complimentary connect call</p>
-          <h2 id="booking-modal-title">Book My Free Call</h2>
+          <h2 id="booking-modal-title">Book My Call</h2>
         </div>
         <button class="booking-modal-close" type="button" aria-label="Close booking calendar" data-booking-close>
           &times;
