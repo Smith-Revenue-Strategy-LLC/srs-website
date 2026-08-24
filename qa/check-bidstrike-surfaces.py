@@ -23,8 +23,29 @@ from html.parser import HTMLParser
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 PAGES = sorted(glob.glob("*.html"))
+
+# A page may opt OUT of the site chrome, but only by saying so out loud: it has
+# to be noindex AND carry the marker below. This is the SAME declaration
+# check-brand-system.py honors, kept byte-identical in intent on purpose - two
+# gates disagreeing about what a legitimate page looks like is how one of them
+# ends up permanently red and stops being read. The chrome checks (footer block,
+# nav row, header wordmark) are the only ones that skip these pages. Every other
+# check here - link classes, utm tags, customer-name ban - still applies to them.
+CHROMELESS_MARKER = "brand-system: chromeless page"
+
+
+def _is_chromeless(src):
+    return CHROMELESS_MARKER in src and re.search(
+        r'name=["\']robots["\'][^>]*noindex', src, re.I)
+
+
+CHROME_PAGES = [p for p in PAGES
+                if not _is_chromeless(open(p, encoding="utf-8").read())]
+CHROMELESS_PAGES = [p for p in PAGES if p not in CHROME_PAGES]
+
 failures = []
-notes = []
+notes = ["chrome scope: %d of %d pages; chromeless by declaration: %s"
+         % (len(CHROME_PAGES), len(PAGES), ", ".join(CHROMELESS_PAGES) or "none")]
 
 
 def check(name):
@@ -154,7 +175,7 @@ def _():
     block = re.compile(r'<div class="bs-footer-block">.*?</div>', re.S)
     seen = {}
     bad = []
-    for page in PAGES:
+    for page in CHROME_PAGES:
         m = block.search(read(page))
         if not m:
             bad.append("%s: no bs-footer-block" % page)
@@ -162,7 +183,7 @@ def _():
         seen.setdefault(m.group(0), []).append(page)
     if len(seen) > 1:
         bad.append("footer block differs between pages: %s" % [v for v in seen.values()])
-    notes.append("footer block on %d/%d pages" % (sum(len(v) for v in seen.values()), len(PAGES)))
+    notes.append("footer block on %d/%d chrome pages" % (sum(len(v) for v in seen.values()), len(CHROME_PAGES)))
     return bad
 
 
@@ -181,7 +202,7 @@ def _():
     nav_re = re.compile(r'<nav[^>]*\bclass="[^"]*\bsite-nav\b[^"]*".*?</nav>', re.S)
     bad = []
     counts = set()
-    for page in PAGES:
+    for page in CHROME_PAGES:
         m = nav_re.search(read(page))
         if not m:
             bad.append("%s: no site-nav found" % page)
@@ -295,7 +316,7 @@ def _():
     block = re.compile(r'<span class="brand-words".*?</span>', re.S)
     bad = []
     seen = {}
-    for page in PAGES:
+    for page in CHROME_PAGES:
         m = block.search(read(page))
         if not m:
             bad.append("%s: no brand-words block" % page)
@@ -309,7 +330,7 @@ def _():
     for text in ("Smith Revenue Strategy", "Unlock AI-Enabled Growth"):
         if not any(text in b for b in seen):
             bad.append("brand-words missing the string %r" % text)
-    notes.append("brand-words on %d/%d pages" % (sum(len(v) for v in seen.values()), len(PAGES)))
+    notes.append("brand-words on %d/%d chrome pages" % (sum(len(v) for v in seen.values()), len(CHROME_PAGES)))
     return bad
 
 
