@@ -145,8 +145,18 @@ p {
   --wm-leading: 1.1;
   --wm-gap: 2px;
   --brand-h: calc((var(--wm-name) + var(--wm-tag)) * var(--wm-leading) + var(--wm-gap));
-  /* srs-lettermark.png is full-bleed ink at 360x155, so box height IS ink height. */
-  --brand-w: calc(var(--brand-h) * 360 / 155);
+  /* THE MARK IS NOW PORTRAIT, so the lockup is a re-layout and not a re-point.
+     The retired srs-lettermark.png was 360x155 (aspect 2.32, landscape) and sat
+     flush to the two-line wordmark block. srs-icon-reverse.svg is 496.835x620.970
+     (aspect 0.800, portrait); matched to the same ~29px text height it would render
+     23px wide and read as a bullet, not a mark. So the icon is sized as a STATED
+     MULTIPLE of the wordmark block instead of equal to it: it still derives from the
+     wordmark tokens, so retyping the wordmark still re-justifies the mark, but the
+     portrait art gets the height it needs. Ratio is the SVG's own viewBox, exact -
+     qa/check-header-lockup.py reads the viewBox and asserts these agree. */
+  --brand-icon-scale: 1.44;
+  --brand-icon-h: calc(var(--brand-h) * var(--brand-icon-scale));
+  --brand-w: calc(var(--brand-icon-h) * 496.835 / 620.970);
   --persona-photo: 32px;
   --persona-linkedin: 28px;
   --persona-pad: 3px 5px;
@@ -155,19 +165,23 @@ p {
   z-index: 20;
   display: block;
   padding: 12px clamp(18px, 4vw, 56px);
-  background: rgba(255, 255, 255, 0.86);
-  border-bottom: 1px solid var(--line);
-  backdrop-filter: blur(20px);
+  /* Dark navy chrome, ported from the BidStrike surface named as the reference. */
+  background:
+    radial-gradient(130% 240% at 82% -60%, rgba(174, 242, 63, 0.16), transparent 46%),
+    radial-gradient(120% 200% at 10% -40%, rgba(58, 87, 173, 0.5), transparent 52%),
+    linear-gradient(180deg, var(--navy-900), var(--navy-850));
+  border-bottom: 1px solid rgba(174, 203, 255, 0.10);
+  backdrop-filter: saturate(1.1) blur(20px);
   transition:
     gap 240ms ease,
     padding 240ms ease,
     background 240ms ease;
 }
 
-/* Past the fold the lockup gives way to the S-mark and the bar tightens. */
+/* Past the fold the bar tightens. One portrait icon carries both states now, so
+   there is no lockup-to-mark crossfade left to run - it just gets smaller. */
 .site-header.is-compact {
-  --brand-w: 30px;
-  --brand-h: 36px;
+  --brand-icon-scale: 1.16;
   --persona-photo: 26px;
   --persona-linkedin: 24px;
   --persona-pad: 3px 4px;
@@ -182,8 +196,8 @@ p {
   align-items: center;
   flex: 0 0 auto;
   min-width: var(--brand-w);
-  height: var(--brand-h);
-  /* the leading slot the absolutely-positioned lockup art occupies */
+  height: var(--brand-icon-h);
+  /* the leading slot the absolutely-positioned mark occupies */
   padding: 0 0 0 var(--brand-w);
   overflow: visible;
   background: transparent;
@@ -198,8 +212,7 @@ p {
   transition: padding-left 240ms ease 110ms, height 240ms ease;
 }
 
-.brand-logo,
-.brand-mark {
+.brand-logo {
   position: absolute;
   top: 50%;
   left: 0;
@@ -208,32 +221,11 @@ p {
   max-width: none;
   height: 100%;
   transform: translateY(-50%);
-  /* Both files are monochrome art cut for the old near-black bar:
-     srs-lettermark.png is near-white (mean ink 183/255) and would vanish here,
-     srs-mark.png is a mid grey (138/255) and washes out. brightness(0) flattens
-     each to solid ink while keeping the alpha, so the lockup and the compact
-     mark read the same weight on the light bar. Measured, not guessed. */
-  filter: brightness(0);
-}
-
-.brand-logo {
-  opacity: 1;
-  transition: opacity 190ms ease 130ms;
-}
-
-.brand-mark {
-  opacity: 0;
-  transition: opacity 130ms ease;
-}
-
-.site-header.is-compact .brand-logo {
-  opacity: 0;
-  transition: opacity 130ms ease;
-}
-
-.site-header.is-compact .brand-mark {
-  opacity: 1;
-  transition: opacity 190ms ease 130ms;
+  /* NO brightness() filter. The old one existed because both retired PNGs were
+     grey art cut for a different bar and had to be flattened to read on white.
+     srs-icon-reverse.svg is already paper white #f7f9fb and measures 16.76:1 on
+     this navy - filtering it would destroy the very thing that makes it legible. */
+  transition: height 240ms ease;
 }
 
 .header-persona,
@@ -363,7 +355,7 @@ p {
   display: block;
   padding: 8px 12px;
   border-radius: 8px;
-  color: var(--ink-soft);
+  color: var(--on-navy-soft);
   font-size: 0.9rem;
   font-weight: 600;
   white-space: nowrap;
@@ -371,8 +363,8 @@ p {
 }
 
 .nav-links a:hover {
-  color: var(--ink);
-  background: rgba(13, 23, 51, 0.05);
+  color: var(--on-navy);
+  background: rgba(174, 203, 255, 0.09);
 }
 
 /* "You are here" is system state, so the mark is lime. The ink and background
@@ -381,8 +373,8 @@ p {
 .nav-links a[aria-current="page"],
 .nav-links a.is-active {
   position: relative;
-  color: var(--ink);
-  background: rgba(13, 23, 51, 0.05);
+  color: var(--on-navy);
+  background: rgba(174, 203, 255, 0.09);
 }
 
 .nav-links a[aria-current="page"]::after,
@@ -395,6 +387,161 @@ p {
   height: 2px;
   border-radius: 2px;
   background: var(--lime-deep);
+}
+
+/* --- /construction product cards ----------------------------------------- */
+/* Two-up, not .service-grid: that one is 3-column and carries nth-child border
+   colours for a three-card row, so a two-card set inherits the wrong accents. */
+.product-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+}
+
+.product-card:nth-child(1) { border-top: 5px solid var(--lime); }
+.product-card:nth-child(2) { border-top: 5px solid var(--amber); }
+
+/* The lockups are different aspects (SLED RADAR 6:1, BidStrike 5.9:1), so they are
+   capped on HEIGHT and left to find their own width. Capping width instead would
+   render them at two different visual weights. */
+.product-card-lockup {
+  height: 26px;
+  width: auto;
+  align-self: flex-start;
+  margin-bottom: 4px;
+}
+
+.product-card h3 { margin: 0; }
+
+.product-card-meta {
+  margin-top: auto;
+  color: var(--ink-soft);
+  font-size: 0.86rem;
+}
+
+.tick-list {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tick-list li {
+  padding-left: 26px;
+  position: relative;
+  color: var(--ink-soft);
+}
+
+.tick-list li::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--lime-deep);
+}
+
+.tick-list li strong { color: var(--ink); }
+
+@media (max-width: 900px) {
+  .product-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --- Solutions & Results dropdown ---------------------------------------- */
+/* The panel is a LIGHT card hanging off a DARK bar, so its own children keep the
+   light-ground tokens (--ink, --wash). Do not "fix" them to on-navy. */
+.nav-drop {
+  position: relative;
+}
+
+.nav-drop-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 30;
+  min-width: 460px;
+  margin-top: 6px;
+  padding: 10px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  display: none;
+}
+
+/* :focus-within is not decoration. Hover-only ships a nav no keyboard user can
+   open, and the dropdown is the only route to /construction. */
+.nav-drop:hover .nav-drop-panel,
+.nav-drop:focus-within .nav-drop-panel {
+  display: block;
+}
+
+/* SPECIFICITY, and this shipped wrong once: `.nav-links a` is (0,1,1) and beats a
+   bare `.nav-drop-row` (0,1,0), so the row inherited the DARK-BAR link colour and
+   rendered light blue on the white panel. The contrast gate did not catch it - it
+   reads declared token pairs, not the resolved cascade. Keep the selector qualified. */
+.nav-links .nav-drop-row,
+.nav-drop-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.nav-links .nav-drop-row:hover,
+.nav-links .nav-drop-row:focus-visible,
+.nav-drop-row:hover,
+.nav-drop-row:focus-visible {
+  background: var(--wash);
+  color: var(--ink);
+}
+
+.nav-drop-brands {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 0 auto;
+}
+
+.nav-drop-brands img {
+  height: 18px;
+  width: auto;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  /* On the mobile panel the rows are already in the flow; a floating card would
+     hang off the viewport edge. */
+  .nav-drop-panel {
+    position: static;
+    display: block;
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
 }
 
 /* --- hamburger (three spans, per the markup) ----------------------------- */
@@ -3069,7 +3216,7 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .brand-words strong {
-  color: var(--ink);
+  color: var(--on-navy);
   font-size: var(--wm-name);
   font-weight: 700;
   letter-spacing: 0.01em;
@@ -3077,7 +3224,10 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .brand-words small {
-  color: var(--teal);
+  /* was var(--teal), chosen against the old white bar. On navy that tone falls
+     under the 4.5:1 floor, so the tagline moves to the on-navy soft token
+     (11.3:1). check-brand-system.py's contrast pass is the authority here. */
+  color: var(--on-navy-soft);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: var(--wm-tag);
   font-weight: 700;
@@ -3123,11 +3273,11 @@ body.nav-menu-open .sticky-booking-cta {
     display: none;
   }
 
-  /* No wordmark left to justify against, so the lockup goes back to carrying
-     the row on its own instead of staying shrunk to a phantom text block. */
+  /* No wordmark left to justify against, so the mark carries the row on its own
+     instead of staying sized to a phantom text block. Ratio is the SVG viewBox. */
   .site-header {
-    --brand-h: 40px;
-    --brand-w: calc(var(--brand-h) * 360 / 155);
+    --brand-icon-h: 40px;
+    --brand-w: calc(var(--brand-icon-h) * 496.835 / 620.970);
   }
 }
 

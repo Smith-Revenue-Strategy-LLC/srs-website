@@ -39,10 +39,29 @@ import sys
 os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 
 ROOT_PX = 16.0
-LETTERMARK = "assets/images/brand/srs-lettermark.png"
+BAR_PX = 66.0   # .nav-wrap height on the dark chrome
+# The monogram/lettermark retired 2026-08-27; the mark is now a PORTRAIT vector.
+# Aspect went 2.32 (360x155 landscape) -> 0.800 (496.835x620.970 portrait), so this
+# gate was re-pointed AND re-derived. Assertions were replaced, never weakened:
+# the exact-equality height check became a stated-multiple check plus a NEW bar-fit
+# check, and the hardcoded 360/155 became a ratio read out of the SVG's own viewBox
+# so the CSS and the art cannot drift apart silently.
+MARK = "assets/images/brand/srs-icon-reverse.svg"
 
 failures = []
 notes = []
+
+
+def mark_viewbox():
+    """(w, h) from the mark SVG's viewBox. The art is the authority on its own
+    aspect - never hardcode it in two places and hope they stay equal."""
+    if not os.path.exists(MARK):
+        return None
+    head = open(MARK, encoding="utf-8").read(2000)
+    m = re.search(r'viewBox="\s*([\d.]+)\s+([\d.]+)\s+([\d.]+)\s+([\d.]+)', head)
+    if not m:
+        return None
+    return float(m.group(3)), float(m.group(4))
 
 
 def check(name):
@@ -143,11 +162,25 @@ def _():
     if v is None:
         return ["--brand-w is not declared on .site-header"]
     bad = []
-    if "--brand-h" not in v:
-        bad.append("--brand-w is %r; it has to scale with --brand-h or the "
-                   "lockup gets letterboxed inside .brand (overflow: hidden)" % v)
-    if not re.search(r"360\s*/\s*155", v):
-        bad.append("--brand-w does not carry the 360/155 aspect: %r" % v)
+    # --brand-w now chains --brand-h -> --brand-icon-h -> --brand-w. Walk the chain
+    # rather than grepping for --brand-h directly: the requirement is that the width
+    # still traces back to the wordmark tokens, and a chain satisfies that. Anything
+    # that does NOT trace back gets letterboxed inside .brand (overflow: hidden).
+    icon_expr = decl(HEADER, "--brand-icon-h") or ""
+    traces = "--brand-h" in v or ("--brand-icon-h" in v and "--brand-h" in icon_expr)
+    if not traces:
+        bad.append("--brand-w is %r and --brand-icon-h is %r; neither traces back "
+                   "to --brand-h, so the mark no longer re-justifies when the "
+                   "wordmark is retyped" % (v, icon_expr))
+    if "--brand-icon-h" not in v:
+        bad.append("--brand-w is %r; the portrait mark must scale off "
+                   "--brand-icon-h, not the raw text block" % v)
+    vb = mark_viewbox()
+    if vb:
+        w, h = vb
+        if not re.search(re.escape("%g" % w) + r"\s*/\s*" + re.escape("%g" % h), v):
+            bad.append("--brand-w does not carry the mark's real %g/%g aspect: %r"
+                       % (w, h, v))
     return bad
 
 
@@ -176,20 +209,21 @@ def _():
 
 
 # --------------------------------------------------------------------------
-@check("srs-lettermark.png still matches the aspect the CSS hardcodes")
+@check("the mark art still matches the aspect the CSS hardcodes")
 def _():
-    if not os.path.exists(LETTERMARK):
-        return ["missing asset %s" % LETTERMARK]
-    with open(LETTERMARK, "rb") as fh:
-        head = fh.read(33)
-    if head[:8] != b"\x89PNG\r\n\x1a\n":
-        return ["%s is not a PNG" % LETTERMARK]
-    w, h = struct.unpack(">II", head[16:24])
-    notes.append("lettermark is %dx%d (aspect %.4f)" % (w, h, w / h))
-    if (w, h) != (360, 155):
-        return ["%s is %dx%d; --brand-w hardcodes 360/155. Re-export at the "
-                "same aspect or update the ratio in both places."
-                % (LETTERMARK, w, h)]
+    vb = mark_viewbox()
+    if vb is None:
+        return ["could not read a viewBox from %s" % MARK]
+    w, h = vb
+    notes.append("mark is %gx%g (aspect %.4f), portrait" % (w, h, w / h))
+    if w >= h:
+        return ["%s is %gx%g - that is landscape or square. The header layout "
+                "and this gate were both re-derived for a PORTRAIT mark; a "
+                "landscape file here means the wrong art got exported." % (MARK, w, h)]
+    v = decl(HEADER, "--brand-w") or ""
+    if not re.search(re.escape("%g" % w) + r"\s*/\s*" + re.escape("%g" % h), v):
+        return ["%s is %gx%g but --brand-w is %r. Re-export at the same aspect "
+                "or update the ratio in both places." % (MARK, w, h, v)]
     return []
 
 
@@ -209,7 +243,7 @@ def _():
 # and require they come out identical; the header centers them, so equal
 # heights means the top edges and the bottom edges land together.
 # --------------------------------------------------------------------------
-@check("lockup height equals the wordmark block height (top and bottom flush)")
+@check("the mark height is the stated multiple of the wordmark block")
 def _():
     name = px(decl(HEADER, "--wm-name"))
     tag = px(decl(HEADER, "--wm-tag"))
@@ -228,14 +262,41 @@ def _():
         return ["could not resolve --brand-h: %r" % expr]
     brand_h = eval(resolved)  # noqa: S307 - literal arithmetic, gated above
 
-    notes.append("wordmark block %.2fpx, lockup %.2fpx, overhang %.2fpx/edge"
-                 % (words_h, brand_h, (brand_h - words_h) / 2))
-    notes.append("lockup renders %.2fpx wide" % (brand_h * 360 / 155))
+    # The old rule was brand_h == words_h exactly, correct while the mark was a
+    # WIDE lettermark that paired edge-to-edge with the two-line text. A portrait
+    # mark held to the text height renders ~23px wide and reads as a bullet. So the
+    # rule is now: the icon height must still be DERIVED from the wordmark tokens
+    # (retyping the wordmark must still re-justify the mark) via an explicit,
+    # declared multiple - and that multiple must be in the CSS, not a magic number.
+    scale_raw = decl(HEADER, "--brand-icon-scale")
+    if scale_raw is None:
+        return ["--brand-icon-scale is not declared; the mark height would be a "
+                "magic number instead of derived from the wordmark tokens"]
+    scale = float(scale_raw)
+    icon_expr = decl(HEADER, "--brand-icon-h") or ""
+    if "--brand-h" not in icon_expr or "--brand-icon-scale" not in icon_expr:
+        return ["--brand-icon-h is %r; it must be --brand-h * --brand-icon-scale "
+                "so the mark stays tied to the wordmark tokens" % icon_expr]
+    icon_h = brand_h * scale
+    vb = mark_viewbox()
+    icon_w = icon_h * (vb[0] / vb[1]) if vb else float("nan")
+
+    notes.append("wordmark block %.2fpx, mark %.2fpx tall (x%.2f), %.2fpx wide"
+                 % (words_h, icon_h, scale, icon_w))
 
     if abs(brand_h - words_h) > 0.01:
-        return ["lockup is %.2fpx tall against a %.2fpx wordmark, so it hangs "
-                "%.2fpx past the text at each edge"
-                % (brand_h, words_h, abs(brand_h - words_h) / 2)]
+        return ["--brand-h is %.2fpx against a %.2fpx wordmark block - the base "
+                "token must still equal the text block" % (brand_h, words_h)]
+    # NEW assertion the old gate had no reason to make: a portrait mark can now
+    # outgrow the bar. 66px bar, and the mark must keep >=8px clearance each edge.
+    if icon_h > BAR_PX - 16:
+        return ["the mark resolves to %.2fpx tall in a %.0fpx bar, leaving under "
+                "8px clearance per edge. Lower --brand-icon-scale."
+                % (icon_h, BAR_PX)]
+    if icon_h <= words_h:
+        return ["the mark resolves to %.2fpx, no taller than the %.2fpx wordmark "
+                "block - a portrait mark at text height reads as a bullet, which "
+                "is the failure this re-layout exists to prevent" % (icon_h, words_h)]
     return []
 
 
@@ -251,9 +312,9 @@ def _():
         r"display:\s*none.*?)\n\}", CSS, re.S)
     if not block:
         return ["no @media (max-width: 900px) block hides .brand-words"]
-    if "--brand-h" not in block.group(1):
+    if "--brand-icon-h" not in block.group(1):
         return ["the <=900px block hides .brand-words but never resets "
-                "--brand-h, leaving the lockup sized to a wordmark that is "
+                "--brand-icon-h, leaving the mark sized to a wordmark that is "
                 "not on screen"]
     return []
 
