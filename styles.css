@@ -389,6 +389,47 @@ p {
   background: var(--lime-deep);
 }
 
+/* --- pull quotes and in-progress labels ---------------------------------- */
+.pull-quote {
+  margin: 22px 0;
+  padding: 22px 26px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--lime-deep);
+  border-radius: var(--radius);
+}
+
+.pull-quote p {
+  margin: 0;
+  font-size: 1.12rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.pull-quote cite {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  font-style: normal;
+  color: var(--ink-soft);
+}
+
+/* An unbuilt thing labelled as live fails Full Disclosure, so the label is a
+   real component rather than a sentence someone can quietly drop in an edit. */
+.status-note {
+  display: inline-block;
+  margin: 0 0 10px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: rgba(180, 83, 9, 0.1);
+  color: var(--action-text);
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.status-note strong { font-weight: 700; }
+
 /* --- home three-path router ---------------------------------------------- */
 /* Construction is priority 1, and the weighting is STRUCTURAL, not just a colour:
    it spans both columns of row 1 and is the only card carrying product lockups.
