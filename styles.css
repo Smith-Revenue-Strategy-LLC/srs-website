@@ -2171,14 +2171,11 @@ body.nav-menu-open .sticky-booking-cta {
 }
 
 .site-footer {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 36px clamp(18px, 5vw, 72px);
+  display: block;
+  padding: 60px clamp(18px, 5vw, 72px) 40px;
   background: var(--navy-950);
   color: var(--on-navy);
-  border-top: 0;
+  border-top: 1px solid rgba(174, 203, 255, 0.1);
 }
 
 .site-footer p {
@@ -2186,18 +2183,112 @@ body.nav-menu-open .sticky-booking-cta {
   color: var(--on-navy-soft);
 }
 
-.site-footer > div {
-  flex: 1 1 auto;
+/* NOTE: the 8/24 spec wrote `font: 700 12px var(--body)` for the column heads.
+   There is no --body token on this site (the stack is a literal "Geist", ...),
+   so the shorthand would have resolved to an invalid font and been dropped
+   WHOLESALE - size, weight and all - leaving the heads at inherited body type.
+   A font shorthand fails silently and completely. Longhand here on purpose. */
+.foot-top {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
+  gap: 32px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(174, 203, 255, 0.1);
 }
 
-.footer-legal {
-  align-self: center;
-  flex: 0 0 auto;
-  margin-left: auto;
-  color: var(--on-navy-soft);
-  font-size: 0.9rem;
-  text-align: right;
+.foot-brand img {
+  height: 34px;
+  width: auto;
+  display: block;
+  margin-bottom: 14px;
 }
+
+.foot-brand p {
+  margin: 0 0 18px;
+  max-width: 30ch;
+  font-size: 13.5px;
+  color: rgba(214, 224, 248, 0.6);
+}
+
+.foot-col h5 {
+  margin: 0 0 14px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(214, 224, 248, 0.85);
+}
+
+.foot-col a {
+  display: block;
+  padding: 5px 0;
+  font-size: 14px;
+  color: rgba(214, 224, 248, 0.62);
+  transition: color 140ms ease;
+}
+
+.foot-col a:hover,
+.foot-col a:focus-visible {
+  color: var(--lime);
+}
+
+.foot-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-top: 26px;
+  font-size: 12.5px;
+  color: rgba(214, 224, 248, 0.58);
+}
+
+/* --- operating principles band ------------------------------------------- */
+/* Purpose plus these THREE principles are the only two layers that survive.
+   The five reverse-engineered "Brand values" were deleted from srs-brand-voice.md
+   on 2026-08-18 and must not come back. check-footer-columns.py bans the string. */
+.principles-band {
+  padding: 30px clamp(18px, 5vw, 72px);
+  background: var(--navy-900);
+  border-top: 1px solid rgba(174, 203, 255, 0.1);
+}
+
+.principles-band ol {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.principles-band h4 {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+
+.principles-band p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--on-navy-soft);
+}
+
+@media (max-width: 900px) {
+  .foot-top { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 760px) {
+  .principles-band ol { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 560px) {
+  .foot-top { grid-template-columns: minmax(0, 1fr); }
+}
+
 
 .privacy-page {
   max-width: 760px;
