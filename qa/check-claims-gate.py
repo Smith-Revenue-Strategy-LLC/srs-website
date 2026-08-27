@@ -23,7 +23,46 @@ NEXT_STEP = "Let's get started"
 # Attributing his own IP to someone else is the failure this guards.
 ICM_NAMES = ["Van Clief", "McDermott", "2603.16021"]
 
+# Client identities that must never appear on a public page. Say what happened to
+# the WORK, never who it happened to, and NEVER characterize a client's finances -
+# true is not a defense there.
+#
+# "Texas Welding Company" is DELIBERATELY ABSENT from this list. It is already named
+# on the live site under Kennan's explicit 2026-08-13 naming and quote approval,
+# recorded in projects/BidStrike/messaging/CLAIMS.md, and check-bidstrike-surfaces.py
+# may depend on it. Adding it here would break a legitimate, approved use.
+NEVER_ON_SITE = ["Andrew Mulford", "Justin Dorroh", "Jacob Earls", "Kennan Westbrook",
+                 "Clark Contractors", "One Life Group", "Leap Development"]
+
+def claim_context(html):
+    """Strip the contexts where naming a person is a CONSENTED RELATIONSHIP rather
+    than a client-outcome claim, then return what is left.
+
+    This distinction is the whole check, and the 8/24 draft did not make it: that
+    version banned the names site-wide and fired on about.html, where Andrew Mulford
+    and Justin Dorroh appear as ADVISORS - photo, role, their own LinkedIn, their own
+    company website - plus matching JSON-LD Person entities. Nobody puts a person's
+    headshot and LinkedIn on their site without agreement. That is a stated
+    relationship, not an anonymized result, and erasing it would have been wrong.
+
+    What stays banned is a client identity anywhere an OUTCOME is being claimed, on
+    ANY page. So the exemption is scoped to the markup, not to a page name: drop a
+    name into a results paragraph on about.html and this still fires.
+    """
+    out = re.sub(r'<script type="application/ld\+json">.*?</script>', "", html, flags=re.S)
+    out = re.sub(r'<article class="resource-card">.*?</article>', "", out, flags=re.S)
+    return out
+
+
 fails = []
+for p in PAGES:
+    body = claim_context(open(p, encoding="utf-8").read())
+    for name in NEVER_ON_SITE:
+        if name in body:
+            fails.append("%s  client identity in an outcome-claim context -> %s. "
+                         "Say what happened to the WORK, never who it happened to."
+                         % (p, name))
+
 for p in PAGES:
     s = open(p, encoding="utf-8").read()
     low = s.lower()
