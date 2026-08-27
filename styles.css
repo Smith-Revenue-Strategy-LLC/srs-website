@@ -389,6 +389,96 @@ p {
   background: var(--lime-deep);
 }
 
+/* --- home three-path router ---------------------------------------------- */
+/* Construction is priority 1, and the weighting is STRUCTURAL, not just a colour:
+   it spans both columns of row 1 and is the only card carrying product lockups.
+   A visual-only emphasis would vanish the moment the grid collapses on mobile. */
+.path-router {
+  padding: 8px clamp(18px, 5vw, 72px) 48px;
+}
+
+.path-router-title {
+  margin: 0 0 20px;
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+}
+
+.path-router-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.path-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 26px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 5px solid var(--navy-600);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  color: var(--ink);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.path-card:hover,
+.path-card:focus-visible {
+  transform: translateY(-2px);
+  color: var(--ink);
+}
+
+.path-card-lead {
+  grid-column: 1 / -1;
+  border-top-color: var(--lime);
+}
+
+.path-card-kicker {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.path-card strong {
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+
+.path-card-body {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.path-card-brands {
+  display: inline-flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 4px;
+}
+
+/* Capped on HEIGHT, not width: the two lockups are different aspects, so a width
+   cap would render them at two different visual weights. */
+.path-card-brands img {
+  height: 22px;
+  width: auto;
+  display: block;
+}
+
+.path-card-go {
+  margin-top: auto;
+  padding-top: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--action-text);
+}
+
+@media (max-width: 760px) {
+  .path-router-grid { grid-template-columns: minmax(0, 1fr); }
+  .path-card-lead { grid-column: auto; }
+}
+
 /* --- /construction product cards ----------------------------------------- */
 /* Two-up, not .service-grid: that one is 3-column and carries nth-child border
    colours for a three-card row, so a two-card set inherits the wrong accents. */

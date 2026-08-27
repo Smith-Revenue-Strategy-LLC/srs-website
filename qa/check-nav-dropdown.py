@@ -28,6 +28,7 @@ PAGES = [p for p in sorted(glob.glob("*.html"))
 
 # Candidate product/lane rows, and the file each would resolve to.
 CANDIDATES = {"/construction": "construction.html",
+              "/what-we-do":   "what-we-do.html",
               "/operator-os":  "operator-os.html",
               "/results":      "results.html"}
 EXPECTED = {r for r, f in CANDIDATES.items() if os.path.exists(f)}

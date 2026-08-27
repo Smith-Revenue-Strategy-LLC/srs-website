@@ -25,6 +25,7 @@ BANNED_VALUES = ["Brand values", "Brand Values"]
 
 # Internal hrefs the footer may offer, gated on the page existing.
 CANDIDATES = {"/construction": "construction.html",
+              "/what-we-do":   "what-we-do.html",
               "/operator-os":  "operator-os.html",
               "/results":      "results.html",
               "/events":       "events.html",
@@ -32,7 +33,8 @@ CANDIDATES = {"/construction": "construction.html",
               "/about":        "about.html",
               "/is-this-you":  "is-this-you.html",
               "/contact":      "contact.html",
-              "/privacy":      "privacy.html"}
+              "/privacy":      "privacy.html",
+              "/work-together":"work-together.html"}
 
 fails = []
 foot_re = re.compile(r'<footer class="site-footer">.*?</footer>', re.S)
