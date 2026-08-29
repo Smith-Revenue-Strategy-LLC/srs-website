@@ -62,8 +62,18 @@
   --lime: #aef23f;
   --lime-bright: #c8ff63;
   --lime-deep: #8ed420;
-  --amber: #8a6d00;
-  --amber-hover: #6f5700;
+  /* BRIGHTENED 2026-08-29 (Rodney): "a bit muddy green and don't exactly speak
+     positivity". He was reading luminance - #8a6d00 sat at L 0.163, genuinely
+     dark, and dark plus hue 47 reads olive. #ffc233 is L 0.601. Going this
+     bright means the label goes NAVY, which is what the lime button already
+     does; navy on it is 10.96:1. */
+  --amber: #ffc233;
+  --amber-hover: #e8a800;
+  /* Amber as TEXT on a light ground is a different job and must stay dark -
+     #ffc233 as text on white is 1.7:1. This keeps the old fill tone, which is
+     4.92:1 on white, and is why --action-text is no longer an alias of
+     --amber-hover. */
+  --amber-text: #8a6d00;
   --maxw: 1200px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
@@ -73,7 +83,7 @@
   --action: var(--amber);         /* CTA fill, white text on it (5.02:1) */
   /* Amber as TEXT: the fill tone is under AA on --canvas-2, so the darker
      tone clears 6.1:1 on every ground we ship, so amber text uses this. */
-  --action-text: var(--amber-hover);
+  --action-text: var(--amber-text);
 
   /* -- on the navy islands ---------------------------------------------- */
   --on-navy: #ffffff;
@@ -95,7 +105,7 @@
   --green: var(--navy-600);       /* was the "system" text colour */
   --green-rgb: 39, 64, 136;       /* navy-600, for washes/dividers only */
   --gold: var(--amber);           /* was #f0cf73, the CTA */
-  --amber-pale: rgba(138, 109, 0, 0.14);
+  --amber-pale: rgba(138, 109, 0, 0.14);   /* wash sits behind text: stays dark */
 
   /* REMOVED, not renamed: --orange (#7fc79a) and --violet (#1a8f54) were both
      greens wearing the wrong name, plus --charcoal, --panel, --panel-soft and
@@ -890,13 +900,13 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
   font-size: 0.875rem;
 }
 
-/* AMBER = a human acts. This is the CTA colour on this site. White on #8a6d00
+/* AMBER = a human acts. This is the CTA colour on this site. Navy on #ffc233
    is 5.02:1. It is deliberately NOT lime - lime is the system accent. */
 .btn-amber {
   background: var(--action);
-  color: #ffffff;
+  color: var(--navy-950);
   border-color: var(--amber-hover);
-  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(138, 109, 0, 0.55);
+  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(180, 140, 0, 0.5);
 }
 
 .btn-amber:hover {
@@ -960,9 +970,9 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
 .nav-cta,
 .button.primary {
   background: var(--action);
-  color: #ffffff;
+  color: var(--navy-950);
   border-color: var(--amber-hover);
-  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(138, 109, 0, 0.55);
+  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(180, 140, 0, 0.5);
 }
 
 .button.secondary {

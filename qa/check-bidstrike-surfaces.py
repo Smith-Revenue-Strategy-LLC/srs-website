@@ -429,6 +429,15 @@ def _():
 # Before this date the expectation was bidstrike-logo-white.png, which was right
 # for the dark site and became a stale assertion the moment the theme changed.
 LOGO_SRC = "/assets/images/brand/bidstrike-logo.png"
+# The ON-BUTTON variant, added 2026-08-29. .bs-cta is a LIME button and the
+# BidStrike strike is lime (mean 185,250,14 against --lime #aef23f), so on that
+# fill the strike all but disappears. This asset is the same art with a shadow
+# composited behind THE STRIKE PIXELS ONLY - the navy wordmark casts nothing.
+#
+# It is allowed in exactly one place: inside a .bs-cta anchor. Anywhere else is
+# a FAIL, because a shadowed mark on a flat ground is just a dirty edge. That
+# makes this assertion narrower than the one it replaced, not looser.
+LOGO_SRC_BUTTON = "/assets/images/brand/bidstrike-logo-onbutton.png"
 
 
 @check("every display wordmark is the logo art, with alt text")
@@ -444,12 +453,17 @@ def _():
         src = read(page)
         if "bs-mark" in src:
             bad.append("%s: still renders the .bs-mark type stand-in" % page)
+        # which placements sit inside a lime CTA button
+        cta_blocks = " ".join(re.findall(r'<a class="bs-cta"[^>]*>.*?</a>', src, re.S))
         for tag in re.findall(r"<img\b[^>]*\bbs-logo\b[^>]*>", src):
             found += 1
             attrs = dict(ATTR_RE.findall(tag))
-            if attrs.get("src") != LOGO_SRC:
-                bad.append("%s: bs-logo src is %r, expected %r"
-                           % (page, attrs.get("src"), LOGO_SRC))
+            on_button = tag in cta_blocks
+            want = LOGO_SRC_BUTTON if on_button else LOGO_SRC
+            if attrs.get("src") != want:
+                bad.append("%s: bs-logo src is %r, expected %r (%s a .bs-cta button)"
+                           % (page, attrs.get("src"), want,
+                              "inside" if on_button else "not inside"))
             if attrs.get("alt") != "BidStrike":
                 bad.append('%s: bs-logo alt is %r, expected "BidStrike" - the '
                            "brand name only reaches a screen reader through alt "
@@ -460,6 +474,8 @@ def _():
 
     # The art file has to exist and match the attributes, or every placement
     # renders at the wrong aspect (or as a broken-image icon).
+    if not os.path.exists(LOGO_SRC_BUTTON.lstrip("/")):
+        bad.append("the on-button art %s is missing" % LOGO_SRC_BUTTON)
     if not os.path.exists(LOGO_SRC.lstrip("/")):
         bad.append("missing asset %s" % LOGO_SRC)
     else:

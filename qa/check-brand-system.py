@@ -106,12 +106,14 @@ PAIRS = [
     ("#0d1733", "#f4f6fb", 4.5, "body ink on canvas"),
     ("#495777", "#f4f6fb", 4.5, "soft ink on canvas"),
     ("#0d1733", "#ffffff", 4.5, "ink on card"),
-    # Re-toned 2026-08-29 from #b45309 (hue 26 deg, orange-RED) to #8a6d00
-    # (hue 47 deg, deep gold) because Rodney reads red as "stop" on a CTA.
-    # These pairs are UPDATED, never deleted - they are what stops the CTA
-    # drifting back under the AA floor.
-    ("#8a6d00", "#ffffff", 4.5, "gold CTA text on white"),
-    ("#ffffff", "#8a6d00", 4.5, "white text on gold CTA"),
+    # The CTA moved twice on 2026-08-29. First off the red axis (#b45309, hue
+    # 26, orange-RED) to #8a6d00. Then brighter, because #8a6d00 sat at
+    # luminance 0.163 and read olive. #ffc233 is L 0.601, and at that
+    # brightness the LABEL HAS TO BE NAVY - white on it is 2.2:1.
+    # Amber as TEXT on a light ground is a separate token (--amber-text) and
+    # stays dark; both jobs are asserted here so neither can drift.
+    ("#0d1733", "#ffc233", 4.5, "navy label on the bright CTA fill"),
+    ("#8a6d00", "#ffffff", 4.5, "amber-text on white"),
     ("#0d1733", "#aef23f", 4.5, "navy text on lime fill"),
     # The mobile menu sits on TWO grounds - navy at the top of the page, white
     # once .is-compact fires - and both need to clear AA. The navy case shipped
