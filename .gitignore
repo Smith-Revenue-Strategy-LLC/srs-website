@@ -8,3 +8,15 @@ docs/
 # Local tooling / OS
 .claude/
 .DS_Store
+
+# Chromeless hand-out pages: LOCAL ONLY until they are finished.
+# ready-2a0a1c.html is the Operator OS Install "you're ready" page. It is handed
+# out by link, one person at a time, and it is NOT finished: it references
+# /assets/video/operator-os-ready.mp4, which does not exist in this repo, while
+# its own fallback copy tells the reader "Nothing is broken."
+#
+# It was swept in by a `git add -A` on 2026-08-28 and went live at
+# https://smithrevenuestrategy.com/ready-2a0a1c.html before anyone ruled on it.
+# Untracked again the same day. This entry is the guardrail so the next `add -A`
+# cannot repeat it. Ship the video first, then remove this line deliberately.
+ready-2a0a1c.html
