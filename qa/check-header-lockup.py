@@ -9,7 +9,10 @@ Run after ANY edit to the .site-header, .brand or .brand-words rules:
 WHAT THIS PROTECTS
 ------------------
 The SRS lockup sits beside a two-line wordmark: "Smith Revenue Strategy" over
-"Unlock AI-Enabled Growth". Until 2026-08-12 the lockup was a hardcoded 40px
+the ruled line, "Freedom to do the work only people can do." (that second line
+was "Unlock AI-Enabled Growth" until Rodney replaced it on 2026-08-28; this
+gate never asserted the literal, it derives from the type tokens, which is
+exactly why the swap did not break it). Until 2026-08-12 the lockup was a hardcoded 40px
 tall while that text block measured 29.09px, so with the header centering both,
 the logo hung 5.45px past the text at the top AND the bottom. The owner read it
 as misaligned in a browser on 2026-08-12, and he was right.

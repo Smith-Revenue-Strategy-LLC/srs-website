@@ -327,7 +327,11 @@ def _():
                        "already carries the accessible name)" % page)
     if len(seen) > 1:
         bad.append("brand-words differs between pages: %s" % [v for v in seen.values()])
-    for text in ("Smith Revenue Strategy", "Unlock AI-Enabled Growth"):
+    # The tagline was "Unlock AI-Enabled Growth" until 2026-08-28. Rodney ruled
+    # the lockup carries the ruled headline instead, so one message runs
+    # everywhere. Assert the NEW literal - never delete this check, or the
+    # tagline silently drifts back page by page.
+    for text in ("Smith Revenue Strategy", "Freedom to do the work only people can do."):
         if not any(text in b for b in seen):
             bad.append("brand-words missing the string %r" % text)
     notes.append("brand-words on %d/%d chrome pages" % (sum(len(v) for v in seen.values()), len(CHROME_PAGES)))

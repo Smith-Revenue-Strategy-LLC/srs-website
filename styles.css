@@ -2374,6 +2374,30 @@ body.nav-menu-open .sticky-booking-cta {
   color: rgba(214, 224, 248, 0.58);
 }
 
+/* --- footer principles strip ----------------------------------------------
+   The SKINNY sitewide variant, ruled by Rodney 2026-08-28. Names ONLY: no
+   headings, no paragraph copy. The full .principles-band below keeps its
+   paragraphs and now renders on about.html ALONE. A full band on all 13 pages
+   was reading as boilerplate and draining the strongest thing SRS publishes.
+   about.html carries BOTH variants by ruling - that is a decision, not a bug.
+   qa/check-footer-columns.py holds the two apart and drift-checks each one
+   separately, so do not merge these rules back together. */
+.foot-principles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  padding: 24px 0 0;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--lime);
+}
+
+.foot-principles span {
+  white-space: nowrap;
+}
+
 /* --- operating principles band ------------------------------------------- */
 /* Purpose plus these THREE principles are the only two layers that survive.
    The five reverse-engineered "Brand values" were deleted from srs-brand-voice.md
