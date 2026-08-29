@@ -106,9 +106,18 @@ PAIRS = [
     ("#0d1733", "#f4f6fb", 4.5, "body ink on canvas"),
     ("#495777", "#f4f6fb", 4.5, "soft ink on canvas"),
     ("#0d1733", "#ffffff", 4.5, "ink on card"),
-    ("#b45309", "#ffffff", 4.5, "amber CTA text on white"),
-    ("#ffffff", "#b45309", 4.5, "white text on amber CTA"),
+    # Re-toned 2026-08-29 from #b45309 (hue 26 deg, orange-RED) to #8a6d00
+    # (hue 47 deg, deep gold) because Rodney reads red as "stop" on a CTA.
+    # These pairs are UPDATED, never deleted - they are what stops the CTA
+    # drifting back under the AA floor.
+    ("#8a6d00", "#ffffff", 4.5, "gold CTA text on white"),
+    ("#ffffff", "#8a6d00", 4.5, "white text on gold CTA"),
     ("#0d1733", "#aef23f", 4.5, "navy text on lime fill"),
+    # The mobile menu sits on TWO grounds - navy at the top of the page, white
+    # once .is-compact fires - and both need to clear AA. The navy case shipped
+    # at 2.45:1 until 2026-08-29 because one ink was used for both.
+    ("#c3cfeb", "#0d1733", 4.5, "mobile menu ink on the navy bar"),
+    ("#495777", "#ffffff", 4.5, "mobile menu ink on the compact white bar"),
 ]
 print("  contrast:")
 for fg, bg, need, label in PAIRS:

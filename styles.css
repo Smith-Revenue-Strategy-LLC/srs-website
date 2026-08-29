@@ -6,7 +6,11 @@
    THE TWO-ACCENT RULE (kept from the dark theme, re-mapped for a light ground):
      LIME  #aef23f = "the system works". Machine output, automated steps,
                      process rails, BidStrike product surfaces.
-     AMBER #b45309 = "a human acts". Every primary CTA. Book a Call is AMBER.
+     AMBER #8a6d00 = "a human acts". Every primary CTA. Book a Call is AMBER.
+     RE-TONED 2026-08-29 from #b45309. Rodney: "I do not want any CTA buttons
+     that are near red. Red means stop to my mind." He was reading it right -
+     #b45309 sits at hue 26 deg, which is orange-RED. #8a6d00 is hue 47 deg,
+     a deep gold, same family and same weight on the page, off the red axis.
    Do not collapse these into one accent and do not make an SRS CTA lime.
 
    HOW LIME SURVIVES A LIGHT GROUND. Lime on white is 1.35:1, so it can never
@@ -58,8 +62,8 @@
   --lime: #aef23f;
   --lime-bright: #c8ff63;
   --lime-deep: #8ed420;
-  --amber: #b45309;
-  --amber-hover: #92400e;
+  --amber: #8a6d00;
+  --amber-hover: #6f5700;
   --maxw: 1200px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 
@@ -67,7 +71,7 @@
   --system: var(--navy-600);      /* text that labels machine output */
   --system-mark: var(--lime);     /* the graphic that carries the lime */
   --action: var(--amber);         /* CTA fill, white text on it (5.02:1) */
-  /* Amber as TEXT: #b45309 is 4.32:1 on --canvas-2, under AA. The darker
+  /* Amber as TEXT: the fill tone is under AA on --canvas-2, so the darker
      tone clears 6.1:1 on every ground we ship, so amber text uses this. */
   --action-text: var(--amber-hover);
 
@@ -91,7 +95,7 @@
   --green: var(--navy-600);       /* was the "system" text colour */
   --green-rgb: 39, 64, 136;       /* navy-600, for washes/dividers only */
   --gold: var(--amber);           /* was #f0cf73, the CTA */
-  --amber-pale: rgba(180, 83, 9, 0.14);
+  --amber-pale: rgba(138, 109, 0, 0.14);
 
   /* REMOVED, not renamed: --orange (#7fc79a) and --violet (#1a8f54) were both
      greens wearing the wrong name, plus --charcoal, --panel, --panel-soft and
@@ -225,7 +229,31 @@ p {
      grey art cut for a different bar and had to be flattened to read on white.
      srs-icon-reverse.svg is already paper white #f7f9fb and measures 16.76:1 on
      this navy - filtering it would destroy the very thing that makes it legible. */
-  transition: height 240ms ease;
+  transition: height 240ms ease, opacity 200ms ease;
+}
+
+/* --- the compact bar is WHITE, so the white mark has to hand off -----------
+   .site-header.is-compact sets background: rgba(255,255,255,0.95). The header
+   mark is srs-icon-reverse.svg, paper white #f7f9fb. On that ground it is
+   INVISIBLE, and it shipped that way until Rodney caught it on mobile
+   2026-08-29. Nothing else in the header breaks on white: .brand-words is
+   already faded to opacity 0 by then, and the mobile nav panel sets its own
+   dark ink.
+
+   Both marks ride in the DOM and the bar state crossfades between them. No JS
+   and no src swap, so there is no first-scroll flash on an uncached file.
+   srs-icon.svg is the navy master #091e3b on the SAME viewBox as the reverse,
+   so the two are pixel-registered and the handoff cannot shift the lockup. */
+.brand-logo-dark {
+  opacity: 0;
+}
+
+.site-header.is-compact .brand-logo {
+  opacity: 0;
+}
+
+.site-header.is-compact .brand-logo-dark {
+  opacity: 1;
 }
 
 .header-persona,
@@ -421,7 +449,7 @@ p {
   margin: 0 0 10px;
   padding: 5px 12px;
   border-radius: 999px;
-  background: rgba(180, 83, 9, 0.1);
+  background: rgba(138, 109, 0, 0.1);
   color: var(--action-text);
   font-size: 0.78rem;
   letter-spacing: 0.04em;
@@ -750,6 +778,38 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
   padding-left: 12px;
 }
 
+/* --- the mobile menu has TWO grounds under it, and only one was styled ------
+   .site-nav lives INSIDE .site-header and has no background of its own, so it
+   inherits whichever bar it is sitting on. The bar is navy at the top of the
+   page and white once .is-compact fires. The link ink was --ink-soft #495777
+   for both, which is 7.21:1 on the white bar and **2.45:1 on the navy** - a
+   plain WCAG AA failure, and it is the washed-out menu Rodney photographed on
+   2026-08-29. Nobody caught it because the menu is usually opened after a
+   scroll, which is the state that happens to work.
+
+   The ink now follows the bar. --on-navy-soft is 11.32:1 on the navy ground.
+   The compact/white case keeps the existing --ink-soft and is untouched.
+   qa/check-brand-system.py carries both pairs so neither can regress. */
+.site-header:not(.is-compact) .site-nav {
+  border-top-color: var(--line-on-navy);
+}
+
+.site-header:not(.is-compact) .site-nav a {
+  color: var(--on-navy-soft);
+  border-bottom-color: rgba(174, 203, 255, 0.12);
+}
+
+.site-header:not(.is-compact) .site-nav a:hover,
+.site-header:not(.is-compact) .site-nav a:focus-visible {
+  color: var(--on-navy);
+  background: rgba(174, 203, 255, 0.09);
+}
+
+.site-header:not(.is-compact) .site-nav a[aria-current="page"],
+.site-header:not(.is-compact) .site-nav a.is-active {
+  color: var(--on-navy);
+}
+
 @keyframes navSlideDown {
   from { opacity: 0; transform: translateY(-8px); }
   to { opacity: 1; transform: none; }
@@ -830,13 +890,13 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
   font-size: 0.875rem;
 }
 
-/* AMBER = a human acts. This is the CTA colour on this site. White on #b45309
+/* AMBER = a human acts. This is the CTA colour on this site. White on #8a6d00
    is 5.02:1. It is deliberately NOT lime - lime is the system accent. */
 .btn-amber {
   background: var(--action);
   color: #ffffff;
   border-color: var(--amber-hover);
-  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(180, 83, 9, 0.55);
+  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(138, 109, 0, 0.55);
 }
 
 .btn-amber:hover {
@@ -902,7 +962,7 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
   background: var(--action);
   color: #ffffff;
   border-color: var(--amber-hover);
-  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(180, 83, 9, 0.55);
+  box-shadow: 0 1px 2px rgba(13, 23, 51, 0.1), 0 10px 22px -12px rgba(138, 109, 0, 0.55);
 }
 
 .button.secondary {
@@ -3623,7 +3683,7 @@ body.nav-menu-open .sticky-booking-cta {
 
 .event-comingsoon {
   padding: 26px 28px;
-  border: 1px solid rgba(180, 83, 9, 0.3);
+  border: 1px solid rgba(138, 109, 0, 0.3);
   border-radius: var(--radius);
   background: var(--card);
 }

@@ -57,6 +57,14 @@ for p in PAGES:
     for b in BRANDS:
         if b not in s:
             fails.append("%s  dropdown missing product lockup -> %s" % (p, b))
+    # ORDER IS A RULING, NOT A LAYOUT ACCIDENT. Rodney, 2026-08-29: BidStrike is
+    # the most established product and the one he is marketing hardest, so it
+    # leads every product list. Presence alone was checked before this date and
+    # presence alone lets the order drift back on the next page someone edits.
+    if all(b in s for b in BRANDS):
+        if s.index(BRANDS[1]) > s.index(BRANDS[0]):
+            fails.append("%s  SLED RADAR lockup precedes BidStrike. BidStrike leads "
+                         "every product list (ruled 8/29)" % p)
     if 'class="site-nav' not in s:
         fails.append("%s  .site-nav contract broken (script.js binds the CLASS)" % p)
     # keyboard access is not optional - hover-only ships a nav no tab user can open
