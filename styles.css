@@ -1325,6 +1325,73 @@ h3 {
   font-weight: 600;
 }
 
+/* --- the way back UP the bracket ----------------------------------------
+   Sits at the foot of every lane page. Deliberately quiet: it is an exit for
+   the person in the wrong lane, not a competing CTA for the person in the
+   right one. Rodney's rule, 2026-08-30. */
+.lane-escape {
+  padding: clamp(20px, 3vw, 28px) clamp(18px, 5vw, 72px) clamp(28px, 4vw, 40px);
+  background: var(--canvas);
+  border-top: 1px solid var(--line-soft);
+}
+
+.lane-escape p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.86rem;
+}
+
+.lane-escape a {
+  color: var(--green);
+  border-bottom: 1px solid rgba(39, 64, 136, 0.45);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.lane-escape a:hover,
+.lane-escape a:focus-visible {
+  border-bottom-color: var(--green);
+}
+
+/* --- the homepage's pointer at the founder story ------------------------- */
+/* Replaced the full .why-section on 2026-08-30 (Rodney: the origin story belongs
+   on /about, the homepage points at it). It has to stay visibly SMALLER than the
+   section it replaced. If it grows past three lines it has become that section
+   again. Flex-wrap, not a media query, so the link drops under the copy on
+   narrow screens without another breakpoint to maintain. */
+.why-chip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: clamp(12px, 2.5vw, 32px);
+  margin: 0 clamp(18px, 5vw, 72px) clamp(28px, 4vw, 44px);
+  padding: clamp(20px, 3vw, 28px) clamp(18px, 3vw, 30px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.why-chip-copy {
+  flex: 1 1 320px;
+}
+
+.why-chip .eyebrow {
+  margin-bottom: 8px;
+}
+
+.why-chip-copy p:last-child {
+  max-width: 68ch;
+  margin-bottom: 0;
+  color: var(--ink-soft);
+}
+
+.why-chip .why-more {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
 .why-more a {
   color: var(--green);
   border-bottom: 1px solid rgba(39, 64, 136, 0.45);
@@ -1342,14 +1409,25 @@ h3 {
   gap: 14px;
 }
 
+/* SINGLE COLUMN BY DEFAULT, fixed 2026-08-30. This was
+   `minmax(260px, 0.42fr) minmax(0, 1fr)` unconditionally, but .friction-summary
+   is used on ZERO pages (grep across all 14) - it is a leftover from an earlier
+   two-column design. So the list landed in the NARROW 0.42fr column and 58% of
+   the panel rendered empty on desktop. Invisible while the items were one-line
+   headings; adding a paragraph to item 02 made it obvious. The two-column form
+   is kept behind :has() so it still works if a summary is ever added back. */
 .friction-panel {
   display: grid;
-  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: clamp(20px, 4vw, 48px);
   padding: clamp(24px, 4vw, 40px);
   background: var(--card);
   border: 0;
   border-radius: 8px;
+}
+
+.friction-panel:has(.friction-summary) {
+  grid-template-columns: minmax(260px, 0.42fr) minmax(0, 1fr);
 }
 
 .friction-summary {
@@ -1398,6 +1476,96 @@ h3 {
   margin-bottom: 0;
 }
 
+/* --- 02 carries a picture -------------------------------------------------
+   Rodney's point, and the reason this one item is weighted: the failure is not
+   that new hires lean on tribal knowledge, it is that the knowledge LEAVES with
+   the person. Inline SVG on purpose - no external asset to 404, it inherits the
+   page's colour tokens, and it stays sharp at any size. Everything here is drawn
+   geometry, not a logo or a mark. */
+.friction-eq {
+  display: block;
+  width: 100%;
+  max-width: 480px;
+  height: auto;
+  margin-top: 24px;
+}
+
+.friction-eq .eq-ink { fill: var(--ink); }
+.friction-eq .eq-void { fill: var(--card); }
+
+/* The bubble stays NEUTRAL. Lime is --system-mark, the BidStrike signal, and a
+   lime bubble on the homepage friction list would read as a product cue. */
+.friction-eq .eq-bubble {
+  fill: var(--canvas-2);
+  stroke: var(--line);
+  stroke-width: 1.5;
+}
+
+.friction-eq .eq-outline {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 3;
+}
+
+.friction-eq .eq-arrow,
+.friction-eq .eq-bone {
+  fill: none;
+  stroke: var(--ink);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.friction-eq .eq-arrow { stroke-width: 3; }
+.friction-eq .eq-bone { stroke-width: 9; }
+
+.friction-eq .eq-ray {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.friction-eq .eq-teeth {
+  fill: none;
+  stroke: var(--card);
+  stroke-width: 2;
+}
+
+.friction-eq .eq-op {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
+
+/* the hours admin took, drawn as what is NOT there any more */
+.friction-eq .eq-faint {
+  fill: none;
+  stroke: var(--line);
+  stroke-width: 2;
+}
+
+.friction-eq .eq-dash {
+  fill: none;
+  stroke: var(--ink-faint);
+  stroke-width: 2;
+  stroke-dasharray: 4 3;
+}
+
+.friction-eq .eq-shard {
+  fill: var(--ink-faint);
+}
+
+/* --ink-soft, not --ink-faint: this is copy, and --ink-faint is 3.76:1 and
+   decoration-only per the token comment. */
+.friction-eq text {
+  fill: var(--ink-soft);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 12px;
+  font-weight: 700;
+  text-anchor: middle;
+}
+
 .steps article,
 .service-grid article,
 .assessment-card,
@@ -1437,7 +1605,22 @@ h3 {
   padding-bottom: clamp(34px, 5vw, 56px);
 }
 
+/* Both sides, not just the top. Before 2026-08-30 only padding-top was tuned
+   here, so the section kept .section's default clamp(72px,10vw,132px) on the
+   BOTTOM and stacked against .next-step-section's own 72px top. Measured at
+   375px: 144px of empty canvas between the last card and the next heading,
+   which is the gap Rodney flagged. The background change plus the 1px rule
+   already mark the boundary; the padding does not have to mark it twice. */
 .situation-page .situation-section {
+  padding-top: clamp(38px, 5vw, 64px);
+  padding-bottom: clamp(38px, 5vw, 64px);
+}
+
+/* Scoped to this page only. Trimming .next-step-section globally would move
+   the rhythm on every page that uses it. Here it makes the cards -> next-step
+   boundary match the page's own hero -> cards boundary (both ~76px at 375px)
+   instead of running 111px. */
+.situation-page .next-step-section {
   padding-top: clamp(38px, 5vw, 64px);
 }
 
@@ -3124,9 +3307,18 @@ body.nav-menu-open .sticky-booking-cta {
   content: url("/assets/images/brand/bidstrike-logo-white.png");
 }
 
-/* ...but the CTA inside the band is a LIME fill, where the dark art is correct. */
+/* ...but the CTA inside the band is a LIME fill, where the dark art is correct.
+   IT MUST BE THE SHADOWED CUT. The BidStrike strike is lime (185,250,14) and so
+   is this button, so the unshadowed strike disappears into the fill - the exact
+   blend the 8/29 session fixed everywhere else with -onbutton.png. This rule was
+   still pointing at the plain art, and because `content` on a replaced element
+   BEATS the src attribute, the markup's -onbutton.png never rendered. Silent:
+   the src reads correct in devtools and in the HTML.
+   Measured 2026-08-30: computed content here was bidstrike-logo.png while the
+   same button on results.html and is-this-you.html computed `normal` and drew
+   the shadowed art. That is why one surface looked wrong and the others right. */
 .bs-band .bs-cta .bs-logo {
-  content: url("/assets/images/brand/bidstrike-logo.png");
+  content: url("/assets/images/brand/bidstrike-logo-onbutton.png");
 }
 
 /* --- outbound link ------------------------------------------------------- */

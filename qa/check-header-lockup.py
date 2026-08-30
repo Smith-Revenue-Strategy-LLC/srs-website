@@ -9,7 +9,7 @@ Run after ANY edit to the .site-header, .brand or .brand-words rules:
 WHAT THIS PROTECTS
 ------------------
 The SRS lockup sits beside a two-line wordmark: "Smith Revenue Strategy" over
-the ruled line, "Freedom to do the work only people can do." (that second line
+the ruled line, "Freedom for the work only people can do." (that second line
 was "Unlock AI-Enabled Growth" until Rodney replaced it on 2026-08-28; this
 gate never asserted the literal, it derives from the type tokens, which is
 exactly why the swap did not break it). Until 2026-08-12 the lockup was a hardcoded 40px

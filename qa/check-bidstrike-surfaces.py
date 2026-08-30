@@ -272,7 +272,11 @@ def _():
         "work-together.html": ["utm_campaign=work-together-paths"],
         "results.html": ["bs-case", "utm_campaign=results-case"],
         "about.html": ["built-tray", "utm_campaign=about-tray"],
-        "is-this-you.html": ["situation_c", "utm_campaign=is-this-you"],
+        # The card marker was renamed situation_c -> bid_desk on 2026-08-30:
+        # "situation_c" told a reader nothing about what they were reading.
+        # This assertion is about the CARD still existing, so it follows the
+        # rename rather than pinning the old opaque label.
+        "is-this-you.html": ["bid_desk", "utm_campaign=is-this-you"],
         "faq.html": ["utm_campaign=faq"],
     }
     bad = []
@@ -331,7 +335,7 @@ def _():
     # the lockup carries the ruled headline instead, so one message runs
     # everywhere. Assert the NEW literal - never delete this check, or the
     # tagline silently drifts back page by page.
-    for text in ("Smith Revenue Strategy", "Freedom to do the work only people can do."):
+    for text in ("Smith Revenue Strategy", "Freedom for the work only people can do."):
         if not any(text in b for b in seen):
             bad.append("brand-words missing the string %r" % text)
     notes.append("brand-words on %d/%d chrome pages" % (sum(len(v) for v in seen.values()), len(CHROME_PAGES)))
