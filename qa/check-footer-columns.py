@@ -45,6 +45,7 @@ FULL_BAND_PAGE = "about.html"
 CANDIDATES = {"/construction": "construction.html",
               "/what-we-do":   "what-we-do.html",
               "/operator-os":  "operator-os.html",
+              "/ai-peer-group":"ai-peer-group.html",
               "/results":      "results.html",
               "/events":       "events.html",
               "/faq":          "faq.html",

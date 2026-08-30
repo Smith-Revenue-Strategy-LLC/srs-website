@@ -30,6 +30,7 @@ PAGES = [p for p in sorted(glob.glob("*.html"))
 CANDIDATES = {"/construction": "construction.html",
               "/what-we-do":   "what-we-do.html",
               "/operator-os":  "operator-os.html",
+              "/ai-peer-group": "ai-peer-group.html",
               "/results":      "results.html"}
 EXPECTED = {r for r, f in CANDIDATES.items() if os.path.exists(f)}
 ABSENT   = {r for r, f in CANDIDATES.items() if not os.path.exists(f)}
@@ -47,9 +48,17 @@ for p in PAGES:
         fails.append("%s  missing .nav-drop" % p)
     if 'class="nav-drop-panel"' not in s:
         fails.append("%s  missing .nav-drop-panel" % p)
+    # SCOPE THE SEARCH TO THE DROPDOWN PANEL. Until 2026-08-30 this checked the
+    # whole page, so a FOOTER link to the same href satisfied it and the row could
+    # be missing from the nav entirely. That is exactly what happened when
+    # ai-peer-group.html was added: it had the footer link, no nav row, and this
+    # gate reported PASS. A gate that any link on the page can satisfy is not
+    # checking the dropdown.
+    panel = " ".join(re.findall(r'<div class="nav-drop-panel">.*?</div>\s*</li>', s, re.S)) or ""
     for r in sorted(EXPECTED):
-        if 'href="%s"' % r not in s:
-            fails.append("%s  dropdown missing row for an EXISTING page -> %s" % (p, r))
+        if 'href="%s"' % r not in panel:
+            fails.append("%s  dropdown missing row for an EXISTING page -> %s "
+                         "(searched the .nav-drop-panel only)" % (p, r))
     for r in sorted(ABSENT):
         if 'href="%s"' % r in s:
             fails.append("%s  dropdown promises %s but %s does not exist"
