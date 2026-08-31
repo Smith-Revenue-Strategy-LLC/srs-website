@@ -2574,8 +2574,15 @@ body.nav-menu-open .sticky-booking-cta {
    A font shorthand fails silently and completely. Longhand here on purpose. */
 .foot-top {
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr;
-  gap: 32px;
+  /* Brand block plus FIVE link groups since 2026-08-30, when Rodney ruled the
+     footer should read as the sitemap: Construction Solutions and Revenue
+     Operations Consulting Solutions replaced the single "Solutions" column, and
+     the BidStrike chip was removed as redundant against the funnel structure.
+     minmax(0,1fr) on the link groups, not a bare 1fr, or the long
+     "Revenue Operations Consulting Solutions" heading forces the track wider
+     than its share and squeezes the rest. */
+  grid-template-columns: 1.3fr repeat(5, minmax(0, 1fr));
+  gap: 28px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(174, 203, 255, 0.1);
 }
@@ -2601,6 +2608,8 @@ body.nav-menu-open .sticky-booking-cta {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: rgba(214, 224, 248, 0.85);
+  overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .foot-col a {

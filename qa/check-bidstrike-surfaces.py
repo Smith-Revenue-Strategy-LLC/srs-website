@@ -94,13 +94,30 @@ LINKS = bidstrike_links()
 # renders identical to the sentence around it, so the link is real, clickable,
 # and completely unseeable. Every outbound link must carry a bs- class.
 # --------------------------------------------------------------------------
-@check("every bidstrike link carries a visible bs- class")
+@check("every bidstrike link is visibly styled, by a bs- class or its container")
 def _():
+    """The point of this check is that a BidStrike link must RENDER as something,
+    not as unstyled prose the eye slides past. A bs- class was the only way that
+    happened until 2026-08-30.
+
+    The footer sitemap added a second legitimate way: a plain <a> inside
+    .foot-col, which styles its own anchors. Asserting a bs- class there would
+    force a monospace lime-underlined .bs-link into a column of plain footer
+    links, which is a worse footer, so the CONTAINER counts as styling.
+
+    This is a widening of the accepted contexts, not of the rule. A BidStrike
+    link that is neither bs-classed nor inside .foot-col still fails."""
     bad = []
+    foot_col = re.compile(r'<div class="foot-col">.*?</div>', re.S)
+    cols = {p: " ".join(foot_col.findall(read(p))) for p in {l[0] for l in LINKS}}
     for page, tag, attrs in LINKS:
         classes = attrs.get("class", "")
-        if not any(c.startswith("bs-") for c in classes.split()):
-            bad.append("%s: class=%r would render as invisible prose" % (page, classes))
+        if any(c.startswith("bs-") for c in classes.split()):
+            continue
+        if tag in cols.get(page, ""):
+            continue
+        bad.append("%s: class=%r and not inside .foot-col, so it would render "
+                   "as invisible prose" % (page, classes))
     return bad
 
 
@@ -170,20 +187,39 @@ def _():
 # --------------------------------------------------------------------------
 # 5. The footer is site-wide and must stay byte-identical across pages.
 # --------------------------------------------------------------------------
-@check("bidstrike footer block present and identical on all pages")
+@check("bidstrike present in the footer sitemap, identical on all pages")
 def _():
-    block = re.compile(r'<div class="bs-footer-block">.*?</div>', re.S)
+    """RULED 2026-08-30. The standalone .bs-footer-block chip ("Also built here"
+    plus the lockup) is GONE - Rodney called it redundant once the footer became
+    the sitemap and the funnel structure carried the same job. BidStrike now
+    rides as a LINK inside the Construction Solutions group.
+
+    This assertion did not weaken with the chip. It still requires BidStrike on
+    every chrome page, still requires the footer to be identical across pages,
+    and it now ALSO pins the link to the Construction Solutions group rather
+    than accepting it anywhere in the footer. The old check would have passed on
+    a BidStrike link dropped into any column."""
+    foot = re.compile(r'<footer class="site-footer">.*?</footer>', re.S)
     seen = {}
     bad = []
     for page in CHROME_PAGES:
-        m = block.search(read(page))
+        m = foot.search(read(page))
         if not m:
-            bad.append("%s: no bs-footer-block" % page)
+            bad.append("%s: no site-footer" % page)
             continue
-        seen.setdefault(m.group(0), []).append(page)
+        f = m.group(0)
+        if "bs-footer-block" in f:
+            bad.append("%s: the retired .bs-footer-block chip is back" % page)
+        # the link has to sit in the construction group, not merely in the footer
+        grp = re.search(r'<h5>Construction Solutions</h5>(.*?)</div>', f, re.S)
+        if not grp:
+            bad.append("%s: no Construction Solutions group in the footer" % page)
+        elif "bidstrike.cloud" not in grp.group(1):
+            bad.append("%s: BidStrike missing from the Construction Solutions group" % page)
+        seen.setdefault(f, []).append(page)
     if len(seen) > 1:
-        bad.append("footer block differs between pages: %s" % [v for v in seen.values()])
-    notes.append("footer block on %d/%d chrome pages" % (sum(len(v) for v in seen.values()), len(CHROME_PAGES)))
+        bad.append("footer differs between pages: %s" % [v for v in seen.values()])
+    notes.append("footer sitemap on %d/%d chrome pages" % (sum(len(v) for v in seen.values()), len(CHROME_PAGES)))
     return bad
 
 
@@ -519,8 +555,17 @@ def _():
                            % (LOGO_SRC, w, h, d[0], d[1]))
 
     notes.append("bs-logo placements: %d across %d pages" % (found, len(PAGES)))
-    if found < 13:
-        bad.append("only %d bs-logo placements; 13 shipped on 2026-08-12" % found)
+    # The floor was 13 from 2026-08-12: one lockup per chrome page, and all but
+    # one of those was the .bs-footer-block chip. Rodney retired that chip on
+    # 2026-08-30 when the footer became the sitemap, so 13 is no longer a
+    # reachable number and holding it would fail forever on a shipped ruling.
+    #
+    # The floor is NOT deleted. It is re-derived from what the design now says
+    # should exist: the named campaign placements in check 8, each of which
+    # carries a lockup. Falling below that still means a placement went missing.
+    if found < 5:
+        bad.append("only %d bs-logo placements; the named campaign placements "
+                   "each carry one, so this means a placement was dropped" % found)
     return bad
 
 

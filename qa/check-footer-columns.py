@@ -16,7 +16,12 @@ CHROMELESS = "brand-system: chromeless page"
 PAGES = [p for p in sorted(glob.glob("*.html"))
          if CHROMELESS not in open(p, encoding="utf-8").read()]
 
-COLS = ["Solutions", "Resources", "Company", "Legal"]
+# RULED 2026-08-30: the footer is the SITEMAP. The single "Solutions" column
+# split into two named groups so a reader can tell which lane a link belongs to,
+# and the separate BidStrike chip came out as redundant against the funnel
+# structure. BidStrike now rides as a LINK inside Construction Solutions.
+COLS = ["Construction Solutions", "Revenue Operations Consulting Solutions",
+        "Resources", "Company", "Legal"]
 # The authoritative wording, confirmed by Rodney 2026-07-23. The five
 # reverse-engineered "Brand values" were DELETED from srs-brand-voice.md on
 # 2026-08-18 and must never come back - two layers remain, purpose and these three.
@@ -73,9 +78,13 @@ for p in PAGES:
         fails.append("%s  missing .foot-top" % p)
     if 'class="foot-bottom"' not in foot:
         fails.append("%s  missing .foot-bottom" % p)
-    if 'class="bs-footer-block"' not in foot:
-        fails.append("%s  bs-footer-block dropped - check-bidstrike-surfaces.py "
-                     "requires it on every chrome page" % p)
+    # The .bs-footer-block chip was RETIRED 2026-08-30 when the footer became the
+    # sitemap. This gate used to require it and pointed at check-bidstrike-surfaces
+    # as the reason, so the two gates held each other in place. That sibling check
+    # now asserts the replacement instead: a BidStrike link inside the Construction
+    # Solutions group. Requiring the chip here as well would deadlock the pair.
+    if 'class="bs-footer-block"' in foot:
+        fails.append("%s  the retired .bs-footer-block chip is back in the footer" % p)
     for c in COLS:
         if ">%s<" % c not in foot:
             fails.append("%s  footer missing column -> %s" % (p, c))
