@@ -1157,19 +1157,21 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
   max-width: 720px;
 }
 
+/* DE-TERMINALISED 2026-08-31 (Rodney): the mono stack and the `> ` prompt cue
+   both came out. His words: nobody types those things unless they cannot avoid
+   it. The label still reads as a label - uppercase, small, heavy, letter-spaced
+   at the same .08em the card kickers use - it just no longer cosplays a shell.
+   The ::before that carried the arrow is GONE, not emptied, so nothing inherits
+   a stray pseudo-element. */
 .eyebrow,
 .terminal-label {
   margin: 0 0 14px;
   color: var(--green);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.78rem;
   font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-}
-
-.eyebrow::before,
-.terminal-label::before {
-  content: "> ";
 }
 
 h1,
@@ -1293,7 +1295,7 @@ h3 {
   background-color: var(--lime);
   border: 1px solid var(--lime-deep);
   border-radius: 6px;
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.72rem;
   text-transform: uppercase;
 }
@@ -1476,7 +1478,7 @@ h3 {
 .lane-escape p {
   margin: 0;
   color: var(--ink-soft);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.86rem;
 }
 
@@ -1602,7 +1604,7 @@ h3 {
 
 .friction-list span {
   color: var(--green);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-weight: 900;
 }
 
@@ -1698,7 +1700,7 @@ h3 {
    decoration-only per the token comment. */
 .friction-eq text {
   fill: var(--ink-soft);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 12px;
   font-weight: 700;
   text-anchor: middle;
@@ -1731,7 +1733,7 @@ h3 {
   display: inline-flex;
   margin-bottom: 32px;
   color: var(--green);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-weight: 900;
 }
 
@@ -1874,7 +1876,7 @@ h3 {
 .card-kicker {
   margin: 0 0 8px;
   color: var(--green);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.78rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -2119,7 +2121,7 @@ h3 {
   border: 0;
   border-radius: 999px;
   color: var(--green);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.78rem;
   text-transform: uppercase;
 }
@@ -2241,7 +2243,7 @@ h3 {
 .event-register-panel dt {
   display: block;
   color: var(--green);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.74rem;
   font-weight: 900;
   text-transform: uppercase;
@@ -2796,6 +2798,19 @@ body.nav-menu-open .sticky-booking-cta {
 
 .foot-principles span {
   white-space: nowrap;
+}
+
+/* Rodney, 2026-08-31: "nothing says that there are values." The three names sat
+   here carrying only an aria-label, so a sighted reader saw three lime words and
+   no reason for them. Screen readers had the context; eyes did not.
+   It is a SPAN on purpose. check-footer-columns.py fails this strip on <p> or
+   <h4>, because headings-plus-copy on every page is exactly the boilerplate the
+   8/28 split removed. A label is not that; a heading would be.
+   Toned to --on-navy-soft rather than lime so it reads as the LABEL for the
+   three, not as a fourth value in the row. */
+.foot-principles-label {
+  color: var(--on-navy-soft);
+  opacity: 0.85;
 }
 
 /* --- operating principles band ------------------------------------------- */
@@ -3883,7 +3898,7 @@ body.nav-menu-open .sticky-booking-cta {
      under the 4.5:1 floor, so the tagline moves to the on-navy soft token
      (11.3:1). check-brand-system.py's contrast pass is the authority here. */
   color: var(--on-navy-soft);
-  font-family: "SFMono-Regular", Consolas, monospace;
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: var(--wm-tag);
   font-weight: 700;
   letter-spacing: 0.1em;
