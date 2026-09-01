@@ -37,7 +37,12 @@ function createHeaderPersona() {
     >
     ${linkedInIconMarkup("header-linkedin")}
   `;
-  // Insert after the brand ANCHOR, never after .brand-words.
+  // POSITION, ruled by Rodney 2026-08-31: the chip moves off the brand lockup and
+  // over to the About / Events / FAQ end of the bar. It goes AFTER the .nav-links
+  // list, so it lands immediately right of FAQ and left of the .nav-spacer that
+  // pushes Book a Call to the far edge.
+  //
+  // NEVER PUT IT BACK INSIDE .brand, AND NEVER ANCHOR IT TO .brand-words.
   // 2026-08-19: the flat top nav moved .brand-words INSIDE the <a class="brand">
   // lockup (it used to be a sibling). Anchoring to .brand-words therefore
   // injected this chip - which contains its own <a> to LinkedIn - inside the
@@ -46,9 +51,15 @@ function createHeaderPersona() {
   // normally split nested anchors never runs, so the invalid structure survives
   // into the live DOM: one click fires the LinkedIn link AND bubbles to the
   // brand link, and the browser can navigate home instead of to LinkedIn.
-  // .brand still ends with the wordmark, so "afterend" on the anchor keeps the
-  // chip welded to the lockup exactly as before.
-  brand.insertAdjacentElement("afterend", persona);
+  // .nav-links is a <ul>, not an anchor, so "afterend" on it is structurally safe
+  // in a way "inside .brand" never was. That is why the list is the anchor point.
+  const navLinks = document.querySelector(".nav-links");
+  if (navLinks) {
+    navLinks.insertAdjacentElement("afterend", persona);
+  } else {
+    // Fallback only. Still the anchor, never .brand-words, for the reason above.
+    brand.insertAdjacentElement("afterend", persona);
+  }
 }
 
 // The header never hides. Past the fold it compacts and the SRS lockup

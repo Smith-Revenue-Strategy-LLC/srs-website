@@ -176,10 +176,10 @@
         </div>
       </section>
 
-      <!-- Three-path router. Order ruled by Rodney 2026-08-31: Small and midsize,
-           then Owners and operators, then Construction third. Construction keeps the
-           full-width span because the two product lockups need the horizontal room,
-           not because it leads the list. -->
+      <!-- TWO-path router now. Construction LEFT this router 2026-08-31 (Rodney):
+           it was sitting here as a third door while actually being a different KIND
+           of thing, the two products SRS owns outright. It has its own band below.
+           What is left here is the two consulting lanes, side by side. -->
       <section class="path-router" id="where-do-you-fit" aria-labelledby="router-title">
         <h2 id="router-title" class="path-router-title">Where do you fit</h2>
         <div class="path-router-grid">
@@ -205,27 +205,67 @@
             <span class="path-card-go">See Operator OS</span>
           </a>
 
-          <a class="path-card path-card-lead" href="/construction">
-            <span class="path-card-kicker">Construction</span>
-            <strong>Most of your revenue starts as an invitation to bid</strong>
-            <span class="path-card-body">
-              This is the pursuit side of the business. Which invitations are worth a bid,
-              which get passed on, and whether the good ones get priced before the
-              deadline. If more than half your work arrives as a bid invite, by email, a
-              GC portal, or a bid board, this lane is yours.
-            </span>
-            <span class="path-card-brands">
-              <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
-              <span class="brand-sep" aria-hidden="true"></span>
-              <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
-            </span>
-            <span class="path-card-go">See the construction lane</span>
-          </a>
-
       </div>
       </section>
 
       <div class="hero-divider" role="presentation"></div>
+
+      <!-- CONSTRUCTION PRODUCT BAND. Moved out of .path-router 2026-08-31 (Rodney).
+           The chip style is DELIBERATELY not .path-card. The router is three doors a
+           visitor chooses between; this is an aside about two products we own. Same
+           system, different shape: a LEFT rail instead of a top border, and a deeper
+           ground under the whole band, so the eye reads "different kind of thing"
+           before it reads a word. Lime is the rail because in this system lime means
+           the system works, and it stays a FILL, never text.
+           Each chip goes to that product's BRIEF on this site. The brief is what
+           ports out to the product's own site. Do not point these straight at
+           bidstrike.cloud / sledradar.ai - that skips the step that qualifies. -->
+      <section class="lane-band" id="construction-products" aria-labelledby="lane-band-title">
+        <p class="lane-band-eyebrow">And if you build for a living</p>
+        <h2 id="lane-band-title">Two products we own. Both clear the path to the next award.</h2>
+        <p class="lane-band-lede">
+          Each one handles an essential workflow that decides whether the next project
+          award ever reaches you. They are not two versions of the same tool. Most
+          shops need one of them, not both.
+        </p>
+
+        <div class="lane-band-grid">
+
+          <a class="solution-chip" href="/construction#bidstrike">
+            <span class="solution-chip-mark">
+              <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
+            </span>
+            <strong>The invitations already arrive. There are more of them than anyone can read.</strong>
+            <span class="solution-chip-body">
+              Every bid invite lands on one board, scored on fit, general contractor
+              quality, distance, and documents. The go or no-go call takes a minute
+              instead of an afternoon.
+            </span>
+            <span class="solution-chip-fit">Fits when most of your revenue arrives as an invitation to bid.</span>
+            <span class="solution-chip-go">Read the BidStrike brief</span>
+          </a>
+
+          <a class="solution-chip" href="/sled-radar">
+            <span class="solution-chip-mark">
+              <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
+            </span>
+            <strong>Public work is decided months before the solicitation posts.</strong>
+            <span class="solution-chip-body">
+              The signal is sitting in the open record: board minutes, capital plans,
+              funding votes. SLED RADAR reads it, scores the entities worth the time, and
+              hands it back organized enough to feed the tools you already run.
+            </span>
+            <span class="solution-chip-fit">Fits when you sell into schools, cities, counties, or state agencies.</span>
+            <span class="solution-chip-go">Read the SLED RADAR brief</span>
+          </a>
+
+        </div>
+
+        <p class="lane-band-foot">
+          Each brief opens onto that product's own site.
+          <a href="/construction">See the whole construction lane</a>
+        </p>
+      </section>
 
       <!-- The founder story that used to sit here moved to /about on 2026-08-30
            (Rodney's call). A homepage does not carry the origin story; it points
