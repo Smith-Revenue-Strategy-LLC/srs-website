@@ -217,8 +217,18 @@ def _():
         grp = re.search(r'<h5>Construction Software</h5>(.*?)</div>', f, re.S)
         if not grp:
             bad.append("%s: no Construction Software group in the footer" % page)
-        elif "bidstrike.cloud" not in grp.group(1):
-            bad.append("%s: BidStrike missing from the Construction Software group" % page)
+        # RE-RULED 2026-08-31: the footer products now point INWARD, matching the
+        # homepage chips (d7040ce) and the nav bracket, because pointing them
+        # straight out skips the step that qualifies. This assertion REQUIRED the
+        # literal "bidstrike.cloud" here, so it encoded the old outward ruling and
+        # would have failed the new one. It inverted with the markup in the same
+        # commit, and now enforces the inward rule in both directions.
+        elif "/construction#bidstrike" not in grp.group(1):
+            bad.append("%s: BidStrike missing from the Construction Software group "
+                       "(it must point INWARD at /construction#bidstrike)" % page)
+        elif "bidstrike.cloud" in grp.group(1):
+            bad.append("%s: the footer BidStrike link points OUT again. Ruled "
+                       "inward 8/31 - outward skips the step that qualifies" % page)
         seen.setdefault(f, []).append(page)
     if len(seen) > 1:
         bad.append("footer differs between pages: %s" % [v for v in seen.values()])
