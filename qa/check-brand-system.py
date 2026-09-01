@@ -120,6 +120,12 @@ PAIRS = [
     # at 2.45:1 until 2026-08-29 because one ink was used for both.
     ("#c3cfeb", "#0d1733", 4.5, "mobile menu ink on the navy bar"),
     ("#495777", "#ffffff", 4.5, "mobile menu ink on the compact white bar"),
+    # REGRESSION, 2026-08-31. The DESKTOP list had no compact override at all, so
+    # .nav-links a stayed --on-navy-soft #c3cfeb on the white compact bar: 1.56:1,
+    # clickable and invisible. The mobile pair above existed and made the bar look
+    # covered. Both bars are asserted now, so neither can drift alone.
+    ("#495777", "#ffffff", 4.5, "desktop nav ink on the compact white bar"),
+    ("#c3cfeb", "#0d1733", 4.5, "desktop nav ink on the navy bar"),
 ]
 print("  contrast:")
 for fg, bg, need, label in PAIRS:

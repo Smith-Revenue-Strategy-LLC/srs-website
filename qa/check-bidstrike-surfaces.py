@@ -312,7 +312,14 @@ def _():
         # "situation_c" told a reader nothing about what they were reading.
         # This assertion is about the CARD still existing, so it follows the
         # rename rather than pinning the old opaque label.
-        "is-this-you.html": ["bid_desk", "utm_campaign=is-this-you"],
+        # RENAMED AGAIN 2026-08-31: bid_desk -> "The bid desk", when Rodney
+        # retired the terminal-coder register site-wide. Same reasoning as the
+        # 8/30 move, one step further: a snake_case marker was still code-speak
+        # wearing a label's clothes. The needle follows the copy, by design.
+        # NOTE the utm_campaign value is DELIBERATELY unchanged - it is a live
+        # attribution key, and renaming a visible label is not a reason to break
+        # historical campaign data.
+        "is-this-you.html": ["The bid desk", "utm_campaign=is-this-you"],
         "faq.html": ["utm_campaign=faq"],
     }
     bad = []

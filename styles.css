@@ -415,6 +415,35 @@ p {
   background: rgba(174, 203, 255, 0.09);
 }
 
+/* THE COMPACT BAR GOES WHITE AND, UNTIL 2026-08-31, THE DESKTOP LINKS DID NOT
+   FOLLOW IT. `.nav-links a` is --on-navy-soft #c3cfeb, a tone chosen for the
+   NAVY bar. On the compact bar's rgba(255,255,255,.95) that computes to
+   1.56:1 - the links are present, focusable and clickable, and effectively
+   invisible. Rodney reported it as "the header names almost become invisible
+   once users scroll down".
+   The MOBILE nav already had its matching pair (.site-header:not(.is-compact)
+   .site-nav a); the desktop list simply never got one, so the bug hid behind a
+   fix that looked like it covered both bars. --ink-soft is 7.21:1 on white and
+   is the same token the mobile bar uses in this exact state, so the two now
+   agree instead of diverging. Regression-checked in check-brand-system.py. */
+.site-header.is-compact .nav-links a {
+  color: var(--ink-soft);
+}
+
+.site-header.is-compact .nav-links a:hover,
+.site-header.is-compact .nav-links a:focus-visible {
+  color: var(--ink);
+  background: rgba(13, 23, 51, 0.06);
+}
+
+/* "You are here" needs the same treatment or the current page reads as the one
+   link that is broken. */
+.site-header.is-compact .nav-links a[aria-current="page"],
+.site-header.is-compact .nav-links a.is-active {
+  color: var(--ink);
+  background: rgba(13, 23, 51, 0.06);
+}
+
 .nav-links a[aria-current="page"]::after,
 .nav-links a.is-active::after {
   content: "";
@@ -2725,6 +2754,18 @@ body.nav-menu-open .sticky-booking-cta {
   gap: 28px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(174, 203, 255, 0.1);
+}
+
+/* `.foot-brand p` is (0,1,1) and beats a bare `.foot-brand-name` (0,1,0), so the
+   company name inherited the muted tagline tone and rendered at .6 alpha - the
+   one line in the block that should NOT be quiet. Scoped selector, same weight
+   class as the rule it has to beat. */
+.foot-brand p.foot-brand-name {
+  margin: 10px 0 6px;
+  color: var(--on-navy);
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
 }
 
 .foot-brand img {
