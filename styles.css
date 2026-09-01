@@ -545,6 +545,25 @@ p {
   display: block;
 }
 
+/* --- BidStrike | SLED RADAR divider -------------------------------------- */
+/* Ruled by Rodney 2026-08-31: side by side and un-separated, the two lockups
+   read as ONE long wordmark. They are two separate solutions, so the rule is
+   deliberately TALLER than the marks - it divides the pair instead of looking
+   like a hairline inside a single logo.
+   currentColor, not a fixed token: the dropdown rides a white panel on desktop
+   and the header's DARK bar state on mobile, so a fixed ink tone would vanish
+   in one of the two. Inheriting the row's own text colour is correct in both. */
+.brand-sep {
+  flex: 0 0 auto;
+  width: 1px;
+  background: currentColor;
+  opacity: 0.28;
+  border-radius: 1px;
+}
+
+.path-card-brands .brand-sep { height: 34px; }
+.nav-drop-brands .brand-sep { height: 28px; }
+
 .path-card-go {
   margin-top: auto;
   padding-top: 6px;
