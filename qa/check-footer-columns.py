@@ -20,7 +20,17 @@ PAGES = [p for p in sorted(glob.glob("*.html"))
 # split into two named groups so a reader can tell which lane a link belongs to,
 # and the separate BidStrike chip came out as redundant against the funnel
 # structure. BidStrike now rides as a LINK inside Construction Solutions.
-COLS = ["Construction Solutions", "Revenue Operations Consulting Solutions",
+# RE-RULED 2026-08-31: consulting is the PRIMARY lane and construction is
+# secondary to it, on this surface and in the nav bracket. The labels also moved
+# to match the nav exactly ("Consulting and Strategy" / "Construction Software"),
+# because the footer and the nav had been calling the same two groups by
+# different names since the nav rebuild.
+#
+# THIS LIST IS ORDERED AND THE ORDER IS ASSERTED BELOW. Presence alone was
+# checked until this date, and presence alone is exactly what lets a ruling about
+# ORDER quietly revert on the next person's edit - the same failure the nav gate
+# hit on 8/29 with the BidStrike lockup.
+COLS = ["Consulting and Strategy", "Construction Software",
         "Resources", "Company", "Legal"]
 # The authoritative wording, confirmed by Rodney 2026-07-23. The five
 # reverse-engineered "Brand values" were DELETED from srs-brand-voice.md on
@@ -88,6 +98,14 @@ for p in PAGES:
     for c in COLS:
         if ">%s<" % c not in foot:
             fails.append("%s  footer missing column -> %s" % (p, c))
+    # ORDER, not just presence. Consulting leads; construction is secondary.
+    present = [c for c in COLS if ">%s<" % c in foot]
+    actual = sorted(present, key=lambda c: foot.index(">%s<" % c))
+    if actual != present:
+        fails.append("%s  footer columns are out of order.\n      on the page: %s"
+                     "\n      should be:   %s\n      Consulting leads and "
+                     "construction is secondary to it (ruled 8/31)"
+                     % (p, " | ".join(actual), " | ".join(present)))
 
     # no footer link may point at a page that does not exist
     for href in re.findall(r'href="(/[^"#?]*)"', foot):

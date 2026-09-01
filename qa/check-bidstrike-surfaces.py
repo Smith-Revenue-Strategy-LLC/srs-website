@@ -211,11 +211,14 @@ def _():
         if "bs-footer-block" in f:
             bad.append("%s: the retired .bs-footer-block chip is back" % page)
         # the link has to sit in the construction group, not merely in the footer
-        grp = re.search(r'<h5>Construction Solutions</h5>(.*?)</div>', f, re.S)
+        # RENAMED 2026-08-31 with the footer reorder: "Construction Solutions"
+        # became "Construction Software" to match the nav bracket. This needle
+        # moved in the SAME commit as the markup, and was positive-controlled.
+        grp = re.search(r'<h5>Construction Software</h5>(.*?)</div>', f, re.S)
         if not grp:
-            bad.append("%s: no Construction Solutions group in the footer" % page)
+            bad.append("%s: no Construction Software group in the footer" % page)
         elif "bidstrike.cloud" not in grp.group(1):
-            bad.append("%s: BidStrike missing from the Construction Solutions group" % page)
+            bad.append("%s: BidStrike missing from the Construction Software group" % page)
         seen.setdefault(f, []).append(page)
     if len(seen) > 1:
         bad.append("footer differs between pages: %s" % [v for v in seen.values()])

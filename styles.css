@@ -1098,6 +1098,22 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
   color: var(--on-navy);
 }
 
+/* --- contact page: the non-booking way to reach us ------------------------ */
+/* --ink-soft is 7.21:1 on the page ground. --ink-faint is 3.76:1 and is banned
+   from carrying copy, so do not reach for it to make this line quieter. */
+.contact-alt {
+  margin-top: 26px;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.contact-alt a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* --- drawer groups: the dropdown bracket, mirrored ------------------------ */
 /* This is the ONLY navigation below 1080px. Qualified as `.site-nav a.x` on
    purpose: `.site-nav a` is (0,1,1) and would beat a bare class, which is the
