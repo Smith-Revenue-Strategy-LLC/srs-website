@@ -89,20 +89,60 @@
         <ul class="nav-links">
           <li><a href="/is-this-you">Who We Serve</a></li>
           <li class="nav-drop">
-            <a href="/results" aria-haspopup="true" aria-expanded="false">Solutions &amp; Results</a>
+            <!-- A BUTTON, not a link. Results left this tab (Rodney 2026-08-31), so it
+                 opens a menu and goes nowhere, and a button is the only honest control
+                 for that. It also retires a static aria-expanded="false" that nothing
+                 ever updated: the panel is CSS :hover / :focus-within, so the attribute
+                 was telling every screen reader the menu was shut while it was open.
+                 :focus-within still fires on a focused button, so keyboard access is
+                 unchanged and no JS was added. -->
+            <button class="nav-drop-trigger" type="button" aria-haspopup="true">Solutions</button>
             <div class="nav-drop-panel">
-              <a class="nav-drop-row" href="/construction">
-                <span>Construction</span>
-                <span class="nav-drop-brands">
-                  <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
-                  <span class="brand-sep" aria-hidden="true"></span>
-                  <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
-                </span>
-              </a>
-              <a class="nav-drop-row" href="/what-we-do"><span>AI workflow, consulting, and go-to-market</span></a>
-              <a class="nav-drop-row" href="/operator-os"><span>Operator OS</span></a>
-              <a class="nav-drop-row" href="/ai-peer-group"><span>AI Operations Peer Group</span></a>
-              <a class="nav-drop-row" href="/results"><span>Results</span></a>
+              <div class="nav-drop-group">
+                <a class="nav-drop-head" href="/what-we-do">
+                  <span class="nav-drop-name">Consulting and Strategy</span>
+                  <span class="nav-drop-who">Small and midsize companies whose stack grew by accident</span>
+                </a>
+                <a class="nav-drop-row" href="/operator-os">
+                  <span class="nav-drop-name">Operator OS</span>
+                  <span class="nav-drop-who">Owners who are the whole revenue department</span>
+                </a>
+                <a class="nav-drop-row" href="/ai-peer-group">
+                  <span class="nav-drop-name">AI Operations Peer Group</span>
+                  <span class="nav-drop-who">Operators who want a room of peers, not another tool</span>
+                </a>
+                <a class="nav-drop-row" href="/results">
+                  <span class="nav-drop-name">Results</span>
+                  <span class="nav-drop-who">What changed for the people who did this work</span>
+                </a>
+              </div>
+              <div class="nav-drop-group">
+                <a class="nav-drop-head" href="/construction">
+                  <span class="nav-drop-name">Construction Software</span>
+                  <span class="nav-drop-who">Contractors and suppliers living on the next award</span>
+                </a>
+                <!-- The products ride as LOCKUP ART inside rows that point at SRS pages.
+                     BidStrike leads (ruled 8/29) and its brief is a section of
+                     /construction, not a page of its own. Do not point either row
+                     straight at bidstrike.cloud / sledradar.ai - that skips the step
+                     that qualifies (same ruling as the homepage band, d7040ce). -->
+                <a class="nav-drop-row" href="/construction#bidstrike">
+                  <span class="nav-drop-mark">
+                    <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
+                  </span>
+                  <span class="nav-drop-who">Most of your revenue arrives as an invitation to bid</span>
+                </a>
+                <a class="nav-drop-row" href="/sled-radar">
+                  <span class="nav-drop-mark">
+                    <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
+                  </span>
+                  <span class="nav-drop-who">You sell into schools, cities, counties, or state agencies</span>
+                </a>
+                <a class="nav-drop-row" href="/results#constr-title">
+                  <span class="nav-drop-name">Results</span>
+                  <span class="nav-drop-who">What changed on the bid desk</span>
+                </a>
+              </div>
             </div>
           </li>
           <li><a href="/about">About</a></li>
@@ -115,12 +155,22 @@
           <span></span><span></span><span></span>
         </button>
       </div>
+      <!-- MOBILE DRAWER. Below 1080px .nav-links is display:none, so the panel above
+           does not exist here and this is the only navigation. It mirrors the same
+           bracket with headed groups.
+           IT CANNOT NAME BIDSTRIKE. check-bidstrike-surfaces.py fails on the string
+           "bidstrike" anywhere inside .site-nav, by standing rule: the nav is the
+           site's identity statement and is not a placement. BidStrike is reached
+           through Construction Software, which is where its brief lives anyway. -->
       <nav class="site-nav mobile-nav" id="site-nav" aria-label="Primary">
         <a href="/is-this-you">Who We Serve</a>
-        <a href="/results">Solutions &amp; Results</a>
-        <a href="/construction">Construction</a>
-        <a href="/what-we-do">What We Do</a>
-        <a href="/operator-os">Operator OS</a>
+        <a class="site-nav-head" href="/what-we-do">Consulting and Strategy</a>
+        <a class="site-nav-sub" href="/operator-os">Operator OS</a>
+        <a class="site-nav-sub" href="/ai-peer-group">AI Operations Peer Group</a>
+        <a class="site-nav-sub" href="/results">Results</a>
+        <a class="site-nav-head" href="/construction">Construction Software</a>
+        <a class="site-nav-sub" href="/sled-radar">SLED RADAR</a>
+        <a class="site-nav-sub" href="/results#constr-title">Results on the bid desk</a>
         <a href="/about">About</a>
         <a href="/events" aria-current="page">Events</a>
         <a href="/faq">FAQ</a>

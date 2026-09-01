@@ -126,6 +126,15 @@ PAIRS = [
     # covered. Both bars are asserted now, so neither can drift alone.
     ("#495777", "#ffffff", 4.5, "desktop nav ink on the compact white bar"),
     ("#c3cfeb", "#0d1733", 4.5, "desktop nav ink on the navy bar"),
+    # THE DROPDOWN PANEL, added with the two-group rebuild 2026-08-31. The panel
+    # is a LIGHT card hanging off whichever bar is showing, so its ink does NOT
+    # follow the bar and is asserted against the card instead. The who-buys-it
+    # line is the one at risk: it is secondary copy, and the obvious way to make
+    # secondary copy quieter here is --ink-faint, which is 3.76:1 and banned from
+    # carrying copy. Named separately from the identical nav pair above so a
+    # change to THIS line fails with THIS label.
+    ("#495777", "#ffffff", 4.5, "dropdown who-buys-it line on the panel card"),
+    ("#0d1733", "#ffffff", 4.5, "dropdown product name on the panel card"),
 ]
 print("  contrast:")
 for fg, bg, need, label in PAIRS:

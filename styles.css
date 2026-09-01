@@ -569,24 +569,16 @@ p {
   display: block;
 }
 
-/* --- BidStrike | SLED RADAR divider -------------------------------------- */
-/* Ruled by Rodney 2026-08-31: side by side and un-separated, the two lockups
-   read as ONE long wordmark. They are two separate solutions, so the rule is
-   deliberately TALLER than the marks - it divides the pair instead of looking
-   like a hairline inside a single logo.
-   currentColor, not a fixed token: the dropdown rides a white panel on desktop
-   and the header's DARK bar state on mobile, so a fixed ink tone would vanish
-   in one of the two. Inheriting the row's own text colour is correct in both. */
-.brand-sep {
-  flex: 0 0 auto;
-  width: 1px;
-  background: currentColor;
-  opacity: 0.28;
-  border-radius: 1px;
-}
-
-.path-card-brands .brand-sep { height: 34px; }
-.nav-drop-brands .brand-sep { height: 28px; }
+/* --- BidStrike | SLED RADAR divider: RETIRED 2026-08-31 -------------------- */
+/* The 1px rule solved "the two lockups read as ONE long wordmark" while the two
+   marks sat ADJACENT in a single row. They no longer do. d7040ce split them into
+   two homepage cards and the nav rebuild split them into two rows in the panel,
+   each with its own who-buys-it line, which finishes the same job the rule
+   started. Zero markup references remained (checked across *.html and *.js), so
+   the rule and both height overrides came out rather than sitting here waiting
+   to be re-attached to something.
+   NOTE for whoever is here next: .path-card-brands (above) is ALSO orphaned, and
+   has been since d7040ce. It was left alone because this pass did not create it. */
 
 .path-card-go {
   margin-top: auto;
@@ -728,6 +720,13 @@ p {
   scroll-margin-top: 96px;
 }
 
+/* Same reason, for the nav's /results#constr-title row: the target is a section
+   HEADING, not a product card, so it needed its own offset or it lands under the
+   sticky bar. Scoped to headings that are actually jump targets. */
+.section h2[id] {
+  scroll-margin-top: 96px;
+}
+
 .product-grid {
   margin-top: 22px;
   display: grid;
@@ -798,11 +797,71 @@ p {
   .product-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* --- Solutions & Results dropdown ---------------------------------------- */
-/* The panel is a LIGHT card hanging off a DARK bar, so its own children keep the
+/* --- Solutions dropdown ---------------------------------------------------- */
+/* Rebuilt 2026-08-31 to Rodney's spec: two main groups, products nested under
+   each, and beside every product a line saying WHO BUYS IT, so a visitor reads
+   the problem a product addresses off the menu without opening a page.
+   The panel is a LIGHT card hanging off a DARK bar, so its own children keep the
    light-ground tokens (--ink, --wash). Do not "fix" them to on-navy. */
 .nav-drop {
   position: relative;
+}
+
+/* THE TRIGGER IS A <button>, NOT A LINK. Results stopped being a top-level tab
+   in this rebuild, so the control navigates nowhere and an anchor would have to
+   lie about a destination. It also retires a static aria-expanded="false" that
+   nothing ever updated - the panel is pure CSS, so the attribute was telling
+   screen readers the menu was shut while it was open.
+   Every .nav-links a declaration is REPEATED here rather than inherited: a
+   button arrives with UA defaults (background, border, font, cursor) that an
+   anchor does not, so "it will pick up the sibling styles" is false. */
+.nav-drop-trigger {
+  display: block;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--on-navy-soft);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 140ms ease, background 140ms ease;
+}
+
+.nav-drop-trigger:hover,
+.nav-drop-trigger:focus-visible,
+.nav-drop-trigger.is-active {
+  color: var(--on-navy);
+  background: rgba(174, 203, 255, 0.09);
+}
+
+/* BOTH BAR STATES, WRITTEN TOGETHER. The desktop list shipped with only the navy
+   one on 2026-08-31 and the links computed to 1.56:1 on the compact white bar -
+   present, focusable, invisible. A new control in this bar gets both or neither. */
+.site-header.is-compact .nav-drop-trigger {
+  color: var(--ink-soft);
+}
+
+.site-header.is-compact .nav-drop-trigger:hover,
+.site-header.is-compact .nav-drop-trigger:focus-visible,
+.site-header.is-compact .nav-drop-trigger.is-active {
+  color: var(--ink);
+  background: rgba(13, 23, 51, 0.06);
+}
+
+/* The caret is the only thing on screen saying this opens something. */
+.nav-drop-trigger::after {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: rotate(45deg) translateY(-3px);
+  opacity: 0.75;
 }
 
 .nav-drop-panel {
@@ -810,9 +869,10 @@ p {
   top: 100%;
   left: 0;
   z-index: 30;
-  min-width: 460px;
+  width: 520px;
+  max-width: calc(100vw - 32px);
   margin-top: 6px;
-  padding: 10px;
+  padding: 8px;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -821,64 +881,115 @@ p {
 }
 
 /* :focus-within is not decoration. Hover-only ships a nav no keyboard user can
-   open, and the dropdown is the only route to /construction. */
+   open, and this panel is the only route to /construction. It fires on the
+   focused <button> exactly as it did on the anchor the button replaced, which is
+   why swapping the element added no JS. */
 .nav-drop:hover .nav-drop-panel,
 .nav-drop:focus-within .nav-drop-panel {
   display: block;
+}
+
+/* THE GROUPS STACK. They are not side by side, and that is a measurement, not a
+   taste call: the panel is anchored left:0 to a list item that already sits
+   several hundred px into the bar, and the desktop nav only exists at 1080px and
+   up, so a two-column panel runs off the right edge at its own first breakpoint. */
+.nav-drop-group + .nav-drop-group {
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
 }
 
 /* SPECIFICITY, and this shipped wrong once: `.nav-links a` is (0,1,1) and beats a
    bare `.nav-drop-row` (0,1,0), so the row inherited the DARK-BAR link colour and
    rendered light blue on the white panel. The contrast gate did not catch it - it
    reads declared token pairs, not the resolved cascade. Keep the selector qualified. */
+.nav-links .nav-drop-head,
 .nav-links .nav-drop-row,
+.nav-drop-head,
 .nav-drop-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 12px 14px;
+  display: block;
+  padding: 9px 12px;
   border-radius: 6px;
   color: var(--ink);
   font-size: 0.9rem;
   font-weight: 600;
+  white-space: normal;
 }
 
+.nav-links .nav-drop-head:hover,
+.nav-links .nav-drop-head:focus-visible,
 .nav-links .nav-drop-row:hover,
 .nav-links .nav-drop-row:focus-visible,
+.nav-drop-head:hover,
+.nav-drop-head:focus-visible,
 .nav-drop-row:hover,
 .nav-drop-row:focus-visible {
   background: var(--wash);
   color: var(--ink);
 }
 
-.nav-drop-brands {
-  display: inline-flex;
-  align-items: center;
-  gap: 14px;
-  flex: 0 0 auto;
+/* The head IS the group. It stays a link because it is a real page, but it reads
+   as a heading and does not carry the children's indent. */
+.nav-drop-head .nav-drop-name {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.nav-drop-brands img {
-  height: 18px;
+.nav-drop-row {
+  margin-left: 10px;
+}
+
+.nav-drop-name {
+  display: block;
+  color: var(--ink);
+}
+
+/* WHO BUYS IT - the whole point of the rebuild. --ink-soft is 7.21:1 on the white
+   panel. --ink-faint is 3.76:1 and is banned from carrying copy, so do not
+   "soften" this line by reaching for it. */
+.nav-drop-who {
+  display: block;
+  margin-top: 2px;
+  color: var(--ink-soft);
+  font-size: 0.78rem;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+/* Capped on HEIGHT, not width: the two lockups are different aspects, so a width
+   cap would render them at two different visual weights.
+   24px, MATCHING .solution-chip-mark on the homepage band, and the number is a
+   legibility floor rather than a taste call. SLED RADAR is a STACKED lockup - its
+   wordmark sits on two lines - so the box height buys only half the cap height
+   BidStrike's single line gets. The old nav ran these at 18px, where BidStrike
+   read at 18px and SLED RADAR read at 9. Measured, not eyeballed: at 24 the two
+   marks land at 24 and 12, which is where the homepage already had them. */
+.nav-drop-mark {
+  display: block;
+  margin-bottom: 3px;
+}
+
+.nav-drop-mark img {
+  height: 24px;
   width: auto;
   display: block;
 }
 
-@media (max-width: 900px) {
-  /* On the mobile panel the rows are already in the flow; a floating card would
-     hang off the viewport edge. */
-  .nav-drop-panel {
-    position: static;
-    display: block;
-    min-width: 0;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    border: 0;
-    box-shadow: none;
-  }
+/* "You are here", the same lime system mark the drawer uses. Lime stays a FILL. */
+.nav-links .nav-drop-head[aria-current="page"],
+.nav-links .nav-drop-row[aria-current="page"],
+.nav-drop-head[aria-current="page"],
+.nav-drop-row[aria-current="page"] {
+  background: var(--wash);
+  box-shadow: inset 3px 0 0 var(--lime-deep);
 }
+
+/* NO max-width:900px BLOCK HERE ANY MORE. There used to be one restyling the
+   panel as a static in-flow list "on mobile". It never rendered: .nav-links is
+   display:none at 1080px and down, so the panel is gone a full 180px before that
+   block starts. It read as mobile coverage and was not. The mobile surface is
+   .site-nav, the drawer, further down this file. */
 
 /* --- hamburger (three spans, per the markup) ----------------------------- */
 .nav-toggle {
@@ -985,6 +1096,27 @@ body.nav-menu-open .nav-toggle span:nth-child(3) {
 .site-header:not(.is-compact) .site-nav a[aria-current="page"],
 .site-header:not(.is-compact) .site-nav a.is-active {
   color: var(--on-navy);
+}
+
+/* --- drawer groups: the dropdown bracket, mirrored ------------------------ */
+/* This is the ONLY navigation below 1080px. Qualified as `.site-nav a.x` on
+   purpose: `.site-nav a` is (0,1,1) and would beat a bare class, which is the
+   exact cascade bug this file has already shipped twice. */
+.site-nav a.site-nav-head {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.site-nav a.site-nav-sub {
+  padding-left: 18px;
+}
+
+/* The current-page rule sets padding-left: 12px, and at equal specificity source
+   order would strip a child's indent the moment it became the current page. */
+.site-nav a.site-nav-sub[aria-current="page"] {
+  padding-left: 26px;
 }
 
 @keyframes navSlideDown {
