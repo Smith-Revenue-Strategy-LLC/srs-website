@@ -304,22 +304,44 @@ def _():
 
 
 # --------------------------------------------------------------------------
-# Below 900px the wordmark is display:none, so there is nothing to justify to
-# and the lockup goes back to carrying the row on its own. Without this the
-# derived height leaves a shrunken logo floating next to a hamburger.
+# RE-RULED 2026-09-26. The old check REQUIRED the whole wordmark to hide at
+# <=900px. Once the booking CTA and persona chip came out, that left the bar as
+# a mark and a hamburger on an empty strip, and Rodney asked for the name back
+# "like it is at the footer". The assertion is replaced, not dropped:
+#   (a) the company NAME is never display:none / opacity:0 / max-width:0, at any
+#       width or in the compact (scrolled) bar
+#   (b) at <=900px only the TAGLINE hides, and the mark gets a stated height so
+#       it is not sized to a two-line block that is now one line
+#   (c) the compact bar is white, so the name must switch to dark ink there
 # --------------------------------------------------------------------------
-@check("the <=900px breakpoint restores the lockup once the wordmark is hidden")
+@check("the company name stays visible at every width and on scroll")
 def _():
-    block = re.search(
-        r"@media\s*\(max-width:\s*900px\)\s*\{(.*?\.brand-words\s*\{[^{}]*"
-        r"display:\s*none.*?)\n\}", CSS, re.S)
-    if not block:
-        return ["no @media (max-width: 900px) block hides .brand-words"]
-    if "--brand-icon-h" not in block.group(1):
-        return ["the <=900px block hides .brand-words but never resets "
-                "--brand-icon-h, leaving the mark sized to a wordmark that is "
-                "not on screen"]
-    return []
+    bad = []
+    hide = re.compile(r"display:\s*none|opacity:\s*0\s*;|max-width:\s*0\s*;")
+    for m in re.finditer(r"([^{}]*)\{([^{}]*)\}", CSS):
+        sel, body = m.group(1), m.group(2)
+        if "brand-words" not in sel or not hide.search(body):
+            continue
+        for part in sel.split(","):
+            part = part.strip()
+            if "brand-words" in part and not part.endswith("small"):
+                bad.append("%r hides the company name (%s)"
+                           % (part, hide.search(body).group(0)))
+    # There is more than one <=900px block in styles.css; find the one that
+    # carries the tagline rule, never just the first.
+    block = next((b for b in re.findall(
+        r"@media\s*\(max-width:\s*900px\)\s*\{(.*?)\n\}", CSS, re.S)
+        if re.search(r"\.brand-words\s+small\s*\{[^{}]*display:\s*none", b)), None)
+    if block is None:
+        bad.append("no <=900px block hides the tagline (.brand-words small)")
+    elif "--brand-icon-h" not in block:
+        bad.append("the <=900px block never resets --brand-icon-h, leaving the "
+                   "mark sized to a two-line wordmark that is now one line")
+    if not re.search(r"\.site-header\.is-compact\s+\.brand-words\s+strong\s*\{"
+                     r"[^{}]*color:\s*var\(--ink\)", CSS):
+        bad.append("the compact (white) bar does not set the name to var(--ink); "
+                   "it would render near-white on white")
+    return bad
 
 
 # --------------------------------------------------------------------------

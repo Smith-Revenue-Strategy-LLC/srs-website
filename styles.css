@@ -246,9 +246,8 @@ p {
    .site-header.is-compact sets background: rgba(255,255,255,0.95). The header
    mark is srs-icon-reverse.svg, paper white #f7f9fb. On that ground it is
    INVISIBLE, and it shipped that way until Rodney caught it on mobile
-   2026-08-29. Nothing else in the header breaks on white: .brand-words is
-   already faded to opacity 0 by then, and the mobile nav panel sets its own
-   dark ink.
+   2026-08-29. The company name stays on the white bar (2026-09-26) and
+   switches to var(--ink) there; the mobile nav panel sets its own dark ink.
 
    Both marks ride in the DOM and the bar state crossfades between them. No JS
    and no src swap, so there is no first-scroll flash on an uncached file.
@@ -4070,15 +4069,17 @@ body.nav-menu-open .sticky-booking-cta {
   line-height: var(--wm-leading);
 }
 
-/* Fade first, then collapse the space, so the text never squeezes mid-run. */
-.site-header.is-compact .brand-words {
-  max-width: 0;
-  margin-left: 0;
-  opacity: 0;
-  transition:
-    opacity 130ms ease,
-    max-width 240ms ease 110ms,
-    margin-left 240ms ease 110ms;
+/* 2026-09-26: THE NAME STAYS ON SCROLL. With the booking CTA and persona chip
+   gone, collapsing the wordmark left the compact bar as a mark and a hamburger
+   on an empty strip. The compact bar is white, so the name switches to navy ink
+   and the tagline is what gives. Same rule as the footer: the name is always
+   there. */
+.site-header.is-compact .brand-words strong {
+  color: var(--ink);
+}
+
+.site-header.is-compact .brand-words small {
+  display: none;
 }
 
 /* Below the desktop nav breakpoint the row is already carrying a hamburger,
@@ -4090,25 +4091,25 @@ body.nav-menu-open .sticky-booking-cta {
    catch. This sits AFTER the canonical .brand-words rule on purpose: that gate
    resolves ".brand-words" to the FIRST exact selector match, so a hide rule
    placed earlier would shadow the rule that carries --wm-gap. */
+/* 2026-09-26: THE NAME NO LONGER GIVES. The CTA and persona chip that used to
+   crowd this row are gone (holding-company restructure), so hiding the wordmark
+   here left a mark, a hamburger and an empty bar. Only the persona chip still
+   hides at this width. The old --brand-h: 40px reset used the retired landscape
+   360/155 ratio and is dropped; the lockup stays derived from the wordmark. */
 @media (max-width: 1080px) {
-  .site-header .brand-words,
   .site-header .header-persona {
     display: none;
   }
-
-  .site-header {
-    --brand-h: 40px;
-    --brand-w: calc(var(--brand-h) * 360 / 155);
-  }
 }
 
+/* Phones and small tablets: the NAME stays, the tagline gives. The mark stops
+   justifying to a two-line block that is now one line, so it carries a stated
+   height. Ratio is the SVG viewBox. */
 @media (max-width: 900px) {
-  .brand-words {
+  .brand-words small {
     display: none;
   }
 
-  /* No wordmark left to justify against, so the mark carries the row on its own
-     instead of staying sized to a phantom text block. Ratio is the SVG viewBox. */
   .site-header {
     --brand-icon-h: 40px;
     --brand-w: calc(var(--brand-icon-h) * 496.835 / 620.970);
