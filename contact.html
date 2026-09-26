@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Book a Call | Smith Revenue Strategy</title>
-    <meta name="description" content="Bring the bottleneck. The first call with SRS is 30 minutes, practical, and designed to help you decide whether there is a clear 4x ROI path.">
+    <title>Contact | Smith Revenue Strategy</title>
+    <meta name="description" content="Reach Smith Revenue Strategy by email. Questions about BidStrike or SLED Radar go to each product's own site.">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
@@ -24,133 +24,56 @@
             <small>Freedom for the work only people can do.</small>
           </span>
         </a>
+        <!-- HOLDING-COMPANY NAV, 2026-09-26. SRS owns two products and sells no
+             services, so the nav is the four company pages plus the two products,
+             which link straight out to their own sites. No booking CTA. -->
         <ul class="nav-links">
-          <li><a href="/is-this-you">Who We Serve</a></li>
-          <li class="nav-drop">
-            <!-- A BUTTON, not a link. Results left this tab (Rodney 2026-08-31), so it
-                 opens a menu and goes nowhere, and a button is the only honest control
-                 for that. It also retires a static aria-expanded="false" that nothing
-                 ever updated: the panel is CSS :hover / :focus-within, so the attribute
-                 was telling every screen reader the menu was shut while it was open.
-                 :focus-within still fires on a focused button, so keyboard access is
-                 unchanged and no JS was added. -->
-            <button class="nav-drop-trigger" type="button" aria-haspopup="true">Solutions</button>
-            <div class="nav-drop-panel">
-              <div class="nav-drop-group">
-                <a class="nav-drop-head" href="/what-we-do">
-                  <span class="nav-drop-name">Consulting and Strategy</span>
-                  <span class="nav-drop-who">Small and midsize companies whose stack grew by accident</span>
-                </a>
-                <a class="nav-drop-row" href="/operator-os">
-                  <span class="nav-drop-name">Operator OS</span>
-                  <span class="nav-drop-who">Owners who are the whole revenue department</span>
-                </a>
-                <a class="nav-drop-row" href="/ai-peer-group">
-                  <span class="nav-drop-name">AI Operations Peer Group</span>
-                  <span class="nav-drop-who">Operators who want a room of peers, not another tool</span>
-                </a>
-                <a class="nav-drop-row" href="/results">
-                  <span class="nav-drop-name">Results</span>
-                  <span class="nav-drop-who">What changed for the people who did this work</span>
-                </a>
-              </div>
-              <div class="nav-drop-group">
-                <a class="nav-drop-head" href="/construction">
-                  <span class="nav-drop-name">Construction Software</span>
-                  <span class="nav-drop-who">Contractors and suppliers living on the next award</span>
-                </a>
-                <!-- The products ride as LOCKUP ART inside rows that point at SRS pages.
-                     BidStrike leads (ruled 8/29) and its brief is a section of
-                     /construction, not a page of its own. Do not point either row
-                     straight at bidstrike.cloud / sledradar.ai - that skips the step
-                     that qualifies (same ruling as the homepage band, d7040ce). -->
-                <a class="nav-drop-row" href="/construction#bidstrike">
-                  <span class="nav-drop-mark">
-                    <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
-                  </span>
-                  <span class="nav-drop-who">Most of your revenue arrives as an invitation to bid</span>
-                </a>
-                <a class="nav-drop-row" href="/sled-radar">
-                  <span class="nav-drop-mark">
-                    <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
-                  </span>
-                  <span class="nav-drop-who">You sell into schools, cities, counties, or state agencies</span>
-                </a>
-                <a class="nav-drop-row" href="/results#constr-title">
-                  <span class="nav-drop-name">Results</span>
-                  <span class="nav-drop-who">What changed on the bid desk</span>
-                </a>
-              </div>
-            </div>
-          </li>
+          <li><a href="/">Home</a></li>
           <li><a href="/about">About</a></li>
-          <li><a href="/events">Events</a></li>
           <li><a href="/faq">FAQ</a></li>
+          <li><a href="/contact" aria-current="page">Contact</a></li>
+          <li><a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">BidStrike</a></li>
+          <li><a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">SLED Radar</a></li>
         </ul>
         <div class="nav-spacer"></div>
-        <a class="btn btn-amber btn-sm nav-cta" href="/contact" data-booking-open>Book a Call</a>
         <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span>
         </button>
       </div>
-      <!-- MOBILE DRAWER. Below 1080px .nav-links is display:none, so the panel above
-           does not exist here and this is the only navigation. It mirrors the same
-           bracket with headed groups.
-           IT CANNOT NAME BIDSTRIKE. check-bidstrike-surfaces.py fails on the string
-           "bidstrike" anywhere inside .site-nav, by standing rule: the nav is the
-           site's identity statement and is not a placement. BidStrike is reached
-           through Construction Software, which is where its brief lives anyway. -->
       <nav class="site-nav mobile-nav" id="site-nav" aria-label="Primary">
-        <a href="/is-this-you">Who We Serve</a>
-        <a class="site-nav-head" href="/what-we-do">Consulting and Strategy</a>
-        <a class="site-nav-sub" href="/operator-os">Operator OS</a>
-        <a class="site-nav-sub" href="/ai-peer-group">AI Operations Peer Group</a>
-        <a class="site-nav-sub" href="/results">Results</a>
-        <a class="site-nav-head" href="/construction">Construction Software</a>
-        <a class="site-nav-sub" href="/sled-radar">SLED RADAR</a>
-        <a class="site-nav-sub" href="/results#constr-title">Results on the bid desk</a>
+        <a href="/">Home</a>
         <a href="/about">About</a>
-        <a href="/events">Events</a>
         <a href="/faq">FAQ</a>
+        <a href="/contact" aria-current="page">Contact</a>
+        <a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">BidStrike</a>
+        <a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">SLED Radar</a>
       </nav>
     </header>
 
+    <!-- CONTACT, holding-company version, 2026-09-26. Email only. The booking
+         widget came out with the consulting pages; nothing here opens a calendar. -->
     <main class="content-page">
-      <p class="eyebrow">30-minute call</p>
-      <h1>Bring the bottleneck. I'll help you decide what to do with it.</h1>
+      <p class="eyebrow">Contact</p>
+      <h1>Email is the best way to reach me.</h1>
       <p class="hero-lede">
-        The first call is 30 minutes and practical. Share what's slowing
-        your team down, and I'll help you decide whether there is a clear
-        4x ROI path worth exploring.
+        Write to me directly and I'll get back to you.
       </p>
-
-      <section class="content-section consult-section">
-        <div class="consult-copy">
-          <p class="eyebrow">Start the conversation</p>
-          <h2>What the first call is for.</h2>
-          <p>
-            If you're not sure whether I'm the right fit, that's exactly what the
-            first call is for. I'll listen first, then tell you honestly what I think.
-          </p>
-        </div>
-        <div class="booking-card" aria-label="Book a call with Smith Revenue Strategy">
-          <p class="eyebrow">Complimentary connect call</p>
-          <h3>30 minutes. No obligation.</h3>
-          <p>
-            Share the friction your team is carrying: workflow, revenue, systems, or
-            something you can't quite name yet. I'll help you understand the problem
-            clearly before recommending a next step.
-          </p>
-          <button class="button primary booking-link" type="button" data-booking-open>
-            Book My Call
-          </button>
-        </div>
-      </section>
-
       <p class="contact-alt">
-        Rather look around first? I'm on
-        <a href="https://www.linkedin.com/in/rodney-smith-profile/" target="_blank" rel="noopener noreferrer">LinkedIn</a>.
+        <a href="mailto:rodney@smithrevenuestrategy.com">rodney@smithrevenuestrategy.com</a>
       </p>
+
+      <section class="content-section">
+        <h2>For product questions</h2>
+        <p>
+          Each product has its own site, and that's where support lives.
+        </p>
+        <p>
+          <a class="bs-link" href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=contact" target="_blank" rel="noopener">BidStrike at bidstrike.cloud</a>
+        </p>
+        <p>
+          <a class="bs-link" href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=contact" target="_blank" rel="noopener">SLED Radar at sledradar.ai</a>
+        </p>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -158,33 +81,19 @@
         <div class="foot-brand">
           <img src="/assets/images/brand/srs-icon-reverse.svg" alt="" width="497" height="621">
           <p class="foot-brand-name">Smith Revenue Strategy</p>
-          <p>Helping owners hunt for the next customer and fix the tools that slow them down.</p>
-        </div>
-        <div class="foot-col">
-          <h5>Consulting and Strategy</h5>
-          <a href="/what-we-do">What We Do</a>
-          <a href="/operator-os">Operator OS</a>
-          <a href="/ai-peer-group">AI Operations Peer Group</a>
-          <a href="/results">Results</a>
-        </div>
-        <div class="foot-col">
-          <h5>Construction Software</h5>
-          <a href="/construction">Construction</a>
-          <a href="/construction#bidstrike">BidStrike</a>
-          <a href="/sled-radar">SLED RADAR</a>
-        </div>
-        <div class="foot-col">
-          <h5>Resources</h5>
-          <a href="/events">Events</a>
-          <a href="/faq">FAQ</a>
-          <a href="https://sledradar.ai/public-bidding" target="_blank" rel="noopener">Public bidding teardown</a>
+          <p>A holding company. Home of BidStrike and SLED Radar.</p>
         </div>
         <div class="foot-col">
           <h5>Company</h5>
+          <a href="/">Home</a>
           <a href="/about">About</a>
-          <a href="/is-this-you">Who We Serve</a>
+          <a href="/faq">FAQ</a>
           <a href="/contact">Contact</a>
-          <a href="https://www.linkedin.com/company/smith-revenue-strategy/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="foot-col">
+          <h5>Products</h5>
+          <a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">BidStrike</a>
+          <a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">SLED Radar</a>
         </div>
         <div class="foot-col">
           <h5>Legal</h5>
@@ -202,6 +111,7 @@
         <span>Waco, Texas</span>
       </div>
     </footer>
+
     <script src="script.js"></script>
   </body>
 </html>

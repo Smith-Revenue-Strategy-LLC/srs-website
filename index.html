@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Freedom for the Work Only People Can Do | Smith Revenue Strategy</title>
+    <title>Smith Revenue Strategy | Home of BidStrike and SLED Radar</title>
     <meta
       name="description"
-      content="Freedom for the work only people can do. I help owners in Waco fix the systems slowing their business down, so their people get the hours back for the human part of the job."
+      content="Smith Revenue Strategy is a holding company. It owns two software products built for construction: BidStrike and SLED Radar."
     >
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
@@ -15,14 +15,19 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/icons/apple-touch-icon.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="canonical" href="https://smithrevenuestrategy.com/">
+    <!-- Machine-readable metadata identifies the LEGAL ENTITY, so name and
+         legalName both carry ", LLC" (ruled 2026-09-23). Organization, not
+         ProfessionalService: since 2026-09-26 SRS is a holding company that owns
+         two products and sells no services. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "ProfessionalService",
+      "@type": "Organization",
       "@id": "https://smithrevenuestrategy.com/#organization",
-      "name": "Smith Revenue Strategy",
+      "name": "Smith Revenue Strategy, LLC",
+      "legalName": "Smith Revenue Strategy, LLC",
       "url": "https://smithrevenuestrategy.com",
-      "description": "Smith Revenue Strategy is a fractional revenue-operations and AI-workflow-automation consultancy based in Waco, Texas. Founded by Rodney Smith, it helps solopreneurs, consultants, contractors, and privately held businesses build revenue architecture and adopt sales technology and AI automation, following a 'process first, tools second' philosophy.",
+      "description": "Smith Revenue Strategy, LLC is a holding company. It owns two software products built for construction: BidStrike and SLED Radar.",
       "slogan": "Freedom for the work only people can do.",
       "founder": {
         "@type": "Person",
@@ -30,52 +35,11 @@
         "@id": "https://smithrevenuestrategy.com/#person"
       },
       "foundingDate": "2026-03-16",
-      "foundingLocation": {
-        "@type": "Place",
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Waco",
-          "addressRegion": "TX",
-          "addressCountry": "US"
-        }
-      },
-      "areaServed": {
-        "@type": "Country",
-        "name": "United States"
-      },
       "address": {
         "@type": "PostalAddress",
         "addressLocality": "Waco",
         "addressRegion": "TX",
         "addressCountry": "US"
-      },
-      "knowsAbout": [
-        "Revenue architecture: champion and relationship mapping",
-        "Warm referral system design for consultants and contractors",
-        "Sales technology and CRM configuration",
-        "AI workflow automation for revenue teams"
-      ],
-      "hasOfferCatalog": {
-        "@type": "OfferCatalog",
-        "name": "Smith Revenue Strategy Services",
-        "itemListElement": [
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Revenue Architecture",
-              "description": "Champion and relationship mapping paired with warm referral system design, so a business's growth doesn't depend on any one salesperson's personal network."
-            }
-          },
-          {
-            "@type": "Offer",
-            "itemOffered": {
-              "@type": "Service",
-              "name": "Sales Technology & AI Automation",
-              "description": "CRM configuration, automated workflows, and AI tooling implemented with a 'process first, tools second' approach for solopreneurs, consultants, contractors, and privately held businesses."
-            }
-          }
-        ]
       },
       "sameAs": [
         "https://www.linkedin.com/company/smith-revenue-strategy/",
@@ -93,7 +57,26 @@
       "applicationCategory": "BusinessApplication",
       "applicationSubCategory": "Construction bid management",
       "operatingSystem": "Web browser",
-      "description": "BidStrike is a bid desk for contractors. It pulls in private bid invitations and public solicitations, scores each one on fit, general contractor quality, distance, and documents, and moves the opportunities worth winning through the pipeline so estimators spend their hours on the jobs they can land.",
+      "description": "BidStrike is a bid desk for commercial subcontractors. It scores private bid invitations on fit, general contractor quality, distance, and documents, so estimators spend their hours on the jobs they can land.",
+      "author": {
+        "@id": "https://smithrevenuestrategy.com/#person"
+      },
+      "publisher": {
+        "@id": "https://smithrevenuestrategy.com/#organization"
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "@id": "https://sledradar.ai/#software",
+      "name": "SLED Radar",
+      "url": "https://sledradar.ai",
+      "applicationCategory": "BusinessApplication",
+      "applicationSubCategory": "Public-sector sales intelligence for construction",
+      "operatingSystem": "Web browser",
+      "description": "SLED Radar is for contractors selling into schools, cities, counties, and state agencies. It reads the open public record, such as board minutes, capital plans, and funding votes, and scores the entities worth the time.",
       "author": {
         "@id": "https://smithrevenuestrategy.com/#person"
       },
@@ -114,174 +97,63 @@
             <small>Freedom for the work only people can do.</small>
           </span>
         </a>
+        <!-- HOLDING-COMPANY NAV, 2026-09-26. SRS owns two products and sells no
+             services, so the nav is the four company pages plus the two products,
+             which link straight out to their own sites. No booking CTA. -->
         <ul class="nav-links">
-          <li><a href="/is-this-you">Who We Serve</a></li>
-          <li class="nav-drop">
-            <!-- A BUTTON, not a link. Results left this tab (Rodney 2026-08-31), so it
-                 opens a menu and goes nowhere, and a button is the only honest control
-                 for that. It also retires a static aria-expanded="false" that nothing
-                 ever updated: the panel is CSS :hover / :focus-within, so the attribute
-                 was telling every screen reader the menu was shut while it was open.
-                 :focus-within still fires on a focused button, so keyboard access is
-                 unchanged and no JS was added. -->
-            <button class="nav-drop-trigger" type="button" aria-haspopup="true">Solutions</button>
-            <div class="nav-drop-panel">
-              <div class="nav-drop-group">
-                <a class="nav-drop-head" href="/what-we-do">
-                  <span class="nav-drop-name">Consulting and Strategy</span>
-                  <span class="nav-drop-who">Small and midsize companies whose stack grew by accident</span>
-                </a>
-                <a class="nav-drop-row" href="/operator-os">
-                  <span class="nav-drop-name">Operator OS</span>
-                  <span class="nav-drop-who">Owners who are the whole revenue department</span>
-                </a>
-                <a class="nav-drop-row" href="/ai-peer-group">
-                  <span class="nav-drop-name">AI Operations Peer Group</span>
-                  <span class="nav-drop-who">Operators who want a room of peers, not another tool</span>
-                </a>
-                <a class="nav-drop-row" href="/results">
-                  <span class="nav-drop-name">Results</span>
-                  <span class="nav-drop-who">What changed for the people who did this work</span>
-                </a>
-              </div>
-              <div class="nav-drop-group">
-                <a class="nav-drop-head" href="/construction">
-                  <span class="nav-drop-name">Construction Software</span>
-                  <span class="nav-drop-who">Contractors and suppliers living on the next award</span>
-                </a>
-                <!-- The products ride as LOCKUP ART inside rows that point at SRS pages.
-                     BidStrike leads (ruled 8/29) and its brief is a section of
-                     /construction, not a page of its own. Do not point either row
-                     straight at bidstrike.cloud / sledradar.ai - that skips the step
-                     that qualifies (same ruling as the homepage band, d7040ce). -->
-                <a class="nav-drop-row" href="/construction#bidstrike">
-                  <span class="nav-drop-mark">
-                    <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
-                  </span>
-                  <span class="nav-drop-who">Most of your revenue arrives as an invitation to bid</span>
-                </a>
-                <a class="nav-drop-row" href="/sled-radar">
-                  <span class="nav-drop-mark">
-                    <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
-                  </span>
-                  <span class="nav-drop-who">You sell into schools, cities, counties, or state agencies</span>
-                </a>
-                <a class="nav-drop-row" href="/results#constr-title">
-                  <span class="nav-drop-name">Results</span>
-                  <span class="nav-drop-who">What changed on the bid desk</span>
-                </a>
-              </div>
-            </div>
-          </li>
+          <li><a href="/" aria-current="page">Home</a></li>
           <li><a href="/about">About</a></li>
-          <li><a href="/events">Events</a></li>
           <li><a href="/faq">FAQ</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">BidStrike</a></li>
+          <li><a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">SLED Radar</a></li>
         </ul>
         <div class="nav-spacer"></div>
-        <a class="btn btn-amber btn-sm nav-cta" href="/contact" data-booking-open>Book a Call</a>
         <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span>
         </button>
       </div>
-      <!-- MOBILE DRAWER. Below 1080px .nav-links is display:none, so the panel above
-           does not exist here and this is the only navigation. It mirrors the same
-           bracket with headed groups.
-           IT CANNOT NAME BIDSTRIKE. check-bidstrike-surfaces.py fails on the string
-           "bidstrike" anywhere inside .site-nav, by standing rule: the nav is the
-           site's identity statement and is not a placement. BidStrike is reached
-           through Construction Software, which is where its brief lives anyway. -->
       <nav class="site-nav mobile-nav" id="site-nav" aria-label="Primary">
-        <a href="/is-this-you">Who We Serve</a>
-        <a class="site-nav-head" href="/what-we-do">Consulting and Strategy</a>
-        <a class="site-nav-sub" href="/operator-os">Operator OS</a>
-        <a class="site-nav-sub" href="/ai-peer-group">AI Operations Peer Group</a>
-        <a class="site-nav-sub" href="/results">Results</a>
-        <a class="site-nav-head" href="/construction">Construction Software</a>
-        <a class="site-nav-sub" href="/sled-radar">SLED RADAR</a>
-        <a class="site-nav-sub" href="/results#constr-title">Results on the bid desk</a>
+        <a href="/" aria-current="page">Home</a>
         <a href="/about">About</a>
-        <a href="/events">Events</a>
         <a href="/faq">FAQ</a>
+        <a href="/contact">Contact</a>
+        <a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">BidStrike</a>
+        <a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">SLED Radar</a>
       </nav>
     </header>
 
     <main id="top">
-      <!-- HERO. The mission is meant to land in PICTURE form here, not in words (ruled
-           2026-08-22). The canvas "flow" animation that used to sit on the right was
-           deleted: it was a diagram of a process, and the mission is about a person.
-           A single real, unstaged photograph goes in .hero-portrait when the shoot
-           happens. Until then the hero runs single-column on purpose. Do not fill the
-           space with stock, an illustration, or an AI-generated face. -->
+      <!-- HERO. Holding-company home, 2026-09-26. The lede is the approved brand
+           paragraph from _ops/rules/srs-holding-company-positioning.md, word for
+           word. Copy it from there on any change; do not re-word it here. -->
       <section class="hero hero-solo" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <h1 id="hero-title">Freedom for the work only people can do.</h1>
+          <h1 id="hero-title">Home of BidStrike and SLED Radar.</h1>
           <p class="hero-lede">
-            We integrate the technology stack you already own with modern AI, so the
-            essential workflows toward new revenue are automated and your people get their
-            hours back for the human part of the business.
+            Smith Revenue Strategy is a holding company. It owns two software products built
+            for construction: BidStrike, for commercial subcontractors deciding which private
+            bids to chase, and SLED Radar, for contractors selling into schools, cities,
+            counties, and state agencies. Each product has its own site, and that's where the
+            work happens.
           </p>
-          <div class="hero-actions">
-            <a class="button primary" href="/contact" data-booking-open>Book a Call</a>
-          </div>
         </div>
       </section>
 
-      <!-- TWO-path router now. Construction LEFT this router 2026-08-31 (Rodney):
-           it was sitting here as a third door while actually being a different KIND
-           of thing, the two products SRS owns outright. It has its own band below.
-           What is left here is the two consulting lanes, side by side. -->
-      <section class="path-router" id="where-do-you-fit" aria-labelledby="router-title">
-        <h2 id="router-title" class="path-router-title">Where do you fit</h2>
-        <div class="path-router-grid">
-
-          <a class="path-card" href="/what-we-do">
-            <span class="path-card-kicker">Small and midsize</span>
-            <strong>Your stack grew by accident and now it drags</strong>
-            <span class="path-card-body">
-              Subscription coaching, consulting, and training. We integrate what you
-              already own, automate the mechanical steps, and teach the team to run it.
-            </span>
-            <span class="path-card-go">See what we do</span>
-          </a>
-
-          <a class="path-card" href="/operator-os">
-            <span class="path-card-kicker">Owners and operators</span>
-            <strong>You are the whole revenue department</strong>
-            <span class="path-card-body">
-              Operator OS is the self-serve version of this work. The first cohort is
-              forming now and it is capped at 15 to 20 people, so it starts with a
-              conversation rather than a signup.
-            </span>
-            <span class="path-card-go">See Operator OS</span>
-          </a>
-
-      </div>
-      </section>
-
-      <div class="hero-divider" role="presentation"></div>
-
-      <!-- CONSTRUCTION PRODUCT BAND. Moved out of .path-router 2026-08-31 (Rodney).
-           The chip style is DELIBERATELY not .path-card. The router is three doors a
-           visitor chooses between; this is an aside about two products we own. Same
-           system, different shape: a LEFT rail instead of a top border, and a deeper
-           ground under the whole band, so the eye reads "different kind of thing"
-           before it reads a word. Lime is the rail because in this system lime means
-           the system works, and it stays a FILL, never text.
-           Each chip goes to that product's BRIEF on this site. The brief is what
-           ports out to the product's own site. Do not point these straight at
-           bidstrike.cloud / sledradar.ai - that skips the step that qualifies. -->
-      <section class="lane-band" id="construction-products" aria-labelledby="lane-band-title">
-        <p class="lane-band-eyebrow">And if you build for a living</p>
-        <h2 id="lane-band-title">Two products we own. Both clear the path to the next award.</h2>
+      <!-- PRODUCT BAND. Same .solution-chip cards as before, but each one now links
+           straight OUT to the product's own site. The SRS brief pages that used to
+           sit in between were retired with the consulting pages on 2026-09-26.
+           BidStrike leads every product list (ruled 8/29). -->
+      <section class="lane-band" id="products" aria-labelledby="lane-band-title">
+        <p class="lane-band-eyebrow">The products</p>
+        <h2 id="lane-band-title">Two products. Both clear the path to the next award.</h2>
         <p class="lane-band-lede">
-          Each one handles an essential workflow that decides whether the next project
-          award ever reaches you. They are not two versions of the same tool. Most
-          shops need one of them, not both.
+          They are not two versions of the same tool. Most shops need one of them, not both.
         </p>
 
         <div class="lane-band-grid">
 
-          <a class="solution-chip" href="/construction#bidstrike">
+          <a class="solution-chip" href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=home-products" target="_blank" rel="noopener">
             <span class="solution-chip-mark">
               <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
             </span>
@@ -292,232 +164,41 @@
               instead of an afternoon.
             </span>
             <span class="solution-chip-fit">Fits when most of your revenue arrives as an invitation to bid.</span>
-            <span class="solution-chip-go">Read the BidStrike brief</span>
+            <span class="solution-chip-go">Visit bidstrike.cloud</span>
           </a>
 
-          <a class="solution-chip" href="/sled-radar">
+          <a class="solution-chip" href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=home-products" target="_blank" rel="noopener">
             <span class="solution-chip-mark">
-              <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
+              <img src="/assets/images/brand/sled-radar.svg" alt="SLED Radar" width="752" height="146">
             </span>
             <strong>Public work is decided months before the solicitation posts.</strong>
             <span class="solution-chip-body">
               The signal is sitting in the open record: board minutes, capital plans,
-              funding votes. SLED RADAR reads it, scores the entities worth the time, and
+              funding votes. SLED Radar reads it, scores the entities worth the time, and
               hands it back organized enough to feed the tools you already run.
             </span>
             <span class="solution-chip-fit">Fits when you sell into schools, cities, counties, or state agencies.</span>
-            <span class="solution-chip-go">Read the SLED RADAR brief</span>
+            <span class="solution-chip-go">Visit sledradar.ai</span>
           </a>
 
         </div>
 
         <p class="lane-band-foot">
-          Each brief opens onto that product's own site.
-          <a href="/construction">See the whole construction lane</a>
+          Questions about either product, including support, go to that product's own site.
         </p>
       </section>
 
-      <!-- The founder story that used to sit here moved to /about on 2026-08-30
-           (Rodney's call). A homepage does not carry the origin story; it points
-           at it. Keep this chip short. If it grows past three lines it has become
-           the section it replaced. -->
+      <!-- Cross-link to /about. Marketing pages carry no AI-disclosure paragraph;
+           they point at About, where it lives (ruled 2026-08-24). -->
       <aside class="why-chip" aria-labelledby="why-chip-title">
         <div class="why-chip-copy">
-          <p class="eyebrow" id="why-chip-title">Why small and midsize companies</p>
+          <p class="eyebrow" id="why-chip-title">Who's behind it</p>
           <p>
-            This is where a change can actually ship. The options are endless, and
-            sifting them is a second job. That part is ours.
+            Rodney Smith founded Smith Revenue Strategy in Waco, Texas, in 2026.
           </p>
         </div>
-        <p class="why-more"><a href="/about">Read the story behind that</a></p>
+        <p class="why-more"><a href="/about">Read Rodney's story</a></p>
       </aside>
-
-
-      <section class="section problem-section" id="friction" aria-labelledby="friction-title">
-        <div class="section-intro">
-          <h2 id="friction-title">It's rarely one bad tool. It's the drag between them.</h2>
-        </div>
-        <div class="friction-panel">
-          <div class="friction-list" aria-label="Workflow friction signals">
-          <article>
-            <span>01</span>
-            <div>
-              <h3>Admin work eats selling time.</h3>
-              <p>
-                Nobody schedules the rekeying, the chasing, or the status update. It
-                absorbs the hours between the calls that actually move revenue, and it
-                never shows up on a report as time lost.
-              </p>
-              <svg class="friction-eq" viewBox="0 0 520 166" role="img" aria-labelledby="eq01-title eq01-desc">
-                <title id="eq01-title">The week, minus admin, equals what is left to sell in</title>
-                <desc id="eq01-desc">A full week of hours, minus admin work, leaves one block of selling time.</desc>
-
-                <g class="eq-cell">
-                  <g class="eq-ink">
-                    <rect x="44" y="34" width="36" height="14" rx="2"></rect>
-                    <rect x="44" y="52" width="36" height="14" rx="2"></rect>
-                    <rect x="44" y="70" width="36" height="14" rx="2"></rect>
-                    <rect x="44" y="88" width="36" height="14" rx="2"></rect>
-                    <rect x="44" y="106" width="36" height="14" rx="2"></rect>
-                  </g>
-                  <text x="62" y="140">The week</text>
-                </g>
-
-                <path class="eq-op" d="M155 77h18"></path>
-
-                <g class="eq-cell">
-                  <rect class="eq-outline" x="240" y="42" width="46" height="62" rx="5"></rect>
-                  <rect class="eq-ink" x="253" y="35" width="20" height="12" rx="3"></rect>
-                  <path class="eq-arrow" d="M251 62h24M251 74h24M251 86h14"></path>
-                  <text x="263" y="140">Admin</text>
-                </g>
-
-                <path class="eq-op" d="M350 71h18M350 83h18"></path>
-
-                <g class="eq-cell">
-                  <g class="eq-faint">
-                    <rect x="440" y="34" width="36" height="14" rx="2"></rect>
-                    <rect x="440" y="52" width="36" height="14" rx="2"></rect>
-                    <rect x="440" y="70" width="36" height="14" rx="2"></rect>
-                    <rect x="440" y="88" width="36" height="14" rx="2"></rect>
-                  </g>
-                  <rect class="eq-ink" x="440" y="106" width="36" height="14" rx="2"></rect>
-                  <text x="458" y="140">Selling time</text>
-                </g>
-              </svg>
-            </div>
-          </article>
-          <article class="friction-lead">
-            <span>02</span>
-            <div>
-              <h3>Tribal knowledge walks out the door with the person who has it.</h3>
-              <p>
-                When the way your business runs lives only in somebody's head, that person
-                is the container. The tools that wear them down are what make them leave,
-                and your operating knowledge leaves in the same box. Put it in the system
-                instead and the next hire picks it up on day one, while the people who
-                carried it get their minds back for the relationships only they can build.
-              </p>
-              <svg class="friction-eq" viewBox="0 0 520 166" role="img" aria-labelledby="friction-eq-title friction-eq-desc">
-                <title id="friction-eq-title">Knowledge in one head, plus turnover, equals knowledge gone</title>
-                <desc id="friction-eq-desc">A person carrying an idea, plus turnover, equals the idea lost.</desc>
-
-                <!-- 1. the person who holds it -->
-                <g class="eq-cell">
-                  <rect class="eq-bubble" x="26" y="4" width="72" height="42" rx="21"></rect>
-                  <circle class="eq-bubble" cx="48" cy="52" r="5"></circle>
-                  <circle class="eq-bubble" cx="40" cy="60" r="3"></circle>
-                  <g class="eq-ink">
-                    <circle cx="62" cy="22" r="8"></circle>
-                    <rect x="58.5" y="29" width="7" height="5" rx="1.6"></rect>
-                    <path class="eq-ray" d="M62 6.5v3.5M47.5 22h3.5M73 22h3.5M51.8 11.8l2.5 2.5M72.2 11.8l-2.5 2.5"></path>
-                  </g>
-                  <circle class="eq-ink" cx="62" cy="82" r="12"></circle>
-                  <path class="eq-ink" d="M38 114c0-14 11-22 24-22s24 8 24 22z"></path>
-                  <text x="62" y="140">Knowledge</text>
-                  <text x="62" y="155">in one head</text>
-                </g>
-
-                <path class="eq-op" d="M155 74h18M164 65v18"></path>
-
-                <!-- 2. turnover -->
-                <g class="eq-cell">
-                  <rect class="eq-outline" x="226" y="40" width="38" height="66" rx="4"></rect>
-                  <circle class="eq-ink" cx="256" cy="74" r="3"></circle>
-                  <path class="eq-arrow" d="M274 74h26M292 66l8 8-8 8"></path>
-                  <text x="263" y="140">Turnover</text>
-                </g>
-
-                <path class="eq-op" d="M350 68h18M350 80h18"></path>
-
-                <!-- 3. it is gone -->
-                <g class="eq-cell">
-                  <path class="eq-bone" d="M429 118l58-18M429 100l58 18"></path>
-                  <g class="eq-ink">
-                    <circle cx="428" cy="119" r="5.5"></circle>
-                    <circle cx="428" cy="99" r="5.5"></circle>
-                    <circle cx="488" cy="99" r="5.5"></circle>
-                    <circle cx="488" cy="119" r="5.5"></circle>
-                  </g>
-                  <path class="eq-ink" d="M434 68a24 26 0 0 1 48 0v10a10 10 0 0 1-10 10h-28a10 10 0 0 1-10-10z"></path>
-                  <rect class="eq-ink" x="448" y="86" width="20" height="14" rx="4"></rect>
-                  <ellipse class="eq-void" cx="448" cy="66" rx="7" ry="8.5"></ellipse>
-                  <ellipse class="eq-void" cx="468" cy="66" rx="7" ry="8.5"></ellipse>
-                  <path class="eq-void" d="M458 76l4.5 9h-9z"></path>
-                  <path class="eq-teeth" d="M453 87v11M458 87v11M463 87v11"></path>
-                  <text x="458" y="140">It leaves</text>
-                  <text x="458" y="155">with them</text>
-                </g>
-              </svg>
-            </div>
-          </article>
-          <article>
-            <span>03</span>
-            <div>
-              <h3>Disconnected tools lose context at every handoff.</h3>
-              <p>
-                Every handoff is a place where somebody retypes what the last system
-                already knew. The detail that gets dropped is usually the one the next
-                person needed.
-              </p>
-              <svg class="friction-eq" viewBox="0 0 520 166" role="img" aria-labelledby="eq03-title eq03-desc">
-                <title id="eq03-title">One system, plus a handoff, equals a detail dropped</title>
-                <desc id="eq03-desc">A record in one tool, passed across a broken link, arrives incomplete.</desc>
-
-                <g class="eq-cell">
-                  <rect class="eq-outline" x="34" y="40" width="56" height="56" rx="8"></rect>
-                  <rect class="eq-ink" x="52" y="54" width="20" height="28" rx="2"></rect>
-                  <text x="62" y="140">One system</text>
-                </g>
-
-                <path class="eq-op" d="M155 62h18M164 53v18"></path>
-
-                <g class="eq-cell">
-                  <rect class="eq-outline" x="230" y="52" width="26" height="20" rx="10"></rect>
-                  <rect class="eq-outline" x="270" y="52" width="26" height="20" rx="10"></rect>
-                  <path class="eq-arrow" d="M259 56l8-8M263 68l8 8"></path>
-                  <text x="263" y="140">Handoff</text>
-                </g>
-
-                <path class="eq-op" d="M350 56h18M350 68h18"></path>
-
-                <g class="eq-cell">
-                  <rect class="eq-outline" x="430" y="40" width="56" height="56" rx="8"></rect>
-                  <rect class="eq-dash" x="448" y="54" width="20" height="28" rx="2"></rect>
-                  <g class="eq-shard">
-                    <rect x="424" y="104" width="12" height="7" rx="2" transform="rotate(-18 430 107)"></rect>
-                    <rect x="470" y="110" width="14" height="7" rx="2" transform="rotate(14 477 113)"></rect>
-                  </g>
-                  <text x="458" y="140">Detail dropped</text>
-                </g>
-              </svg>
-            </div>
-          </article>
-          </div>
-        </div>
-      </section>
-
-      <aside class="bs-band" aria-labelledby="bs-band-title">
-        <div class="bs-band-copy">
-          <p class="bs-band-kicker">
-            <img class="bs-logo" src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
-            <span>Software we built</span>
-          </p>
-          <h2 id="bs-band-title">When the fix doesn't exist, we build it.</h2>
-          <p>
-            BidStrike scores bid invitations so estimators stop guessing which jobs to chase.
-          </p>
-        </div>
-        <div class="bs-band-actions">
-          <a class="bs-cta" href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=home-band" target="_blank" rel="noopener">Learn about <img class="bs-logo" src="/assets/images/brand/bidstrike-logo-onbutton.png" alt="BidStrike" width="1570" height="289"></a>
-        </div>
-      </aside>
-
-      <section class="section decision-section" aria-label="Next step">
-        <div class="decision-actions" aria-label="Next steps">
-          <a class="button primary" href="/contact" data-booking-open>Book a Call</a>
-        </div>
-      </section>
     </main>
 
     <footer class="site-footer">
@@ -525,33 +206,19 @@
         <div class="foot-brand">
           <img src="/assets/images/brand/srs-icon-reverse.svg" alt="" width="497" height="621">
           <p class="foot-brand-name">Smith Revenue Strategy</p>
-          <p>Helping owners hunt for the next customer and fix the tools that slow them down.</p>
-        </div>
-        <div class="foot-col">
-          <h5>Consulting and Strategy</h5>
-          <a href="/what-we-do">What We Do</a>
-          <a href="/operator-os">Operator OS</a>
-          <a href="/ai-peer-group">AI Operations Peer Group</a>
-          <a href="/results">Results</a>
-        </div>
-        <div class="foot-col">
-          <h5>Construction Software</h5>
-          <a href="/construction">Construction</a>
-          <a href="/construction#bidstrike">BidStrike</a>
-          <a href="/sled-radar">SLED RADAR</a>
-        </div>
-        <div class="foot-col">
-          <h5>Resources</h5>
-          <a href="/events">Events</a>
-          <a href="/faq">FAQ</a>
-          <a href="https://sledradar.ai/public-bidding" target="_blank" rel="noopener">Public bidding teardown</a>
+          <p>A holding company. Home of BidStrike and SLED Radar.</p>
         </div>
         <div class="foot-col">
           <h5>Company</h5>
+          <a href="/">Home</a>
           <a href="/about">About</a>
-          <a href="/is-this-you">Who We Serve</a>
+          <a href="/faq">FAQ</a>
           <a href="/contact">Contact</a>
-          <a href="https://www.linkedin.com/company/smith-revenue-strategy/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="foot-col">
+          <h5>Products</h5>
+          <a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">BidStrike</a>
+          <a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">SLED Radar</a>
         </div>
         <div class="foot-col">
           <h5>Legal</h5>

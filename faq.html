@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>FAQ | Smith Revenue Strategy</title>
-    <meta name="description" content="Questions about AI, automation, security, legacy systems, and whether SRS is the right fit, answered plainly.">
+    <meta name="description" content="Short answers about Smith Revenue Strategy, the holding company that owns BidStrike and SLED Radar.">
     <link rel="icon" href="/favicon.ico" sizes="any">
     <link rel="icon" type="image/svg+xml" href="/assets/icons/favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
@@ -24,197 +24,65 @@
             <small>Freedom for the work only people can do.</small>
           </span>
         </a>
+        <!-- HOLDING-COMPANY NAV, 2026-09-26. SRS owns two products and sells no
+             services, so the nav is the four company pages plus the two products,
+             which link straight out to their own sites. No booking CTA. -->
         <ul class="nav-links">
-          <li><a href="/is-this-you">Who We Serve</a></li>
-          <li class="nav-drop">
-            <!-- A BUTTON, not a link. Results left this tab (Rodney 2026-08-31), so it
-                 opens a menu and goes nowhere, and a button is the only honest control
-                 for that. It also retires a static aria-expanded="false" that nothing
-                 ever updated: the panel is CSS :hover / :focus-within, so the attribute
-                 was telling every screen reader the menu was shut while it was open.
-                 :focus-within still fires on a focused button, so keyboard access is
-                 unchanged and no JS was added. -->
-            <button class="nav-drop-trigger" type="button" aria-haspopup="true">Solutions</button>
-            <div class="nav-drop-panel">
-              <div class="nav-drop-group">
-                <a class="nav-drop-head" href="/what-we-do">
-                  <span class="nav-drop-name">Consulting and Strategy</span>
-                  <span class="nav-drop-who">Small and midsize companies whose stack grew by accident</span>
-                </a>
-                <a class="nav-drop-row" href="/operator-os">
-                  <span class="nav-drop-name">Operator OS</span>
-                  <span class="nav-drop-who">Owners who are the whole revenue department</span>
-                </a>
-                <a class="nav-drop-row" href="/ai-peer-group">
-                  <span class="nav-drop-name">AI Operations Peer Group</span>
-                  <span class="nav-drop-who">Operators who want a room of peers, not another tool</span>
-                </a>
-                <a class="nav-drop-row" href="/results">
-                  <span class="nav-drop-name">Results</span>
-                  <span class="nav-drop-who">What changed for the people who did this work</span>
-                </a>
-              </div>
-              <div class="nav-drop-group">
-                <a class="nav-drop-head" href="/construction">
-                  <span class="nav-drop-name">Construction Software</span>
-                  <span class="nav-drop-who">Contractors and suppliers living on the next award</span>
-                </a>
-                <!-- The products ride as LOCKUP ART inside rows that point at SRS pages.
-                     BidStrike leads (ruled 8/29) and its brief is a section of
-                     /construction, not a page of its own. Do not point either row
-                     straight at bidstrike.cloud / sledradar.ai - that skips the step
-                     that qualifies (same ruling as the homepage band, d7040ce). -->
-                <a class="nav-drop-row" href="/construction#bidstrike">
-                  <span class="nav-drop-mark">
-                    <img src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261">
-                  </span>
-                  <span class="nav-drop-who">Most of your revenue arrives as an invitation to bid</span>
-                </a>
-                <a class="nav-drop-row" href="/sled-radar">
-                  <span class="nav-drop-mark">
-                    <img src="/assets/images/brand/sled-radar.svg" alt="SLED RADAR" width="752" height="146">
-                  </span>
-                  <span class="nav-drop-who">You sell into schools, cities, counties, or state agencies</span>
-                </a>
-                <a class="nav-drop-row" href="/results#constr-title">
-                  <span class="nav-drop-name">Results</span>
-                  <span class="nav-drop-who">What changed on the bid desk</span>
-                </a>
-              </div>
-            </div>
-          </li>
+          <li><a href="/">Home</a></li>
           <li><a href="/about">About</a></li>
-          <li><a href="/events">Events</a></li>
           <li><a href="/faq" aria-current="page">FAQ</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">BidStrike</a></li>
+          <li><a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">SLED Radar</a></li>
         </ul>
         <div class="nav-spacer"></div>
-        <a class="btn btn-amber btn-sm nav-cta" href="/contact" data-booking-open>Book a Call</a>
         <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
           <span></span><span></span><span></span>
         </button>
       </div>
-      <!-- MOBILE DRAWER. Below 1080px .nav-links is display:none, so the panel above
-           does not exist here and this is the only navigation. It mirrors the same
-           bracket with headed groups.
-           IT CANNOT NAME BIDSTRIKE. check-bidstrike-surfaces.py fails on the string
-           "bidstrike" anywhere inside .site-nav, by standing rule: the nav is the
-           site's identity statement and is not a placement. BidStrike is reached
-           through Construction Software, which is where its brief lives anyway. -->
       <nav class="site-nav mobile-nav" id="site-nav" aria-label="Primary">
-        <a href="/is-this-you">Who We Serve</a>
-        <a class="site-nav-head" href="/what-we-do">Consulting and Strategy</a>
-        <a class="site-nav-sub" href="/operator-os">Operator OS</a>
-        <a class="site-nav-sub" href="/ai-peer-group">AI Operations Peer Group</a>
-        <a class="site-nav-sub" href="/results">Results</a>
-        <a class="site-nav-head" href="/construction">Construction Software</a>
-        <a class="site-nav-sub" href="/sled-radar">SLED RADAR</a>
-        <a class="site-nav-sub" href="/results#constr-title">Results on the bid desk</a>
+        <a href="/">Home</a>
         <a href="/about">About</a>
-        <a href="/events">Events</a>
         <a href="/faq" aria-current="page">FAQ</a>
+        <a href="/contact">Contact</a>
+        <a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">BidStrike</a>
+        <a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=nav" target="_blank" rel="noopener">SLED Radar</a>
       </nav>
     </header>
 
     <main>
+      <!-- FAQ, holding-company version, 2026-09-26. The consulting Q&As came out
+           with the consulting pages. The AI-use answer below is KEPT VERBATIM: it
+           is the cross-link destination for every marketing page (ruled 8/24),
+           never strip it. -->
       <section class="page-hero" aria-labelledby="faq-title">
-        <p class="eyebrow">Questions I hear often</p>
-        <h1 id="faq-title">Questions leaders ask before changing how work gets done.</h1>
-        <p class="hero-lede">
-          These questions are normal. The first call is designed to help determine whether
-          automation, AI, workflow redesign, or a simpler process change is the right next move.
-        </p>
-        <div class="hero-actions">
-          <a class="button primary" href="/contact" data-booking-open>Book a Call</a>
-        </div>
+        <p class="eyebrow">FAQ</p>
+        <h1 id="faq-title">Short answers.</h1>
       </section>
 
       <section class="section faq-section" aria-labelledby="faq-list-title">
         <div class="section-intro">
-          <p class="eyebrow">Decision support</p>
           <h2 id="faq-list-title">Frequently Asked Questions</h2>
         </div>
         <div class="faq-list">
           <details>
-            <summary>Who's a good fit for Smith Revenue Strategy?</summary>
-            <p>Consultants, contractors, and privately held businesses with revenues ranging from $500,000 to $100M.</p>
+            <summary>What is Smith Revenue Strategy?</summary>
+            <p>A holding company. It owns two software products built for construction: BidStrike, for commercial subcontractors deciding which private bids to chase, and SLED Radar, for contractors selling into schools, cities, counties, and state agencies.</p>
           </details>
           <details>
-            <summary>What is your pricing model?</summary>
-            <p>Every engagement starts with a consult to discuss your situation and consider existing roadblocks and constraints. Pricing may include project-based work and consulting, custom solution design or setup fees with an ongoing support tier, or fractional leadership.</p>
+            <summary>Who owns BidStrike and SLED Radar?</summary>
+            <p>Smith Revenue Strategy owns both. It's my holding company.</p>
           </details>
           <details>
-            <summary>What if our business is too messy for automation?</summary>
-            <p>Messy is actually a good starting point. You don't need a fully clean operation. You need one repeatable task you'd like off your team's plate. That's where it starts, and it builds from there.</p>
-          </details>
-          <details>
-            <summary>When is a company ready for automated workflows?</summary>
-            <p>If your team is doing the same work over and over manually, you're ready. Automation isn't about replacing people. It's about freeing them to focus on work that actually requires human judgment.</p>
-          </details>
-          <details>
-            <summary>What if our business has too many nuances?</summary>
-            <p>AI thrives in the nuance because it has a lot of range as long as the driver has the vision. If you have the vision, AI can be an excellent partner in bringing it out into reality.</p>
-          </details>
-          <details>
-            <summary>Can AI be consistent enough for core business functions?</summary>
-            <p>Predictions and machine learning can be inaccurate, but that is generally avoidable during a curation phase. Humans have been known to be inaccurate as well. The benefit of the LLM is that you can curate multiple ML models and see which one is most accurate for your intended purpose.</p>
-          </details>
-          <details>
-            <summary>Do we have to send business data to public AI tools?</summary>
-            <p>No. There are private AI options that keep your data internal and off any public model. Cloud providers also offer private environments where your data isn't used to train anything. The right setup depends on your security requirements, and that's part of what I help you figure out.</p>
+            <summary>Where do I get help with a product?</summary>
+            <p>On that product's own site. Each product has its own site, and that's where the work happens, support included.</p>
+            <a class="bs-link" href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=faq" target="_blank" rel="noopener">Learn about <img class="bs-logo" src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261"></a>
+            <a class="bs-link" href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=faq" target="_blank" rel="noopener">Learn about SLED Radar</a>
           </details>
           <details>
             <summary>Do you use AI to do our work?</summary>
             <p>Yes, and here's exactly how. I use AI tools for the organizing, drafting, and research work. That's what they're good at. But everything you get from me, I've read and I stand behind. The composition gets automated. The accountability doesn't. If a recommendation reaches you, it's because I thought it through, not because a model produced it and I forwarded it.</p>
           </details>
-          <details>
-            <summary>What about security risk?</summary>
-            <p>This is not a new category of risk. It is the same risk you already manage with the software and operating systems you run today. The real question is whether you have a clear policy for who can reach what data. If you do, AI gets held to it. If you don't, that is the first thing we fix.</p>
-          </details>
-          <details>
-            <summary>Can regulated industries use AI solutions?</summary>
-            <p>Most providers have compliance-compliant tenant environments. Hosting an LLM locally is also a capability, though it can drive up infrastructure cost. The tradeoff is that you have full and total control of your data.</p>
-          </details>
-          <details>
-            <summary>What if our software is old and hard to integrate?</summary>
-            <p>This is not a new problem. The build-vs-buy decision has always been there, and now the shift to building is more obtainable. Rather than using a solution that inhibits revenue growth, investing in a solution custom tailored to your environment can provide more business and process control that influences efficient operations.</p>
-          </details>
-          <details>
-            <summary>Have you actually built one of these, or do you only advise?</summary>
-            <p>Both. Most of this work makes better use of the tools you already own. When nothing on the market fits, I build. BidStrike is mine: it scores bid invitations for contractors so estimators stop losing their week to sorting through them. I own it outright, so treat it as a work sample and not a referral.</p>
-            <a class="bs-link" href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=faq" target="_blank" rel="noopener">Learn about <img class="bs-logo" src="/assets/images/brand/bidstrike-logo.png" alt="BidStrike" width="1542" height="261"></a>
-          </details>
-          <details>
-            <summary>What if the technology keeps changing?</summary>
-            <p>It will. That's why I focus on process first and tools second. The businesses that adapt well aren't the ones with the newest software. They're the ones with clear processes that aren't locked to one vendor. I build for that flexibility from the start.</p>
-          </details>
-          <details>
-            <summary>What if we do not have technical people to manage this after launch?</summary>
-            <p>Managed service providers and support contracts are not a new concept, and they should be looked at through what is best for your company. Some companies have the personnel to fine tune agentic automations while others are solo shops. The solution delivered needs to be built so you do not need daily fine tuning.</p>
-          </details>
-          <details>
-            <summary>We already have ChatGPT or Microsoft Copilot. Why work with SRS?</summary>
-            <p>ChatGPT and Copilot are great for individual productivity: drafting, looking things up, answering questions. What I focus on is different: connecting your systems, automating handoffs between teams, and building workflows that run without someone prompting them every time. Those are separate problems, and separate tools.</p>
-          </details>
-        </div>
-      </section>
-
-      <section class="section next-step-section" aria-labelledby="faq-next-title">
-        <div class="next-step-copy">
-          <p class="eyebrow">Your next move</p>
-          <h2 id="faq-next-title">Bring the specific concern to the first call.</h2>
-          <p>
-            Security, compliance, legacy systems, and adoption concerns are exactly the
-            kinds of constraints that should shape the recommendation.
-          </p>
-        </div>
-        <div class="next-step-card">
-          <p class="terminal-label">Open questions</p>
-          <h3>Ask the hard thing first.</h3>
-          <p>The first call should make the decision clearer, not add more complexity.</p>
-          <div class="next-step-actions">
-            <a class="button primary" href="/contact" data-booking-open>Book a Call</a>
-            <a class="button secondary" href="/is-this-you">Learn More</a>
-          </div>
         </div>
       </section>
     </main>
@@ -224,33 +92,19 @@
         <div class="foot-brand">
           <img src="/assets/images/brand/srs-icon-reverse.svg" alt="" width="497" height="621">
           <p class="foot-brand-name">Smith Revenue Strategy</p>
-          <p>Helping owners hunt for the next customer and fix the tools that slow them down.</p>
-        </div>
-        <div class="foot-col">
-          <h5>Consulting and Strategy</h5>
-          <a href="/what-we-do">What We Do</a>
-          <a href="/operator-os">Operator OS</a>
-          <a href="/ai-peer-group">AI Operations Peer Group</a>
-          <a href="/results">Results</a>
-        </div>
-        <div class="foot-col">
-          <h5>Construction Software</h5>
-          <a href="/construction">Construction</a>
-          <a href="/construction#bidstrike">BidStrike</a>
-          <a href="/sled-radar">SLED RADAR</a>
-        </div>
-        <div class="foot-col">
-          <h5>Resources</h5>
-          <a href="/events">Events</a>
-          <a href="/faq">FAQ</a>
-          <a href="https://sledradar.ai/public-bidding" target="_blank" rel="noopener">Public bidding teardown</a>
+          <p>A holding company. Home of BidStrike and SLED Radar.</p>
         </div>
         <div class="foot-col">
           <h5>Company</h5>
+          <a href="/">Home</a>
           <a href="/about">About</a>
-          <a href="/is-this-you">Who We Serve</a>
+          <a href="/faq">FAQ</a>
           <a href="/contact">Contact</a>
-          <a href="https://www.linkedin.com/company/smith-revenue-strategy/" target="_blank" rel="noopener">LinkedIn</a>
+        </div>
+        <div class="foot-col">
+          <h5>Products</h5>
+          <a href="https://bidstrike.cloud/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">BidStrike</a>
+          <a href="https://sledradar.ai/?utm_source=srs&amp;utm_medium=site&amp;utm_campaign=footer" target="_blank" rel="noopener">SLED Radar</a>
         </div>
         <div class="foot-col">
           <h5>Legal</h5>

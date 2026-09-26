@@ -2898,7 +2898,9 @@ body.nav-menu-open .sticky-booking-cta {
      minmax(0,1fr) on the link groups, not a bare 1fr, or the long
      "Revenue Operations Consulting Solutions" heading forces the track wider
      than its share and squeezes the rest. */
-  grid-template-columns: 1.3fr repeat(5, minmax(0, 1fr));
+  /* 2026-09-26: THREE link groups (Company, Products, Legal) once SRS became a
+     holding company and the consulting columns came out. */
+  grid-template-columns: 1.3fr repeat(3, minmax(0, 1fr));
   gap: 28px;
   padding-bottom: 40px;
   border-bottom: 1px solid rgba(174, 203, 255, 0.1);
