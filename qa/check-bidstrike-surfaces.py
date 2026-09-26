@@ -602,8 +602,16 @@ def _():
         if org.get("@id") != "https://smithrevenuestrategy.com/#organization":
             bad.append("Organization @id is %r, which the SoftwareApplication "
                        "publisher references" % org.get("@id"))
-        if "https://bidstrike.cloud" not in org.get("sameAs", []):
-            bad.append("bidstrike.cloud not in Organization sameAs")
+        # RE-RULED AGAIN 2026-09-26 (Rodney approved the fix). schema.org sameAs means
+        # "this is the same thing", and a product SRS OWNS is not SRS. That claim also
+        # contradicts the prior-IP position (SRS, LLC owns the products as assets).
+        #   OLD: bidstrike.cloud MUST be in Organization sameAs.
+        #   NEW: no product domain may be in Organization sameAs; the org-to-product
+        #        link is carried by each SoftwareApplication's publisher @id (checked below).
+        for dom in ("bidstrike.cloud", "sledradar.ai"):
+            if any(dom in u for u in org.get("sameAs", [])):
+                bad.append("%s is in Organization sameAs; a product is not the same "
+                           "entity as its owner. Link it via publisher @id" % dom)
 
     if app is None:
         bad.append("SoftwareApplication node missing")
