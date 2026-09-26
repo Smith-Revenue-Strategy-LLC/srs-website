@@ -1,4 +1,39 @@
 #!/usr/bin/env python3
+"""RETIRED 2026-09-26. NOT A GATE. KEPT FOR THE RECORD.
+
+RULING: Rodney Smith, 2026-09-26 (_ops/rules/srs-holding-company-positioning.md,
+Q2). smithrevenuestrategy.com collapsed from a consulting site to a holding-company
+site: five live pages (index, about, contact, faq, privacy), the consulting pages
+retired to chromeless noindex redirect stubs, and a flat nav of Home, About, FAQ,
+Contact plus two outbound product links (bidstrike.cloud, sledradar.ai). He
+approved re-ruling the QA gates to that structure the same day.
+
+WHY RETIRED, NOT RE-RULED: every assertion below is about a control that no
+longer exists by ruling. The two-group dropdown (Consulting and Strategy /
+Construction Software), its Results rows, its who-buys-it lines, its product
+lockups and its button trigger all described the consulting funnel. There is no
+dropdown to measure, so rewriting these checks would be inventing a subject for
+them. Deleting the file would lose the reasoning behind rules that may come back
+if a product line ever returns to this site, so it moves here instead.
+
+REPLACED BY: qa/check-site-nav.py, written for the new contract (identical
+desktop nav and mobile drawer on every chrome page, exactly the six ruled links,
+products link out to the right domain in a new tab, no nav link to a retired
+stub or a missing file). The principles it inherited from this file are kept
+there: scope enumerated from the filesystem, both directions of the
+page-exists check, BidStrike leads every product list (ruled 8/29), and the
+.site-nav class contract script.js binds.
+
+The code is unchanged below the guard. The guard stops it running as if it were
+a gate: it would fail on every page by design and read as a live regression.
+"""
+import sys
+sys.exit("RETIRED 2026-09-26: the nav dropdown no longer exists by ruling. "
+         "Run qa/check-site-nav.py instead.")
+
+# ---------------------------------------------------------------------------
+# ORIGINAL GATE, as last run on 3af472c, preserved verbatim below this line.
+# ---------------------------------------------------------------------------
 """Gate for the Solutions & Results dropdown.
 
 SCOPE IS ENUMERATED FROM THE FILESYSTEM, never a hand-maintained list - a gate whose

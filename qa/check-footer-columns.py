@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
-"""Gate for the five-column footer and the operating-principles band.
+"""Gate for the footer columns and the operating-principles band.
 
-SCOPE ENUMERATED FROM THE FILESYSTEM. Same reasoning as check-nav-dropdown.py: the
+RE-RULED 2026-09-26 to the holding-company structure (Rodney Smith,
+_ops/rules/srs-holding-company-positioning.md, Q2; he approved re-ruling the gates
+the same day). The five consulting-era columns became three: Company, Products,
+Legal. Only COLS and the internal-link check changed; every other assertion in
+this file still describes the live footer and is kept as it was.
+
+SCOPE ENUMERATED FROM THE FILESYSTEM. Same reasoning as the retired
+qa/retired/check-nav-dropdown.py: the
 8/24 draft hardcoded an "Operator OS" link into the Solutions column, but that page
 is Tier 2 and does not exist, so the gate would have demanded a footer link to a
 404. Internal destinations are therefore checked against what is actually on disk.
@@ -30,8 +37,17 @@ PAGES = [p for p in sorted(glob.glob("*.html"))
 # checked until this date, and presence alone is exactly what lets a ruling about
 # ORDER quietly revert on the next person's edit - the same failure the nav gate
 # hit on 8/29 with the BidStrike lockup.
-COLS = ["Consulting and Strategy", "Construction Software",
-        "Resources", "Company", "Legal"]
+#
+# RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+#   OLD assertion: five columns in order, Consulting and Strategy | Construction
+#                  Software | Resources | Company | Legal.
+#   NEW assertion: three columns in order, Company | Products | Legal.
+# The consulting lane is gone, so "consulting leads" no longer has a subject.
+# Order is still asserted, not just presence, for the reason above: Company (the
+# site itself) leads, the products it owns follow, Legal closes. What the Products
+# column must CONTAIN (both products, linking out, BidStrike first) is asserted in
+# check-bidstrike-surfaces.py check 5, so the two gates cannot deadlock over it.
+COLS = ["Company", "Products", "Legal"]
 # The authoritative wording, confirmed by Rodney 2026-07-23. The five
 # reverse-engineered "Brand values" were DELETED from srs-brand-voice.md on
 # 2026-08-18 and must never come back - two layers remain, purpose and these three.
@@ -56,19 +72,27 @@ BANNED_VALUES = ["Brand values", "Brand Values"]
 # identity assertions get STRONGER here, not weaker.
 FULL_BAND_PAGE = "about.html"
 
-# Internal hrefs the footer may offer, gated on the page existing.
-CANDIDATES = {"/construction": "construction.html",
-              "/what-we-do":   "what-we-do.html",
-              "/operator-os":  "operator-os.html",
-              "/ai-peer-group":"ai-peer-group.html",
-              "/results":      "results.html",
-              "/events":       "events.html",
-              "/faq":          "faq.html",
-              "/about":        "about.html",
-              "/is-this-you":  "is-this-you.html",
-              "/contact":      "contact.html",
-              "/privacy":      "privacy.html",
-              "/work-together":"work-together.html"}
+# RE-RULED 2026-09-26.
+#   OLD assertion: a footer href that appears in a hand-maintained CANDIDATES map
+#                  of twelve paths must resolve to a file that exists.
+#   NEW assertion: EVERY internal footer href must resolve to a file that exists
+#                  AND is a live chrome page, not a chromeless retired stub.
+# Why it moved: ten of those twelve paths were retired to redirect stubs on
+# 2026-09-26. The files still exist, so the old check would have PASSED a footer
+# link to /what-we-do that bounces the reader home. And a hand list only covers
+# what someone remembered to add. Both halves are now derived from disk.
+def _chromeless(src):
+    return "brand-system: chromeless page" in src and re.search(
+        r'name=["\']robots["\'][^>]*noindex', src, re.I)
+
+
+RETIRED = [p for p in sorted(glob.glob("*.html"))
+           if _chromeless(open(p, encoding="utf-8").read())]
+
+
+def resolve(href):
+    path = href.split("#")[0].split("?")[0]
+    return "index.html" if path == "/" else path.strip("/") + ".html"
 
 fails = []
 foot_re = re.compile(r'<footer class="site-footer">.*?</footer>', re.S)
@@ -98,20 +122,25 @@ for p in PAGES:
     for c in COLS:
         if ">%s<" % c not in foot:
             fails.append("%s  footer missing column -> %s" % (p, c))
-    # ORDER, not just presence. Consulting leads; construction is secondary.
+    # ORDER, not just presence. Company leads, Products, then Legal (2026-09-26).
     present = [c for c in COLS if ">%s<" % c in foot]
     actual = sorted(present, key=lambda c: foot.index(">%s<" % c))
     if actual != present:
         fails.append("%s  footer columns are out of order.\n      on the page: %s"
-                     "\n      should be:   %s\n      Consulting leads and "
-                     "construction is secondary to it (ruled 8/31)"
+                     "\n      should be:   %s\n      Company leads, then the "
+                     "products it owns, then Legal (ruled 2026-09-26)"
                      % (p, " | ".join(actual), " | ".join(present)))
 
-    # no footer link may point at a page that does not exist
-    for href in re.findall(r'href="(/[^"#?]*)"', foot):
-        if href in CANDIDATES and not os.path.exists(CANDIDATES[href]):
-            fails.append("%s  footer links %s but %s does not exist"
-                         % (p, href, CANDIDATES[href]))
+    # no footer link may point at a page that does not exist, or at a stub
+    for href in re.findall(r'href="(/(?!/)[^"]*)"', foot):
+        if href.startswith("/assets/"):
+            continue
+        f = resolve(href)
+        if not os.path.exists(f):
+            fails.append("%s  footer links %s but %s does not exist" % (p, href, f))
+        elif f in RETIRED:
+            fails.append("%s  footer links %s, a chromeless retired stub that "
+                         "redirects away (retired 2026-09-26)" % (p, href))
 
     # the skinny strip is sitewide chrome and lives INSIDE the footer
     st = strip_re.search(foot)
@@ -159,7 +188,8 @@ if len(seen_strip) > 1:
                  % [v for v in seen_strip.values()])
 
 print("  scope: %d pages enumerated from disk" % len(PAGES))
-print("  internal footer hrefs validated against files on disk")
+print("  internal footer hrefs validated against files on disk and %d derived "
+      "chromeless stubs" % len(RETIRED))
 print("  full principles band expected on %s only; skinny footer strip on all %d"
       % (FULL_BAND_PAGE, len(PAGES)))
 if fails:
@@ -167,5 +197,5 @@ if fails:
     for f in fails:
         print("  " + f)
     sys.exit(1)
-print("\nRESULT: PASS - five columns, full band on %s only, skinny strip on all %d, "
-      "bs block intact, no dead links" % (FULL_BAND_PAGE, len(PAGES)))
+print("\nRESULT: PASS - %s in order, full band on %s only, skinny strip on all %d, "
+      "no dead or retired internal links" % (" | ".join(COLS), FULL_BAND_PAGE, len(PAGES)))

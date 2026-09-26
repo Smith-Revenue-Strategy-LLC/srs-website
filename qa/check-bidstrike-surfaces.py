@@ -106,18 +106,39 @@ def _():
     links, which is a worse footer, so the CONTAINER counts as styling.
 
     This is a widening of the accepted contexts, not of the rule. A BidStrike
-    link that is neither bs-classed nor inside .foot-col still fails."""
-    bad = []
-    foot_col = re.compile(r'<div class="foot-col">.*?</div>', re.S)
-    cols = {p: " ".join(foot_col.findall(read(p))) for p in {l[0] for l in LINKS}}
+    link that is neither bs-classed nor inside .foot-col still fails.
+
+    RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+      OLD assertion: a bs- class, or inside .foot-col.
+      NEW assertion: a bs- class, or a card class from STYLED_CARDS that
+                     styles.css actually defines, or inside a container that
+                     styles its own anchors: .foot-col, the desktop nav row
+                     (ul.nav-links) or the mobile drawer (nav.site-nav).
+    Why: the ruling puts BidStrike in the nav, and the homepage product card is
+    a .solution-chip whose whole face is the link. Both render as a visible
+    control; neither can be prose. The rule is unchanged: a link that is none of
+    these still fails. Each card class is checked against styles.css so a class
+    name that styles nothing cannot count as styling."""
+    STYLED_CARDS = {"solution-chip"}
+    css = read("styles.css")
+    bad = ["styles.css defines no .%s rule, so it cannot count as styling" % c
+           for c in sorted(STYLED_CARDS)
+           if not re.search(r"(^|[\s,}])\.%s\s*\{" % re.escape(c), css)]
+    containers = [re.compile(r'<div class="foot-col">.*?</div>', re.S),
+                  re.compile(r'<ul class="nav-links">.*?</ul>', re.S),
+                  re.compile(r'<nav\b[^>]*\bclass="[^"]*\bsite-nav\b[^"]*".*?</nav>', re.S)]
+    cols = {p: " ".join(" ".join(c.findall(read(p))) for c in containers)
+            for p in {l[0] for l in LINKS}}
     for page, tag, attrs in LINKS:
-        classes = attrs.get("class", "")
-        if any(c.startswith("bs-") for c in classes.split()):
+        classes = attrs.get("class", "").split()
+        if any(c.startswith("bs-") for c in classes):
+            continue
+        if STYLED_CARDS & set(classes):
             continue
         if tag in cols.get(page, ""):
             continue
-        bad.append("%s: class=%r and not inside .foot-col, so it would render "
-                   "as invisible prose" % (page, classes))
+        bad.append("%s: class=%r and not inside .foot-col or the nav, so it "
+                   "would render as invisible prose" % (page, " ".join(classes)))
     return bad
 
 
@@ -151,9 +172,36 @@ def _():
         m = re.search(r"utm_campaign=([^&\s\"]+)", href)
         if m:
             campaigns.setdefault(m.group(1), []).append(page)
+    # RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+    #   OLD assertion: every campaign is used once, except "footer", which may
+    #                  repeat anywhere.
+    #   NEW assertion: every campaign is used once, except the two SITE-WIDE
+    #                  CHROME campaigns, "footer" and "nav", and each of those may
+    #                  repeat ONLY inside its own chrome region (the footer, or
+    #                  the nav row + drawer). Anywhere else it is a reuse.
+    # Why nav joins footer: the ruling puts BidStrike in the nav, and the nav is
+    # chrome that check 6 and check-site-nav.py hold byte-identical across every
+    # page. A per-page campaign would break that identity to answer a question
+    # nobody asked; the question this rule exists for is WHICH SURFACE sent the
+    # visit (nav vs footer vs a body placement), and one name per surface still
+    # answers it. The row and the drawer share the name because they are one nav
+    # at two widths, never on screen together.
+    # Why the region pin is new: the old exemption let "footer" appear in a body
+    # paragraph and still pass, which would have silently merged two surfaces.
+    SITEWIDE = {
+        "footer": [re.compile(r'<footer class="site-footer">.*?</footer>', re.S)],
+        "nav": [re.compile(r'<ul class="nav-links">.*?</ul>', re.S),
+                re.compile(r'<nav\b[^>]*\bclass="[^"]*\bsite-nav\b[^"]*".*?</nav>', re.S)],
+    }
+    for page, tag, attrs in LINKS:
+        m = re.search(r"utm_campaign=([^&\s\"]+)", html.unescape(attrs.get("href", "")))
+        if m and m.group(1) in SITEWIDE:
+            region = " ".join(" ".join(r.findall(read(page))) for r in SITEWIDE[m.group(1)])
+            if tag not in region:
+                bad.append("%s: campaign %r used outside its own chrome region"
+                           % (page, m.group(1)))
     for name, pages in campaigns.items():
-        # the footer is intentionally site-wide; everything else is one place
-        if name != "footer" and len(pages) > 1:
+        if name not in SITEWIDE and len(pages) > 1:
             bad.append("campaign %r reused on %s" % (name, pages))
     notes.append("campaigns: %s" % ", ".join(sorted(campaigns)))
     return bad
@@ -210,25 +258,42 @@ def _():
         f = m.group(0)
         if "bs-footer-block" in f:
             bad.append("%s: the retired .bs-footer-block chip is back" % page)
-        # the link has to sit in the construction group, not merely in the footer
+        # the link has to sit in the products group, not merely in the footer
         # RENAMED 2026-08-31 with the footer reorder: "Construction Solutions"
-        # became "Construction Software" to match the nav bracket. This needle
-        # moved in the SAME commit as the markup, and was positive-controlled.
-        grp = re.search(r'<h5>Construction Software</h5>(.*?)</div>', f, re.S)
+        # became "Construction Software" to match the nav bracket.
+        #
+        # RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+        #   OLD assertion: BidStrike sits in a "Construction Software" column and
+        #                  points INWARD at /construction#bidstrike; an outward
+        #                  bidstrike.cloud link there FAILS (ruled 8/31: outward
+        #                  skipped the SRS page that qualified the buyer).
+        #   NEW assertion: BidStrike sits in the "Products" column and points OUT
+        #                  at https://bidstrike.cloud, SLED Radar sits beside it
+        #                  pointing OUT at https://sledradar.ai, BidStrike first;
+        #                  an inward link to /construction FAILS.
+        # Why it inverted again: the qualifying page /construction is now a
+        # chromeless redirect stub. Pointing inward would send the reader to a
+        # page that bounces them home. The product sites are where the work
+        # happens now, per the approved brand paragraph.
+        grp = re.search(r'<h5>Products</h5>(.*?)</div>', f, re.S)
         if not grp:
-            bad.append("%s: no Construction Software group in the footer" % page)
-        # RE-RULED 2026-08-31: the footer products now point INWARD, matching the
-        # homepage chips (d7040ce) and the nav bracket, because pointing them
-        # straight out skips the step that qualifies. This assertion REQUIRED the
-        # literal "bidstrike.cloud" here, so it encoded the old outward ruling and
-        # would have failed the new one. It inverted with the markup in the same
-        # commit, and now enforces the inward rule in both directions.
-        elif "/construction#bidstrike" not in grp.group(1):
-            bad.append("%s: BidStrike missing from the Construction Software group "
-                       "(it must point INWARD at /construction#bidstrike)" % page)
-        elif "bidstrike.cloud" in grp.group(1):
-            bad.append("%s: the footer BidStrike link points OUT again. Ruled "
-                       "inward 8/31 - outward skips the step that qualifies" % page)
+            bad.append("%s: no Products column in the footer" % page)
+        else:
+            g = grp.group(1)
+            bs = g.find('href="https://bidstrike.cloud/')
+            sr = g.find('href="https://sledradar.ai/')
+            if bs < 0:
+                bad.append("%s: BidStrike missing from the Products column, or not "
+                           "pointing OUT at https://bidstrike.cloud" % page)
+            if sr < 0:
+                bad.append("%s: SLED Radar missing from the Products column, or not "
+                           "pointing OUT at https://sledradar.ai" % page)
+            if bs >= 0 and sr >= 0 and sr < bs:
+                bad.append("%s: SLED Radar precedes BidStrike in the Products column. "
+                           "BidStrike leads every product list (ruled 8/29)" % page)
+            if "/construction" in g:
+                bad.append("%s: the Products column points INWARD at /construction, "
+                           "which was retired to a redirect stub 2026-09-26" % page)
         seen.setdefault(f, []).append(page)
     if len(seen) > 1:
         bad.append("footer differs between pages: %s" % [v for v in seen.values()])
@@ -237,32 +302,259 @@ def _():
 
 
 # --------------------------------------------------------------------------
-# 6. The nav is the site's identity statement and is deliberately NOT a
-# placement. bidstrike-landing shipped a folded nav row on 2026-08-05 by
-# adding one link too many; a wrapped nav still looks like it rendered.
+# 6. The nav must never fold.
+# bidstrike-landing shipped a folded nav row on 2026-08-05 by adding one link
+# too many; a wrapped nav still looks like it rendered.
+#
+# RE-RULED 2026-09-26 (holding-company collapse, ruling Q2, which Rodney made
+# knowing it reverses this check's first half).
+#   OLD assertion: the nav is the site's identity statement and NOT a
+#                  placement, so NO bidstrike link may appear in it; link count
+#                  identical across pages.
+#   NEW assertion: each nav (desktop row AND drawer) carries EXACTLY ONE
+#                  BidStrike link, pointing OUT; link count identical across
+#                  pages (kept); and the reason the old rule existed is now
+#                  measured directly instead of prevented by proxy: in a real
+#                  browser layout the desktop row never wraps, clips, overflows
+#                  or collides with the header chip, at the narrowest desktop
+#                  width and at 1440px, and below the breakpoint the drawer is
+#                  reachable and each of its links is one line.
+# Why measure: "no bidstrike link" was a proxy for "no fold". The ruling adds
+# two links to the row, so the proxy is gone and only the real property is left
+# to check. A static count cannot see a fold; only layout can.
+#
+# HOW IT MEASURES. Chrome headless loads each chrome page from a local server
+# (absolute /assets paths need one) with the site's real CSS, real Geist font
+# and real script.js, which injects the LinkedIn chip into this same row. A
+# probe script appended to the served copy reads getBoundingClientRect after
+# document.fonts.ready and writes JSON into the DOM, which --dump-dom returns.
+# Nothing on disk is modified. The instrument checks itself first: if the
+# viewport width is not the one requested, or Geist did not load, the numbers
+# describe a page nobody ships and the check FAILS rather than reporting them.
+# If Chrome is missing the check FAILS: a layout check that could not run has
+# not passed.
 # --------------------------------------------------------------------------
-@check("nav row untouched: no bidstrike link in site navigation")
+CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+NAV_ROW_RE = re.compile(r'<ul class="nav-links">.*?</ul>', re.S)
+NAV_DRAWER_RE = re.compile(r'<nav[^>]*\bclass="[^"]*\bsite-nav\b[^"]*".*?</nav>', re.S)
+
+PROBE = r"""<script>
+(async function(){
+  try { await document.fonts.ready; } catch (e) {}
+  await new Promise(function (r) { setTimeout(r, 300); });
+  var R = function (el) { var b = el.getBoundingClientRect();
+    return {top: b.top, h: b.height, l: b.left, r: b.right}; };
+  var out = {iw: innerWidth, docW: document.documentElement.scrollWidth,
+             geist: Array.from(document.fonts).some(function (f) {
+               return /Geist/.test(f.family) && f.status === "loaded"; })};
+  var ul = document.querySelector(".nav-links");
+  out.row = ul ? getComputedStyle(ul).display : "missing";
+  var tg = document.querySelector(".nav-toggle");
+  out.toggle = tg ? getComputedStyle(tg).display : "missing";
+  if (ul && out.row !== "none") {
+    out.links = [].map.call(ul.querySelectorAll("a"), function (a) {
+      var o = R(a); o.t = a.textContent.trim(); o.sw = a.scrollWidth; o.cw = a.clientWidth;
+      var cs = getComputedStyle(a); o.lh = parseFloat(cs.lineHeight) || 1.2 * parseFloat(cs.fontSize);
+      return o; });
+    out.ulSW = ul.scrollWidth; out.ulCW = ul.clientWidth;
+    var w = document.querySelector(".nav-wrap");
+    out.wrap = R(w);
+    out.kids = [].map.call(w.children, function (c) {
+      var o = R(c); o.cls = c.className; o.d = getComputedStyle(c).display; return o; });
+  } else {
+    var nav = document.querySelector(".site-nav");
+    if (nav) {
+      nav.classList.add("is-open"); document.body.classList.add("nav-menu-open");
+      out.drawer = getComputedStyle(nav).display;
+      out.dlinks = [].map.call(nav.querySelectorAll("a"), function (a) {
+        var o = R(a); o.t = a.textContent.trim(); o.sw = a.scrollWidth; o.cw = a.clientWidth;
+      var cs = getComputedStyle(a); o.lh = parseFloat(cs.lineHeight) || 1.2 * parseFloat(cs.fontSize);
+      return o; });
+      out.navSW = nav.scrollWidth; out.navCW = nav.clientWidth;
+    }
+  }
+  var pre = document.createElement("pre"); pre.id = "__navprobe";
+  pre.textContent = JSON.stringify(out); document.body.appendChild(pre);
+})();
+</script>"""
+
+
+def _row_breakpoint():
+    """The widest width at which .nav-links is display:none, read off the CSS."""
+    css = read("styles.css")
+    for m in re.finditer(r"@media\s*\(max-width:\s*(\d+)px\)\s*\{(.*?)\n\}", css, re.S):
+        if re.search(r"\.nav-links\s*\{\s*display:\s*none", m.group(2)):
+            return int(m.group(1))
+    return None
+
+
+def _measure(pages, widths):
+    import functools
+    import http.server
+    import io
+    import subprocess
+    import threading
+    from concurrent.futures import ThreadPoolExecutor
+
+    root = os.getcwd()
+
+    class Probe(http.server.SimpleHTTPRequestHandler):
+        def log_message(self, *a):
+            pass
+
+        def send_head(self):
+            path = self.translate_path(self.path)
+            if os.path.isdir(path):
+                path = os.path.join(path, "index.html")
+            if not os.path.exists(path) and os.path.exists(path + ".html"):
+                path += ".html"
+            if path.endswith(".html") and os.path.exists(path):
+                body = read(path).replace("</body>", PROBE + "</body>").encode("utf-8")
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                return io.BytesIO(body)
+            return super().send_head()
+
+    srv = http.server.ThreadingHTTPServer(
+        ("127.0.0.1", 0), functools.partial(Probe, directory=root))
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    port = srv.server_address[1]
+
+    def one(job):
+        page, width = job
+        url = "http://127.0.0.1:%d/%s" % (port, page)
+        r = subprocess.run([CHROME, "--headless", "--disable-gpu", "--hide-scrollbars",
+                            "--no-first-run", "--window-size=%d,900" % width,
+                            "--virtual-time-budget=5000", "--dump-dom", url],
+                           capture_output=True, text=True, timeout=90)
+        m = re.search(r'<pre id="__navprobe">(.*?)</pre>', r.stdout, re.S)
+        return page, width, (json.loads(html.unescape(m.group(1))) if m else None)
+
+    try:
+        with ThreadPoolExecutor(max_workers=5) as ex:
+            return list(ex.map(one, [(p, w) for p in pages for w in widths]))
+    finally:
+        srv.shutdown()
+
+
+@check("nav never folds: one outbound bidstrike link per nav, row fits in real layout")
 def _():
-    # 2026-08-19: was r'<nav class="site-nav"' which demanded that be the ONLY class.
-    # The flat top nav carries `class="site-nav mobile-nav"`, so the old pattern
-    # matched nothing and the check reported "no site-nav found" on every page -
-    # a gate failing on its own brittleness, not on a real defect. Match site-nav
-    # as one class among several.
-    nav_re = re.compile(r'<nav[^>]*\bclass="[^"]*\bsite-nav\b[^"]*".*?</nav>', re.S)
     bad = []
     counts = set()
     for page in CHROME_PAGES:
-        m = nav_re.search(read(page))
-        if not m:
-            bad.append("%s: no site-nav found" % page)
+        src = read(page)
+        row, drawer = NAV_ROW_RE.search(src), NAV_DRAWER_RE.search(src)
+        if not row or not drawer:
+            bad.append("%s: nav row or drawer not found" % page)
             continue
-        nav = m.group(0)
-        if "bidstrike" in nav.lower():
-            bad.append("%s: bidstrike link added to the nav row" % page)
-        counts.add(nav.count("<a "))
-    if len(counts) > 1:
+        for where, blk in (("row", row.group(0)), ("drawer", drawer.group(0))):
+            bs = re.findall(r"<a\b[^>]*bidstrike\.cloud[^>]*>", blk)
+            if len(bs) != 1:
+                bad.append("%s: %s carries %d bidstrike links, ruled exactly 1 "
+                           "(2026-09-26)" % (page, where, len(bs)))
+            elif 'href="https://bidstrike.cloud/' not in bs[0]:
+                bad.append("%s: %s bidstrike link does not point OUT at "
+                           "https://bidstrike.cloud" % (page, where))
+            counts.add((where, blk.count("<a ")))
+    if len({c for w, c in counts if w == "row"}) > 1 or len({c for w, c in counts if w == "drawer"}) > 1:
         bad.append("nav link count differs across pages: %s" % sorted(counts))
-    notes.append("nav anchors per page: %s" % sorted(counts))
+    notes.append("nav anchors per page (row, drawer): %s" % sorted(counts))
+
+    # ---- the layout half
+    if not os.path.exists(CHROME):
+        return bad + ["instrument missing: %s. The layout check could not run, "
+                      "and a check that did not run has not passed" % CHROME]
+    bp = _row_breakpoint()
+    if bp is None:
+        return bad + ["could not find the @media rule that hides .nav-links in "
+                      "styles.css, so the narrowest desktop width is unknown"]
+    # 1024 is below the breakpoint (drawer only), bp+1 is the narrowest width
+    # that shows the row and so the one where a fold would appear first, and
+    # 1440 is the common laptop width. bp+1 is DERIVED from the CSS so the check
+    # follows the breakpoint if it ever moves.
+    widths = sorted({1024, bp + 1, 1440})
+    notes.append("nav layout widths: %s (row breakpoint derived from CSS: <=%dpx hides it)"
+                 % (widths, bp))
+    for page, width, m in _measure(CHROME_PAGES, widths):
+        tag = "%s @%dpx" % (page, width)
+        if m is None:
+            bad.append("%s: the layout probe returned nothing. Instrument failure, "
+                       "not a pass" % tag)
+            continue
+        if m["iw"] != width:
+            bad.append("%s: viewport measured %dpx, requested %dpx. Instrument "
+                       "failure" % (tag, m["iw"], width))
+            continue
+        if not m["geist"]:
+            bad.append("%s: Geist did not load, so this is not the shipped layout" % tag)
+            continue
+        if m["docW"] > width:
+            bad.append("%s: page scrolls sideways (%dpx wide)" % (tag, m["docW"]))
+        if width > bp:
+            if m["row"] == "none":
+                bad.append("%s: desktop nav row is hidden above the breakpoint" % tag)
+                continue
+            ls = m["links"]
+            if not ls:
+                bad.append("%s: desktop nav row rendered no links" % tag)
+                continue
+            tops = {round(l["top"]) for l in ls}
+            if len(tops) > 1:
+                bad.append("%s: nav row FOLDED onto %d lines: %s" % (
+                    tag, len(tops), [(l["t"], round(l["top"])) for l in ls]))
+            if max(l["h"] for l in ls) - min(l["h"] for l in ls) >= min(l["lh"] for l in ls) / 2:
+                bad.append("%s: a nav label wrapped (heights differ by half a line or more): %s" % (
+                    tag, [(l["t"], round(l["h"])) for l in ls]))
+            for l in ls:
+                if l["sw"] > l["cw"] + 1:
+                    bad.append("%s: nav link %r is clipped (%d of %dpx)" % (
+                        tag, l["t"], l["cw"], l["sw"]))
+            if m["ulSW"] > m["ulCW"] + 1:
+                bad.append("%s: nav row overflows its box (%d > %dpx)" % (
+                    tag, m["ulSW"], m["ulCW"]))
+            vis = [k for k in m["kids"] if k["d"] != "none" and k["h"] > 0]
+            if m["wrap"]["h"] > max(k["h"] for k in vis) + 1:
+                bad.append("%s: header row is %.0fpx tall, taller than its tallest "
+                           "item (%.0fpx), so it wrapped" % (
+                               tag, m["wrap"]["h"], max(k["h"] for k in vis)))
+            first, last = min(l["l"] for l in ls), max(l["r"] for l in ls)
+            # any other visible header item (brand lockup, the JS-injected
+            # LinkedIn chip, the toggle) that overlaps the row's span collides
+            for k in vis:
+                if "nav-links" in k["cls"].split():
+                    continue
+                if k["l"] < last - 1 and k["r"] > first + 1:
+                    bad.append("%s: nav row (%.0f-%.0fpx) collides with %r (%.0f-%.0fpx)"
+                               % (tag, first, last, k["cls"] or "?", k["l"], k["r"]))
+            notes.append("%s: 1 row, %d links, %.0fpx to %.0fpx, header row %.0fpx tall, "
+                         "nearest item right of it starts %s"
+                         % (tag, len(ls), first, last, m["wrap"]["h"],
+                            next(("%.0fpx (%s)" % (k["l"], k["cls"]) for k in
+                                  sorted(vis, key=lambda k: k["l"]) if k["l"] >= last - 1),
+                                 "none")))
+        else:
+            if m["row"] != "none":
+                bad.append("%s: desktop row still showing below the breakpoint" % tag)
+            if m["toggle"] in ("none", "missing"):
+                bad.append("%s: menu toggle hidden below the breakpoint, so this width "
+                           "has NO navigation" % tag)
+            dl = m.get("dlinks") or []
+            if m.get("drawer") in (None, "none") or not dl:
+                bad.append("%s: drawer did not open" % tag)
+                continue
+            # A wrapped label is taller by a whole LINE. Exact equality is the
+            # wrong instrument: .site-nav a:last-child drops its bottom border,
+            # so the last row is 1px shorter on a perfectly good drawer (it
+            # false-failed exactly that way the first time this ran, 2026-09-26).
+            if max(l["h"] for l in dl) - min(l["h"] for l in dl) >= min(l["lh"] for l in dl) / 2:
+                bad.append("%s: a drawer label wrapped (heights differ by half a line or more): %s" % (
+                    tag, [(l["t"], round(l["h"])) for l in dl]))
+            if m["navSW"] > m["navCW"] + 1:
+                bad.append("%s: drawer overflows sideways" % tag)
+            notes.append("%s: drawer opens, %d links, each %s px tall"
+                         % (tag, len(dl), sorted({round(l["h"]) for l in dl})))
     return bad
 
 
@@ -286,13 +578,32 @@ def _():
     if bad:
         return bad
 
-    org = next((b for b in parsed if b.get("@type") == "ProfessionalService"), None)
-    app = next((b for b in parsed if b.get("@type") == "SoftwareApplication"), None)
+    # RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+    #   OLD assertion: a ProfessionalService node exists and lists
+    #                  https://bidstrike.cloud in sameAs.
+    #   NEW assertion: an Organization node with the site's #organization @id
+    #                  exists and lists https://bidstrike.cloud in sameAs, and NO
+    #                  ProfessionalService node remains.
+    # Why: SRS sells no services now. ProfessionalService would tell every search
+    # engine the opposite of the ruling, on the placement nobody sees on screen.
+    # The sameAs link and the SoftwareApplication checks below are unchanged, and
+    # the publisher @id they point at is now required to exist on the org node.
+    org = next((b for b in parsed if b.get("@type") == "Organization"), None)
+    app = next((b for b in parsed if b.get("@type") == "SoftwareApplication"
+                and b.get("url") == "https://bidstrike.cloud"),
+               next((b for b in parsed if b.get("@type") == "SoftwareApplication"), None))
 
+    if any(b.get("@type") == "ProfessionalService" for b in parsed):
+        bad.append("a ProfessionalService node is back. SRS sells no services "
+                   "since 2026-09-26; the node is an Organization")
     if org is None:
-        bad.append("ProfessionalService node missing")
-    elif "https://bidstrike.cloud" not in org.get("sameAs", []):
-        bad.append("bidstrike.cloud not in ProfessionalService sameAs")
+        bad.append("Organization node missing")
+    else:
+        if org.get("@id") != "https://smithrevenuestrategy.com/#organization":
+            bad.append("Organization @id is %r, which the SoftwareApplication "
+                       "publisher references" % org.get("@id"))
+        if "https://bidstrike.cloud" not in org.get("sameAs", []):
+            bad.append("bidstrike.cloud not in Organization sameAs")
 
     if app is None:
         bad.append("SoftwareApplication node missing")
@@ -314,12 +625,27 @@ def _():
 # --------------------------------------------------------------------------
 # 8. The five placements exist where they are supposed to.
 # --------------------------------------------------------------------------
-@check("all five placements present on their expected pages")
+@check("all placements present on their expected pages")
 def _():
+    # RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+    #   OLD assertion: six named placements, including index bs-band/home-band,
+    #                  work-together-paths, results bs-case/results-case and the
+    #                  is-this-you "The bid desk" card.
+    #   NEW assertion: the placements on the five live pages (index
+    #                  home-products, about built-tray/about-tray, faq, contact,
+    #                  plus the site-wide nav and footer), AND every page that
+    #                  used to carry a placement but was retired is a DECLARED
+    #                  chromeless noindex stub, not a live page that quietly lost
+    #                  its placement.
+    # Why: work-together, results and is-this-you were retired to redirect stubs
+    # by the ruling, and the homepage band became the two-product card row. The
+    # retired half is not deleted, it is inverted: if one of those pages comes
+    # back to life, this check demands the ruling be revisited rather than
+    # passing a live page with nothing on it.
+    retired = ["work-together.html", "results.html", "is-this-you.html"]
     expected = {
-        "index.html": ["bs-band", "utm_campaign=home-band"],
-        "work-together.html": ["utm_campaign=work-together-paths"],
-        "results.html": ["bs-case", "utm_campaign=results-case"],
+        "index.html": ["solution-chip", "utm_campaign=home-products"],
+        "contact.html": ["utm_campaign=contact"],
         "about.html": ["built-tray", "utm_campaign=about-tray"],
         # The card marker was renamed situation_c -> bid_desk on 2026-08-30:
         # "situation_c" told a reader nothing about what they were reading.
@@ -332,7 +658,8 @@ def _():
         # NOTE the utm_campaign value is DELIBERATELY unchanged - it is a live
         # attribution key, and renaming a visible label is not a reason to break
         # historical campaign data.
-        "is-this-you.html": ["The bid desk", "utm_campaign=is-this-you"],
+        # RETIRED 2026-09-26 with the page: "is-this-you.html": ["The bid desk",
+        # "utm_campaign=is-this-you"]. See `retired` above.
         "faq.html": ["utm_campaign=faq"],
     }
     bad = []
@@ -341,6 +668,20 @@ def _():
         for needle in needles:
             if needle not in src:
                 bad.append("%s: missing %r" % (page, needle))
+    for page in CHROME_PAGES:
+        src = read(page)
+        for name in ("nav", "footer"):
+            if "utm_campaign=%s" % name not in src:
+                bad.append("%s: missing the site-wide %r placement" % (page, name))
+    for page in retired:
+        if not os.path.exists(page):
+            bad.append("%s: gone entirely; it was retired to a redirect stub so "
+                       "inbound links do not 404" % page)
+        elif page in CHROME_PAGES:
+            bad.append("%s: is a live chrome page again but was retired 2026-09-26 "
+                       "with its placement. Revisit the ruling" % page)
+        elif "bidstrike.cloud" in read(page):
+            bad.append("%s: a retired stub still carries a bidstrike placement" % page)
     return bad
 
 
@@ -349,17 +690,37 @@ def _():
 # referral. The /about tray sits directly under a tray whose closing line
 # describes revenue-share referrals, so the distinction has to be explicit.
 # --------------------------------------------------------------------------
-@check("ownership disclosed on /about and /results")
+@check("ownership disclosed on /about and /")
 def _():
+    # RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+    #   OLD assertion: the /about built-tray says "own BidStrike outright", and
+    #                  results.html says "my own product".
+    #   NEW assertion: the /about built-tray says "Smith Revenue Strategy owns
+    #                  both products" AND keeps "Neither is a partner referral";
+    #                  the homepage says "Smith Revenue Strategy is a holding
+    #                  company. It owns two software products" (the approved
+    #                  brand paragraph, _ops/rules/srs-holding-company-positioning.md).
+    # Why: the owner is now the company, not Rodney personally, and there are two
+    # products, so the old phrase is no longer the true statement. /results was
+    # retired; its half of this check moves to the homepage, which now carries
+    # the ownership statement in the brand paragraph. The partner-referral line is
+    # asserted because it is the distinction this check was written to protect.
     bad = []
     about = read("about.html")
     tray = about.split('id="built-tray"', 1)
     if len(tray) < 2:
         bad.append("about.html: built-tray missing")
-    elif "own bidstrike outright" not in tray[1].lower():
-        bad.append("about.html: built-tray does not state outright ownership")
-    if "my own product" not in read("results.html").lower():
-        bad.append("results.html: case block does not disclose ownership")
+    else:
+        body = re.sub(r"\s+", " ", tray[1].split("</details>", 1)[0])
+        if "Smith Revenue Strategy owns both products" not in body:
+            bad.append("about.html: built-tray does not state that Smith Revenue "
+                       "Strategy owns both products")
+        if "Neither is a partner referral" not in body:
+            bad.append("about.html: built-tray lost the partner-referral distinction")
+    home = re.sub(r"\s+", " ", read("index.html"))
+    if ("Smith Revenue Strategy is a holding company. It owns two software products"
+            not in home):
+        bad.append("index.html: the brand paragraph no longer states ownership")
     return bad
 
 
@@ -509,8 +870,13 @@ def _():
         bad.append("styles.css still defines .bs-mark (the type stand-in)")
 
     found = 0
+    per_page = {}
     for page in PAGES:
         src = read(page)
+        # any <img> of the BidStrike art counts as a lockup placement, classed
+        # bs-logo or not (the homepage card carries it without the class)
+        per_page[page] = len([t for t in re.findall(r"<img\b[^>]*>", src)
+                              if "/brand/bidstrike-logo" in t])
         if "bs-mark" in src:
             bad.append("%s: still renders the .bs-mark type stand-in" % page)
         # which placements sit inside a lime CTA button
@@ -583,9 +949,40 @@ def _():
     # The floor is NOT deleted. It is re-derived from what the design now says
     # should exist: the named campaign placements in check 8, each of which
     # carries a lockup. Falling below that still means a placement went missing.
-    if found < 5:
-        bad.append("only %d bs-logo placements; the named campaign placements "
-                   "each carry one, so this means a placement was dropped" % found)
+    #
+    # RE-RULED 2026-09-26 (holding-company collapse, ruling Q2).
+    #   OLD assertion: at least 5 bs-logo placements site-wide.
+    #   NEW assertion: each page in LOCKUP_PAGES carries at least one img of the
+    #                  BidStrike art, and every such img passes the src/alt/size
+    #                  checks above, bs-logo class or not.
+    # Why: the five came from placements on /results, /work-together,
+    # /is-this-you and the old home band, all retired. A bare total can be met by
+    # stacking logos on one page while another placement loses its lockup, so the
+    # floor is now pinned per placement. The nav, footer and contact placements
+    # are text by design and are not in the list.
+    LOCKUP_PAGES = {"index.html": "home-products card",
+                    "about.html": "about-tray",
+                    "faq.html": "faq answer"}
+    for page, what in LOCKUP_PAGES.items():
+        if not per_page.get(page):
+            bad.append("%s: the %s placement lost its BidStrike lockup art" % (page, what))
+    # the src/alt/size checks above only see imgs classed bs-logo; hold the
+    # unclassed ones to the same standard
+    for page in PAGES:
+        for tag in re.findall(r"<img\b[^>]*>", read(page)):
+            if "/brand/bidstrike-logo" not in tag or re.search(r"\bbs-logo\b", tag):
+                continue
+            attrs = dict(ATTR_RE.findall(tag))
+            if attrs.get("src") != LOGO_SRC:
+                bad.append("%s: BidStrike art src is %r, expected %r"
+                           % (page, attrs.get("src"), LOGO_SRC))
+            if attrs.get("alt") != "BidStrike":
+                bad.append('%s: BidStrike art alt is %r, expected "BidStrike"'
+                           % (page, attrs.get("alt")))
+            if not (attrs.get("width") and attrs.get("height")):
+                bad.append("%s: BidStrike art has no width/height" % page)
+    notes.append("bidstrike lockup art per page: %s"
+                 % {p: n for p, n in per_page.items() if n})
     return bad
 
 
