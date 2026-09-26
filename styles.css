@@ -2967,64 +2967,40 @@ body.nav-menu-open .sticky-booking-cta {
   color: rgba(214, 224, 248, 0.58);
 }
 
-/* --- footer principles strip ----------------------------------------------
-   The SKINNY sitewide variant, ruled by Rodney 2026-08-28. Names ONLY: no
-   headings, no paragraph copy. The full .principles-band below keeps its
-   paragraphs and now renders on about.html ALONE. A full band on all 13 pages
-   was reading as boilerplate and draining the strongest thing SRS publishes.
-   about.html carries BOTH variants by ruling - that is a decision, not a bug.
-   qa/check-footer-columns.py holds the two apart and drift-checks each one
-   separately, so do not merge these rules back together. */
+/* --- footer values ---------------------------------------------------------
+   RE-RULED BY RODNEY 2026-09-26. The three values now render IN FULL, name plus
+   explanation, in the footer of every chrome page, and the separate
+   .principles-band on about.html is GONE. About had been carrying both the band
+   and the names-only strip stacked on top of each other, and it read as a
+   duplicate. One treatment, sitewide, at the bottom of every page.
+   STACKED AT EVERY WIDTH, on purpose: most readers are on a phone, so the
+   values run top to bottom, never in a row. qa/check-footer-columns.py holds
+   this: full copy in the footer, no band anywhere. */
 .foot-principles {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px 26px;
-  padding: 24px 0 0;
+  padding: 26px 0 0;
+  max-width: 640px;
+}
+
+.foot-principles-label {
+  display: block;
+  margin-bottom: 14px;
   font-size: 11.5px;
   font-weight: 700;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: var(--lime);
-}
-
-.foot-principles span {
-  white-space: nowrap;
-}
-
-/* Rodney, 2026-08-31: "nothing says that there are values." The three names sat
-   here carrying only an aria-label, so a sighted reader saw three lime words and
-   no reason for them. Screen readers had the context; eyes did not.
-   It is a SPAN on purpose. check-footer-columns.py fails this strip on <p> or
-   <h4>, because headings-plus-copy on every page is exactly the boilerplate the
-   8/28 split removed. A label is not that; a heading would be.
-   Toned to --on-navy-soft rather than lime so it reads as the LABEL for the
-   three, not as a fourth value in the row. */
-.foot-principles-label {
   color: var(--on-navy-soft);
   opacity: 0.85;
 }
 
-/* --- operating principles band ------------------------------------------- */
-/* Purpose plus these THREE principles are the only two layers that survive.
-   The five reverse-engineered "Brand values" were deleted from srs-brand-voice.md
-   on 2026-08-18 and must not come back. check-footer-columns.py bans the string. */
-.principles-band {
-  padding: 30px clamp(18px, 5vw, 72px);
-  background: var(--navy-900);
-  border-top: 1px solid rgba(174, 203, 255, 0.1);
-}
-
-.principles-band ol {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 26px;
+.foot-principles dl {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   margin: 0;
-  padding: 0;
-  list-style: none;
 }
 
-.principles-band h4 {
-  margin: 0 0 8px;
+.foot-principles dt {
+  margin: 0 0 4px;
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -3032,18 +3008,15 @@ body.nav-menu-open .sticky-booking-cta {
   color: var(--lime);
 }
 
-.principles-band p {
+.foot-principles dd {
   margin: 0;
   font-size: 14px;
+  line-height: 1.5;
   color: var(--on-navy-soft);
 }
 
 @media (max-width: 900px) {
   .foot-top { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 760px) {
-  .principles-band ol { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 560px) {
